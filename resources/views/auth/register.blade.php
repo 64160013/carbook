@@ -61,6 +61,35 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label for="phonenumber" class="col-md-4 col-form-label text-md-end">{{ __('Phone number') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="phonenumber" type="text" class="form-control @error('phonenumber') is-invalid @enderror" name="phonenumber" value="{{ old('phonenumber') }}" required autocomplete="phonenumber" autofocus>
+
+                                @error('phonenumber')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="signature_name" class="col-md-4 col-form-label text-md-end">{{ __('Signature Name') }}</label>
+
+                        <div class="col-md-6">
+                            <input id="signature_name" type="text" class="form-control @error('signature_name') is-invalid @enderror" name="signature_name" value="{{ old('signature_name') }}" required autocomplete="signature_name" autofocus>
+
+                                @error('signature_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

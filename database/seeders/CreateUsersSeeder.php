@@ -19,13 +19,16 @@ class CreateUsersSeeder extends Seeder
                 'email' => 'admin@go.buu.ac.th',
                 'is_admin' => '1',
                 'password' => bcrypt('adminisadmin'),
+                'phonenumber' => '0123456789',
             ],
             [
                 'name' => 'User',
                 'email' => 'user@go.buu.ac.th',
                 'is_admin' => '0',
                 'password' => bcrypt('1234'),
+                'phonenumber' => '0123456789',
             ]
+
         ];
 
         foreach($user as $key => $value) {
