@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Http\JsonResponse;
   
-class FullCalenderController extends Controller
+class FullCalendarController extends Controller
 {
     /**
      * Write code on Method
@@ -25,7 +25,7 @@ class FullCalenderController extends Controller
              return response()->json($data);
         }
   
-        return view('fullcalender');
+        return view('fullcalendar');
     }
  
     /**
