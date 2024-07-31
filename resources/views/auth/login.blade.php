@@ -4,8 +4,31 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login3') }}</div>
+            <div class="card border border-primary">
+                <div class="card-header">{{ __('Login') }}</div>
+
+
+                <div class="card-body">
+
+    <div class="row">
+        <div class="col-md-6" style="border-right: 1px solid #ddd;">
+            <!-- เนื้อหาครึ่งซ้าย -->
+            <p>เนื้อหาครึ่งซ้าย</p>
+        </div>
+        <div class="col-md-6">
+            <!-- เนื้อหาครึ่งขวา -->
+            <p>เนื้อหาครึ่งขวา</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -73,6 +96,7 @@
                         </div>
                     </form>
                 </div>
+                
             </div>
         </div>
     </div>

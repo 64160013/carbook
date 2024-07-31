@@ -39,7 +39,9 @@
           end: '2024-07-20'
         },
         {
-          title: 'test',
+          groupId: 'availableForMeeting',
+          
+          title: 'kuy',
           start: '2024-07-18',
           end: '2024-07-18'
         },
@@ -96,7 +98,7 @@
     max-width: 1100px;
     margin: 0 auto;
   }
-
+  
 </style>
 </head>
 <body>
