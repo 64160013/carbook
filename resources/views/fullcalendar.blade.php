@@ -24,60 +24,60 @@
       events: [
         {
           title: 'Business Lunch',
-          start: '2024-07-03T13:00:00',
+          start: '2024-08-03T13:00:00',
           constraint: 'businessHours'
         },
         {
           title: 'Meeting',
-          start: '2024-07-13T11:00:00',
+          start: '2024-08-13T11:00:00',
           constraint: 'availableForMeeting', // defined below
           color: '#257e4a'
         },
         {
           title: 'Conference',
-          start: '2024-07-18',
-          end: '2024-07-20'
+          start: '2024-08-18',
+          end: '2024-08-20'
         },
         {
           groupId: 'availableForMeeting',
           
           title: 'kuy',
-          start: '2024-07-18',
-          end: '2024-07-18'
+          start: '2024-08-18',
+          end: '2024-08-18'
         },
         {
           title: 'Party',
-          start: '2024-07-29T20:00:00'
+          start: '2024-08-29T20:00:00'
         },
 
         // areas where "Meeting" must be dropped
         {
           groupId: 'availableForMeeting',
-          start: '2024-07-11T10:00:00',
-          end: '2024-07-11T16:00:00',
+          start: '2024-08-11T10:00:00',
+          end: '2024-08-11T16:00:00',
           display: 'ff9f89'   //เปลี่ยนจาก bg->rgb แล้วงง
         },
         {
           groupId: 'availableForMeeting',
-          start: '2024-07-13T10:00:00',
-          end: '2024-07-13T16:00:00',
+          start: '2024-08-13T10:00:00',
+          end: '2024-08-13T16:00:00',
           display: 'background'
         },
 
         // red areas where no events can be dropped
         {
-          start: '2024-07-24',
-          end: '2024-07-28',
+          start: '2024-08-24',
+          end: '2024-08-28',
           overlap: false,
           display: 'background',
           color: '#ff9f89'
         },
         {
-          start: '2024-07-06',
-          end: '2024-07-09',   //ไม่ตรงกับหน้า display
+          start: '2024-08-06',
+          end: '2024-08-09',   //ไม่ตรงกับหน้า display
           overlap: false,
           display: 'background',
-          color: '#000'
+          color: '#ff9f87'
         }
       ]
     });
