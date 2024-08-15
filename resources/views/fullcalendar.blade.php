@@ -1,109 +1,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset='utf-8' />
-<link href='https://unpkg.com/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-<script src='https://unpkg.com/fullcalendar@5.11.3/main.min.js'></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var today = new Date().toISOString().slice(0, 10); // ดึงวันที่ในรูปแบบ 'YYYY-MM-DD'
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,listMonth'
-        //right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-      },
-      initialDate: today, // ใช้วันที่ปัจจุบันเป็นค่าเริ่มต้น
-      navLinks: true, // can click day/week names to navigate views
-      businessHours: true, // display business hours
-      editable: true,
-      selectable: true,
-      events: [
-        {
-          title: 'Business Lunch',
-          start: '2024-08-03T13:00:00',
-          constraint: 'businessHours'
-        },
-        {
-          title: 'Meeting',
-          start: '2024-08-13T11:00:00',
-          constraint: 'availableForMeeting', // defined below
-          color: '#257e4a'
-        },
-        {
-          title: 'Conference',
-          start: '2024-08-18',
-          end: '2024-08-20'
-        },
-        {
-          groupId: 'availableForMeeting',
-          
-          title: 'kuy',
-          start: '2024-08-18',
-          end: '2024-08-18'
-        },
-        {
-          title: 'Party',
-          start: '2024-08-29T20:00:00'
-        },
-
-        // areas where "Meeting" must be dropped
-        {
-          groupId: 'availableForMeeting',
-          start: '2024-08-11T10:00:00',
-          end: '2024-08-11T16:00:00',
-          display: 'ff9f89'   //เปลี่ยนจาก bg->rgb แล้วงง
-        },
-        {
-          groupId: 'availableForMeeting',
-          start: '2024-08-13T10:00:00',
-          end: '2024-08-13T16:00:00',
-          display: 'background'
-        },
-
-        // red areas where no events can be dropped
-        {
-          start: '2024-08-24',
-          end: '2024-08-28',
-          overlap: false,
-          display: 'background',
-          color: '#ff9f89'
-        },
-        {
-          start: '2024-08-06',
-          end: '2024-08-09',   //ไม่ตรงกับหน้า display
-          overlap: false,
-          display: 'background',
-          color: '#ff9f87'
-        }
-      ]
-    });
-
-    calendar.render();
-  });
-</script>
-<style>
-
-  body {
-    margin: 40px 10px;
-    padding: 0;
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-  }
-
-  #calendar {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  
-</style>
+    <title>Laravel 11 Fullcalender Tutorial Tutorial - ItSolutionStuff.com</title>
+    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 </head>
 <body>
-
-  <div id='calendar'></div>
-
+    
+<div class="container">
+    <div class="card mt-5">
+        <h3 class="card-header p-3">Laravel 11 FullCalender Tutorial Example - ItSolutionStuff.com แก้ไม่ให้ย้ายวันได้</h3>
+        <div class="card-body">
+            <div id='calendar'></div>
+        </div>
+    </div>
+</div>
+  
+<script type="text/javascript">
+  
+$(document).ready(function () {
+      
+    /*------------------------------------------
+    --------------------------------------------
+    Get Site URL
+    --------------------------------------------
+    --------------------------------------------*/
+    var SITEURL = "{{ url('/') }}";
+    
+    /*------------------------------------------
+    --------------------------------------------
+    CSRF Token Setup
+    --------------------------------------------
+    --------------------------------------------*/
+    $.ajaxSetup({
+        headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+      
+    /*------------------------------------------
+    --------------------------------------------
+    FullCalender JS Code
+    --------------------------------------------
+    --------------------------------------------*/
+    var calendar = $('#calendar').fullCalendar({
+                    editable: true,
+                    events: SITEURL + "/fullcalendar",
+                    displayEventTime: false,
+                    editable: true,
+                    eventRender: function (event, element, view) {
+                        if (event.allDay === 'true') {
+                                event.allDay = true;
+                        } else {
+                                event.allDay = false;
+                        }
+                    },
+                    selectable: true,
+                    selectHelper: true,
+                    select: function (start, end, allDay) {
+                        var title = prompt('Event Title:');
+                        if (title) {
+                            var start = $.fullCalendar.formatDate(start, "Y-MM-DD");
+                            var end = $.fullCalendar.formatDate(end, "Y-MM-DD");
+                            $.ajax({
+                                url: SITEURL + "/fullcalendarAjax",
+                                data: {
+                                    title: title,
+                                    start: start,
+                                    end: end,
+                                    type: 'add'
+                                },
+                                type: "POST",
+                                success: function (data) {
+                                    displayMessage("Event Created Successfully");
+  
+                                    calendar.fullCalendar('renderEvent',
+                                        {
+                                            id: data.id,
+                                            title: title,
+                                            start: start,
+                                            end: end,
+                                            allDay: allDay
+                                        },true);
+  
+                                    calendar.fullCalendar('unselect');
+                                }
+                            });
+                        }
+                    },
+                    eventDrop: function (event, delta) {
+                        var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
+                        var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
+  
+                        $.ajax({
+                            url: SITEURL + '/fullcalendarAjax',
+                            data: {
+                                title: event.title,
+                                start: start,
+                                end: end,
+                                id: event.id,
+                                type: 'update'
+                            },
+                            type: "POST",
+                            success: function (response) {
+                                displayMessage("Event Updated Successfully");
+                            }
+                        });
+                    },
+                    eventClick: function (event) {
+                        var deleteMsg = confirm("Do you really want to delete?");
+                        if (deleteMsg) {
+                            $.ajax({
+                                type: "POST",
+                                url: SITEURL + '/fullcalendarAjax',
+                                data: {
+                                        id: event.id,
+                                        type: 'delete'
+                                },
+                                success: function (response) {
+                                    calendar.fullCalendar('removeEvents', event.id);
+                                    displayMessage("Event Deleted Successfully");
+                                }
+                            });
+                        }
+                    }
+ 
+                });
+ 
+    });
+      
+    /*------------------------------------------
+    --------------------------------------------
+    Toastr Success Code
+    --------------------------------------------
+    --------------------------------------------*/
+    function displayMessage(message) {
+        toastr.success(message, 'Event');
+    } 
+    
+</script>
+  
 </body>
 </html>
