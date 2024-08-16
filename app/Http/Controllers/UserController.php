@@ -9,6 +9,17 @@ use Image;
 
 class UserController extends Controller
 {
+    //เพิ่มม
+    public function index()
+    {
+        // ดึงข้อมูลผู้ใช้รวมถึงความสัมพันธ์กับ Department และ Division
+        $users = User::with(['department', 'division'])->get();
+
+        // ส่งข้อมูลไปยังวิว
+        return view('users.index', compact('users'));
+    }
+
+
     public function edit()
     {
         $user = Auth::user();

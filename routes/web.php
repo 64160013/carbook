@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 
 // เส้นทางสำหรับ FullCalendar
 Route::controller(FullCalendarController::class)->group(function () {
@@ -35,3 +36,9 @@ Route::get('/admin/home', [HomeController::class, 'adminHome'])
 
 Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit');
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
+
+
+Route::get('/users', function () {
+    $users = User::with('department', 'division')->get();
+    return view('index', compact('users'));
+});
