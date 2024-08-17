@@ -2,7 +2,7 @@
 /node_modules
 /public/build
 /public/hot
-!/public/storage
+!/public/storage/signatures
 /storage/*.key
 /vendor
 .env
@@ -19,6 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 
-!/carbook/storage/app/public/signatures/
 
 
