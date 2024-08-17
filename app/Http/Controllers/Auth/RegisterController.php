@@ -34,10 +34,10 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phonenumber' => ['required', 'digits:10', 'regex:/^[0-9]+$/'],
-            // 'department' => 'required|exists:departments,id',
-            // 'division' => 'required|exists:divisions,id',
-            'department' => ['required', 'string', 'max:255'],
-            'division' => ['required', 'string', 'max:255'],
+            'department' => 'required|exists:departments,id',
+            'division' => 'required|exists:divisions,id',
+            // 'department' => ['required', 'string', 'max:255'],
+            // 'division' => ['required', 'string', 'max:255'],
         ]);
     }
 
@@ -59,8 +59,8 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'phonenumber' => $data['phonenumber'],
-            'department_id' => $department->id,
-            'division_id' => $division->id,
+            'department_id' => $department->department_name,
+            'division_id' => $division->division_name,
         ]);
     }
 
