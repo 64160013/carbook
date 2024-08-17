@@ -34,8 +34,10 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phonenumber' => ['required', 'digits:10', 'regex:/^[0-9]+$/'],
-            'department' => ['required', 'string'],
-            'division' => ['required', 'string'],
+            // 'department' => 'required|exists:departments,id',
+            // 'division' => 'required|exists:divisions,id',
+            'department' => ['required', 'string', 'max:255'],
+            'division' => ['required', 'string', 'max:255'],
         ]);
     }
 
@@ -61,4 +63,15 @@ class RegisterController extends Controller
             'division_id' => $division->id,
         ]);
     }
+
+    public function showRegistrationForm()
+    {
+        // ดึงข้อมูลจากฐานข้อมูล
+        $divisions = Division::all();
+        $departments = Department::all();
+    
+        // ส่งข้อมูลทั้งหมดไปยังวิว
+        return view('auth.register', compact('divisions', 'departments'));
+    }
+    
 }
