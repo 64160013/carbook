@@ -18,5 +18,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-!/public/storage/signatures/
+
+!/carbook/storage/app/public/signatures/
+
 
