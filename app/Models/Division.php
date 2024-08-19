@@ -9,13 +9,6 @@ class Division extends Model
 {
     use HasFactory;
 
-    protected $table = 'divisions';
-    protected $fillable = ['division_name'];
-
-    // ความสัมพันธ์กับ User
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
+    protected $table = 'division'; // ระบุชื่อของตารางที่ถูกต้อง
+    protected $fillable = ['name'];
 }
-

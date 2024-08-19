@@ -11,6 +11,7 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        <!-- ชื่อ -->
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
 
@@ -25,6 +26,7 @@
                             </div>
                         </div>
 
+                        <!-- อีเมล -->
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
 
@@ -39,6 +41,7 @@
                             </div>
                         </div>
 
+                        <!-- รหัสผ่าน -->
                         <div class="row mb-3">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
@@ -53,6 +56,7 @@
                             </div>
                         </div>
 
+                        <!-- ยืนยันรหัสผ่าน -->
                         <div class="row mb-3">
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
 
@@ -61,6 +65,7 @@
                             </div>
                         </div>
 
+                        <!-- หมายเลขโทรศัพท์ -->
                         <div class="row mb-3">
                             <label for="phonenumber" class="col-md-4 col-form-label text-md-end">{{ __('Phone number') }}</label>
 
@@ -75,33 +80,18 @@
                             </div>
                         </div>
 
-                        <!-- <div class="row mb-3">
-                            <label for="division" class="col-md-4 col-form-label text-md-end">{{ __('Division') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="division" type="text" class="form-control @error('division') is-invalid @enderror" name="division" value="{{ old('division') }}" required>
-
-                                @error('division')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div> -->
-
+                        <!-- Division -->
                         <div class="row mb-3">
                             <label for="division" class="col-md-4 col-form-label text-md-end">{{ __('Division') }}</label>
-
                             <div class="col-md-6">
                                 <select id="division" class="form-control @error('division') is-invalid @enderror" name="division" required>
-                                    <option value="">{{ __('Select Division') }}</option>
+                                    <option value="" disabled selected>{{ __('Select Division') }}</option>
                                     @foreach($divisions as $division)
-                                        <option value="{{ $division->id }}" {{ old('division') == $division->id ? 'selected' : '' }}>
+                                        <option value="{{ $division->division_id }}" {{ old('division') == $division->division_id ? 'selected' : '' }}>
                                             {{ $division->division_name }}
                                         </option>
                                     @endforeach
                                 </select>
-
                                 @error('division')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -111,43 +101,7 @@
                         </div>
 
 
-                        <!-- <div class="row mb-3">
-                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('Department') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="department" type="text" class="form-control @error('department') is-invalid @enderror" name="department" value="{{ old('department') }}" required>
-
-                                @error('department')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>             -->
-
-
-                        <div class="row mb-3">
-                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('Department') }}</label>
-
-                            <div class="col-md-6">
-                                <select id="department" class="form-control @error('department') is-invalid @enderror" name="department" required>
-                                    <option value="">{{ __('Select Department') }}</option>
-                                    @foreach($departments as $department)
-                                        <option value="{{ $department->id }}" {{ old('department') == $department->id ? 'selected' : '' }}>
-                                            {{ $department->department_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                @error('department')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-
+                        <!-- ปุ่มลงทะเบียน -->
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

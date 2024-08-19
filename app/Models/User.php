@@ -18,8 +18,7 @@ class User extends Authenticatable
         'phonenumber',
         'signature_name',
         'is_admin',
-        'department_id',  // Added department_id
-        'division_id',    // Added division_id
+        'division_id',   //เก็บค่าเข้าตาราง users
     ];
 
     // Fields that should be hidden
@@ -51,16 +50,6 @@ class User extends Authenticatable
         }
         return "https://api.dicebear.com/6.x/fun-emoji/svg?seed={$this->name}";
     }
+    
 
-    // Relationship with Department
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
-
-    // Relationship with Division
-    public function division()
-    {
-        return $this->belongsTo(Division::class);
-    }
 }

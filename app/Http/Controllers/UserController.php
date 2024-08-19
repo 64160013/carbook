@@ -1,29 +1,21 @@
 <?php
+// app/Http/Controllers/UserController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
-use Image;
+use App\Models\Division;
 
 class UserController extends Controller
 {
-    //เพิ่มม
-    public function index()
-    {
-        // ดึงข้อมูลผู้ใช้รวมถึงความสัมพันธ์กับ Department และ Division
-        $users = User::with(['department', 'division'])->get();
-
-        // ส่งข้อมูลไปยังวิว
-        return view('users.index', compact('users'));
-    }
-
-
     public function edit()
     {
         $user = Auth::user();
-        return view('profile.edit', compact('user'));
+        $divisions = Division::all(); // ดึงข้อมูล division ทั้งหมด
+        return view('profile.edit', compact('user', 'divisions'));
     }
 
     public function update(Request $request)
@@ -32,8 +24,9 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'phonenumber' => 'nullable|digits:10|regex:/^[0-9]+$/',  //เบอร์ไม่เกิน 10 
-            'signature_name' => 'nullable|image|mimes:png|max:1024|dimensions:width=530,height=120',  //png 
+            'phonenumber' => 'nullable|digits:10|regex:/^[0-9]+$/', // เบอร์ไม่เกิน 10
+            'division_id' => 'nullable|exists:divisions,division_id', // ตรวจสอบ division_id
+            'signature_name' => 'nullable|image|mimes:png|max:1024|dimensions:width=530,height=120', // png
         ]);
 
         if ($request->hasFile('signature_name')) {
@@ -47,7 +40,9 @@ class UserController extends Controller
             $validatedData['signature_name'] = $path;
         }
 
+        // อัพเดตข้อมูลผู้ใช้
         $user->update($validatedData);
+
         return redirect()->route('profile.edit')->with('success', 'แก้ไขข้อมูลเรียบร้อยแล้ว');
     }
 }

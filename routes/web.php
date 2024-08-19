@@ -37,9 +37,3 @@ Route::get('/admin/home', [HomeController::class, 'adminHome'])
 // แก้ไขโปนไฟล์
 Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit');
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
-
-//เทดสอบกาจอยตาราง
-Route::get('/users', function () {
-    $users = User::with('department', 'division')->get();
-    return view('index', compact('users'));
-});

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_admin')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->unsignedBigInteger('division_id')->nullable(); // หรือไม่ nullable ถ้าไม่ต้องการให้เป็นค่าว่าง
 
         });
 
