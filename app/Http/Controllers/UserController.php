@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Division;
+use App\Models\Department;
 
 class UserController extends Controller
 {
@@ -15,8 +16,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $divisions = Division::all(); // ดึงข้อมูล division ทั้งหมด
-        return view('profile.edit', compact('user', 'divisions'));
-    }
+        $departments = Department::all(); // ดึงข้อมูล department ทั้งหมด
+        return view('profile.edit', compact('user', 'divisions', 'departments'));
+    }    
 
     public function update(Request $request)
     {
@@ -26,6 +28,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'phonenumber' => 'nullable|digits:10|regex:/^[0-9]+$/', // เบอร์ไม่เกิน 10
             'division_id' => 'nullable|exists:divisions,division_id', // ตรวจสอบ division_id
+            'department_id' => 'nullable|exists:departments,department_id', // ตรวจสอบ department_id
             'signature_name' => 'nullable|image|mimes:png|max:1024|dimensions:width=530,height=120', // png
         ]);
 

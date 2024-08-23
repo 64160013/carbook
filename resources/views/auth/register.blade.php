@@ -80,6 +80,50 @@
                             </div>
                         </div>
 
+
+                        <!-- Division -->
+                        <!-- <div class="row mb-3">
+                            <label for="division" class="col-md-4 col-form-label text-md-end">{{ __('Division') }}</label>
+                            <div class="col-md-6">
+                                <select id="division" class="form-control @error('division') is-invalid @enderror" name="division" required>
+                                    <option value="" disabled selected>{{ __('Select Division') }}</option>
+                                    @foreach($divisions as $division)
+                                        <option value="{{ $division->division_id }}" {{ old('division') == $division->division_id ? 'selected' : '' }}>
+                                            {{ $division->division_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('division')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div> -->
+
+
+                        <!-- Department -->
+                        <!-- <div class="row mb-3">
+                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('Department') }}</label>
+                            <div class="col-md-6">
+                                <select id="department" class="form-control @error('department_id') is-invalid @enderror" name="department_id" required>
+                                    <option value="" disabled selected>{{ __('Select Department') }}</option>
+                                    @foreach($departments as $department)
+                                        @if($department->division_id == 2)
+                                            <option value="{{ $department->department_id }}" {{ old('department_id') == $department->department_id ? 'selected' : '' }}>
+                                                {{ $department->department_name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('department_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div> -->
+
                         <!-- Division -->
                         <div class="row mb-3">
                             <label for="division" class="col-md-4 col-form-label text-md-end">{{ __('Division') }}</label>
@@ -99,6 +143,53 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Department -->
+                        <div class="row mb-3" id="department-group" style="display: none;"> <!--department-group ใช้กับscript-->
+                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('Department') }}</label>
+                            <div class="col-md-6">
+                                <select id="department" class="form-control @error('department_id') is-invalid @enderror" name="department_id">
+                                    <option value="" disabled selected>{{ __('Select Department') }}</option>
+                                    @foreach($departments as $department)
+                                        @if($department->division_id == 2)
+                                            <option value="{{ $department->department_id }}" {{ old('department_id') == $department->department_id ? 'selected' : '' }}>
+                                                {{ $department->department_name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('department_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const divisionSelect = document.getElementById('division');
+        const departmentGroup = document.getElementById('department-group');
+
+        // ฟังก์ชันตรวจสอบค่า division
+        function toggleDepartmentField() {
+            if (divisionSelect.value == '2') {
+                departmentGroup.style.display = 'block'; // แสดง
+            } else {
+                departmentGroup.style.display = 'none'; // ซ่อน
+            }
+        }
+
+        toggleDepartmentField();// เรียกฟังก์ชันเมื่อหน้าโหลดขึ้นมา (เพื่อตรวจสอบค่าเก่า)
+
+        // เรียกฟังก์ชันเมื่อเปลี่ยนค่าใน dropdown
+        divisionSelect.addEventListener('change', toggleDepartmentField);
+    });
+</script>
+
+
+
 
 
                         <!-- ปุ่มลงทะเบียน -->

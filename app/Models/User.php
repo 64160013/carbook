@@ -19,6 +19,7 @@ class User extends Authenticatable
         'signature_name',
         'is_admin',
         'division_id',   //เก็บค่าเข้าตาราง users
+        'department_id',
     ];
 
     // Fields that should be hidden

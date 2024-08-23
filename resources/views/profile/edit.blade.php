@@ -66,6 +66,22 @@
                             @enderror
                         </div>
 
+                        <!-- ฝ่ายงาน -->
+                        <div class="mb-3">
+                            <label for="department" class="form-label">ฝ่ายงาน</label>
+                            <p id="department" class="form-control @error('department_id') is-invalid @enderror">
+                                @foreach($departments as $department)
+                                    @if($user->department_id == $department->department_id)
+                                        {{ $department->department_name }}
+                                    @endif
+                                @endforeach
+                            </p>
+                            @error('department_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
 
                         <button type="submit" class="btn btn-primary mb-5">บันทึกการเปลี่ยนแปลง</button>
                     </form>
