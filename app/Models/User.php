@@ -20,6 +20,10 @@ class User extends Authenticatable
         'is_admin',
         'division_id',   //เก็บค่าเข้าตาราง users
         'department_id',
+        'position_id',
+        'role_id',
+
+
     ];
 
     // Fields that should be hidden

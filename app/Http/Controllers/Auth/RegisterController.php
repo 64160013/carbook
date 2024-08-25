@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Division;
 use App\Models\Department;
+use App\Models\Position;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -25,10 +27,12 @@ class RegisterController extends Controller
     public function showRegistrationForm() {
         $divisions = \App\Models\Division::all(); // ดึงข้อมูล division ทั้งหมด
         $departments = \App\Models\Department::all(); // ดึงข้อมูล department ทั้งหมด
-        return view('auth.register', compact('divisions', 'departments'));
+        $positions = \App\Models\Position::all(); 
+        $roles = \App\Models\Role::all(); 
+        return view('auth.register', compact('divisions', 'departments','positions','roles'));
     }    
-    
-    
+    //  
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -38,6 +42,8 @@ class RegisterController extends Controller
             'phonenumber' => ['required', 'string', 'max:15'],
             'division' => ['required', 'exists:division,division_id'],
             'department_id' => ['required', 'exists:department,department_id'], // เพิ่มการตรวจสอบ department_id
+            'position_id' => ['required', 'exists:position,position_id'],
+            'role_id' => ['required', 'exists:role,role_id'],
         ]);
     }
 
@@ -53,6 +59,8 @@ class RegisterController extends Controller
             'phonenumber' => $data['phonenumber'],
             'division_id' => $data['division'], // บันทึก division_id
             'department_id' => $data['department_id'],
+            'position_id' => $data['position_id'],
+            'role_id' => $data['role_id'],
         ]);
     }
 }

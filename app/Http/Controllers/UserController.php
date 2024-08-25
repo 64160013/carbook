@@ -9,16 +9,23 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Division;
 use App\Models\Department;
+use App\Models\Position;
+use App\Models\Role;
 
 class UserController extends Controller
 {
-    public function edit()
-    {
+    public function edit() {
         $user = Auth::user();
-        $divisions = Division::all(); // ดึงข้อมูล division ทั้งหมด
-        $departments = Department::all(); // ดึงข้อมูล department ทั้งหมด
-        return view('profile.edit', compact('user', 'divisions', 'departments'));
-    }    
+        $divisions = Division::all();
+        $departments = Department::all();
+        $positions = Position::all(); // ดึงข้อมูลตำแหน่งทั้งหมด
+        $roles = Role::all();
+
+    
+        return view('profile.edit', compact('user', 'divisions', 'departments', 'positions', 'roles' ));
+    }
+    
+    //'
 
     public function update(Request $request)
     {
@@ -29,6 +36,9 @@ class UserController extends Controller
             'phonenumber' => 'nullable|digits:10|regex:/^[0-9]+$/', // เบอร์ไม่เกิน 10
             'division_id' => 'nullable|exists:divisions,division_id', // ตรวจสอบ division_id
             'department_id' => 'nullable|exists:departments,department_id', // ตรวจสอบ department_id
+            'position_id' => 'nullable|exists:positions,position_id',
+            'role_id' => 'nullable|exists:roles,role_id',
+
             'signature_name' => 'nullable|image|mimes:png|max:1024|dimensions:width=530,height=120', // png
         ]);
 
