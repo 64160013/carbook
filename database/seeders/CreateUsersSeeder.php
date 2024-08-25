@@ -16,14 +16,16 @@ class CreateUsersSeeder extends Seeder
         $user = [
             [
                 'name' => 'Admin',
-                'email' => 'admin@go.buu.ac.th',
+                'lname' => 'admin',
+                'email' => 'admin3@go.buu.ac.th',
                 'is_admin' => '1',
                 'password' => bcrypt('adminisadmin'),
                 'phonenumber' => '0123456789',
             ],
             [
                 'name' => 'User',
-                'email' => 'user@go.buu.ac.th',
+                'lname' => 'user',
+                'email' => 'user3@go.buu.ac.th',
                 'is_admin' => '0',
                 'password' => bcrypt('1234'),
                 'phonenumber' => '0123456789',

@@ -13,7 +13,7 @@
 
                         <!-- ชื่อ -->
                         <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('ชื่อ') }}</label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -26,9 +26,24 @@
                             </div>
                         </div>
 
+                        <!-- นามสกุล -->
+                        <div class="row mb-3">
+                            <label for="lname" class="col-md-4 col-form-label text-md-end">{{ __('นามสกุล') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="lname" type="text" class="form-control @error('lname') is-invalid @enderror" name="lname" value="{{ old('lname') }}" required autocomplete="lname" autofocus>
+
+                                @error('lname')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <!-- อีเมล -->
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('อีเมล') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -43,7 +58,7 @@
 
                         <!-- รหัสผ่าน -->
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('รหัสผ่าน') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
@@ -58,7 +73,7 @@
 
                         <!-- ยืนยันรหัสผ่าน -->
                         <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('ยืนยันรหัสผ่าน') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
@@ -67,7 +82,7 @@
 
                         <!-- หมายเลขโทรศัพท์ -->
                         <div class="row mb-3">
-                            <label for="phonenumber" class="col-md-4 col-form-label text-md-end">{{ __('Phone number') }}</label>
+                            <label for="phonenumber" class="col-md-4 col-form-label text-md-end">{{ __('เบอร์โทร') }}</label>
 
                             <div class="col-md-6">
                                 <input id="phonenumber" type="text" class="form-control @error('phonenumber') is-invalid @enderror" name="phonenumber" value="{{ old('phonenumber') }}" required autocomplete="phonenumber" autofocus>
@@ -82,7 +97,7 @@
 
                         <!-- Division -->
                         <div class="row mb-3">
-                            <label for="division" class="col-md-4 col-form-label text-md-end">{{ __('Division') }}</label>
+                            <label for="division" class="col-md-4 col-form-label text-md-end">{{ __('ส่วนงาน') }}</label>
                             <div class="col-md-6">
                                 <select id="division" class="form-control @error('division') is-invalid @enderror" name="division" required>
                                     <option value="" disabled selected>{{ __('Select Division') }}</option>
@@ -102,7 +117,7 @@
 
                         <!-- Department -->
                         <div class="row mb-3" id="department-group" style="display: none;"> <!--department-group ใช้กับscript-->
-                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('Department') }}</label>
+                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('ฝ่ายงาน') }}</label>
                             <div class="col-md-6">
                                 <select id="department" class="form-control @error('department_id') is-invalid @enderror" name="department_id">
                                     <option value="" disabled selected>{{ __('Select Department') }}</option>
@@ -124,7 +139,7 @@
 
                          <!-- Position -->
                          <div class="row mb-3">
-                            <label for="position_id" class="col-md-4 col-form-label text-md-end">{{ __('Position') }}</label>
+                            <label for="position_id" class="col-md-4 col-form-label text-md-end">{{ __('ตำแหน่งงาน') }}</label>
                             <div class="col-md-6">
                                 <select id="position_id" class="form-control @error('position_id') is-invalid @enderror" name="position_id" required>
                                     <option value="" disabled selected>{{ __('Select Position') }}</option>
@@ -145,7 +160,7 @@
                        
                         <!-- role -->
                         <div class="row mb-3">
-                            <label for="role_id" class="col-md-4 col-form-label text-md-end">{{ __('Role') }}</label>
+                            <label for="role_id" class="col-md-4 col-form-label text-md-end">{{ __('บทบาท') }}</label>
                             <div class="col-md-6">
                                 <select id="role_id" class="form-control @error('role_id') is-invalid @enderror" name="role_id" required>
                                     <option value="" disabled selected>{{ __('Select Role') }}</option>
@@ -162,7 +177,6 @@
                                 @enderror
                             </div>
                         </div>
-
 
 
 
@@ -190,29 +204,26 @@
 
                         <!-- ปุ่มลงทะเบียน -->
                         <div class="row mb-0">
-    <div class="col-md-6 offset-md-4">
-        <button type="submit" class="btn btn-primary">
-            {{ __('Register') }}
-        </button>
-    </div>
-</div>
-
-<!-- แสดงข้อความ error ถ้ามี -->
-@if ($errors->any())
-    <div class="row mt-3">
-        <div class="col-md-6 offset-md-4">
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-@endif
-
-
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Register') }}
+                                </button>
+                            </div>
+                        </div>
+                        <!-- แสดงข้อความ error ถ้ามี -->
+                        @if ($errors->any())
+                            <div class="row mt-3">
+                                <div class="col-md-6 offset-md-4">
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>

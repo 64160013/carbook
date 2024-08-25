@@ -39,27 +39,11 @@ Route::get('/admin/home', [HomeController::class, 'adminHome'])
 Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit');
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
 
-
-// // Route เพื่อแสดงฟอร์ม
-// Route::get('/user-form', [UserController::class, 'showForm'])->name('user.form');
-// // Route เพื่อจัดการการส่งข้อมูลฟอร์ม
-// Route::post('/user-form', [UserController::class, 'submitForm'])->name('user.submitForm');
-
-
-// // Route::get('/form', function () {
-// //     return view('form');
-// // });
-
-// Route::get('/form', [UserController::class, 'test'])->name('form');
+// เพิ่มรถ
+Route::get('/add-vehicle', [HomeController::class, 'showAddVehicleForm'])
+->name('add.vehicle')    
+->middleware(IsAdmin::class);;
+Route::post('/add-vehicle', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
 
 
-
-
-// Route::get('/car-reservation/form', [CarReservationController::class, 'showForm'])
-//     ->name('car-reservation.form')
-//     ->middleware(['auth', 'isNotAdmin']); 
-
-// Route::post('/car-reservation', [CarReservationController::class, 'submitForm'])
-//     ->name('car-reservation.submit')
-//     ->middleware(['auth', 'isNotAdmin']); 
 

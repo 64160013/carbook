@@ -33,12 +33,12 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
             'phonenumber' => 'nullable|digits:10|regex:/^[0-9]+$/', // เบอร์ไม่เกิน 10
             'division_id' => 'nullable|exists:divisions,division_id', // ตรวจสอบ division_id
             'department_id' => 'nullable|exists:departments,department_id', // ตรวจสอบ department_id
             'position_id' => 'nullable|exists:positions,position_id',
             'role_id' => 'nullable|exists:roles,role_id',
-
             'signature_name' => 'nullable|image|mimes:png|max:1024|dimensions:width=530,height=120', // png
         ]);
 

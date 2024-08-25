@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Edit Profile') }}</div>
+                <div class="card-header">{{ __('แก้ไขข้อมูลส่วนตัว') }}</div>
 
                 <div class="container mt-2">
                     @if (session('success'))
@@ -22,6 +22,12 @@
                         <div class="mb-3">
                             <label for="name" class="form-label mt-2">ชื่อ</label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
+                        </div>
+
+                        <!-- นามสกุล -->
+                        <div class="mb-3">
+                            <label for="lname" class="form-label mt-2">ชื่อ</label>
+                            <input type="text" name="lname" id="lname" class="form-control" value="{{ $user->lname }}">
                         </div>
 
                         <!-- อีเมล -->
@@ -77,6 +83,21 @@
                                 @endforeach
                             </p>
                             @error('department_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- ตำแหน่งงาน -->
+                        <div class="mb-3">
+                            <label for="position" class="form-label">ตำแหน่ง</label>
+                            <p id="position" class="form-control @error('position_id') is-invalid @enderror">
+                                @foreach($positions as $position)
+                                    @if($user->position_id == $position->position_id)
+                                        {{ $position->position_name }}
+                                    @endif
+                                @endforeach
+                            </p>
+                            @error('position_id')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
