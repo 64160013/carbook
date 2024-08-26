@@ -34,7 +34,7 @@
         <div class="col-md-6 right-box">
             <div class="row align-items-center">
                 <div class="header-text mb-4 mt-5 text-center">
-                    <h2>Login</h2>
+                    <h2>เข้าสู่ระบบ</h2>
                 </div>
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
@@ -75,13 +75,13 @@
                             <label for="formCheck" class="form-check-label text-secondary"><small>Remember Me</small></label>
                         </div>
                         <div class="forgot">
-                            <small><a href="{{ route('password.request') }}" style="color: #FB7F0D;">Forgot Password?</a></small>
+                            <small><a href="{{ route('password.request') }}" style="color: #FB7F0D;">ลืมรหัสผ่าน?</a></small>
                         </div>
                     </div>
 
 
                     <div class="input-group mb-3">
-                        <button type="submit" class="btn btn-lg btn-warning w-100 fs-6">Login</button>
+                        <button type="submit" class="btn btn-lg btn-warning w-100 fs-6">เข้าสู่ระบบ</button>
                     </div>
                 </form>
             </div>

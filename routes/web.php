@@ -35,14 +35,14 @@ Route::get('/admin/home', [HomeController::class, 'adminHome'])
     ->name('admin.home')
     ->middleware(IsAdmin::class);
 
-// แก้ไขโปนไฟล์
+// แก้ไขโปรไฟล์
 Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit');
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
 
 // เพิ่มรถ
-Route::get('/add-vehicle', [HomeController::class, 'showAddVehicleForm'])
-->name('add.vehicle')    
-->middleware(IsAdmin::class);;
+Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
+    ->name('add.vehicle')    
+    ->middleware(IsAdmin::class);;
 Route::post('/add-vehicle', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
 
 

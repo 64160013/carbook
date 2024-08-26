@@ -15,9 +15,11 @@ class Vehicle extends Model
      * @var array
      */
     protected $table = 'car_info';
-    protected $fillable = [
-        'car_type',   
+    protected $fillable = [   
+        'icon_id',   
+        'car_category',
         'car_regnumber',
+        'car_province',
 
     ];
 }

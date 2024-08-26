@@ -73,6 +73,7 @@
                         </div>
 
                         <!-- ฝ่ายงาน -->
+                        @if($user->department_id != null)
                         <div class="mb-3">
                             <label for="department" class="form-label">ฝ่ายงาน</label>
                             <p id="department" class="form-control @error('department_id') is-invalid @enderror">
@@ -86,6 +87,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        @endif
 
                         <!-- ตำแหน่งงาน -->
                         <div class="mb-3">
@@ -101,10 +103,10 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-
-
-
-                        <button type="submit" class="btn btn-primary mb-5">บันทึกการเปลี่ยนแปลง</button>
+                        <div class="form-group mt-4 text-center mb-3">         
+                            <a href="{{ route('home') }}" class="btn btn-warning">ย้อนกลับ</a>
+                            <button type="submit" class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                        </div>
                     </form>
 
                 </div>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Vehicle;
+use App\Models\CarIcon;
+
 
 class HomeController extends Controller
 {
@@ -42,30 +45,38 @@ class HomeController extends Controller
      *
      * 
      */
-        public function showAddVehicleForm()
+    public function AddVehicleForm()
     {
-        return view('addVehicle');
+        $car_icons = \App\Models\CarIcon::all();
+        return view('addVehicle', compact('car_icons'));
     }
-
-    public function storeVehicle(Request $request)
-{
-    // Validate the input
-    $request->validate([
-        'car_type' => 'required|string|max:255',
-        'car_regnumber' => 'required|string|max:255',
-    ]);
-
-    // Store the data into the database (Assuming a Vehicle model exists)
-    \App\Models\Vehicle::create([
-        'car_regnumber' => $request->car_regnumber,
-        'car_status' => 'Y', // or 'N', depending on your logic
-        'car_reason' => $request->car_reason, // Assuming you have this field in your form
-    ]);
     
+    public function storeVehicle(Request $request)
+    {
+        // Validate the input
+        $request->validate([
+            'icon_id' => ['required', 'exists:car_icon,icon_id'],
+            'car_category' => 'required|string|max:3',                  //varchar(3)
+            'car_regnumber' => 'required|integer|digits_between:1,4',   //int(4)
+            'car_province' => 'required|string|max:255',       
+            // 'car_regnumber' => 'required|string|max:255',                //รวม            
+            // 'car_regnumber' => 'required|integer|digits_between:1,4',  
 
-    // Redirect back with a success message
-    return redirect()->route('add.vehicle')->with('success', 'Vehicle added successfully!');
-}
+        ]);
+
+        // Store the data into the database (Assuming a Vehicle model exists)
+        \App\Models\Vehicle::create([
+            'icon_id' => $request->icon_id, 
+            'car_category' => $request->car_category,
+            'car_regnumber' => $request->car_regnumber,
+            'car_province' => $request->car_province,
+
+            // 'car_status' => 'Y', // or 'N', depending on your logic
+            'car_reason' => $request->car_reason, // Assuming you have this field in your form
+        ]);
+        
+        return redirect()->route('add.vehicle')->with('success', 'เพิ่มข้อมูลรถ สำเร็จ!!!');
+    }
 
 
 }
