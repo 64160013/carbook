@@ -36,6 +36,7 @@
                             </div>
                         </div>
 
+
                         <!-- หมวดเลขทะเบียน -->
                         <div class="row mb-3">
                             <label for="car_category" class="col-md-4 col-form-label text-md-end">{{ __('หมวดทะเบียน') }}</label>
@@ -81,8 +82,8 @@
 
                         <!-- ปุ่ม -->
                         <div class="form-group mt-4 text-center">
-                            <a href="{{ route('admin.home') }}" class="btn btn-primary">ย้อนกลับ</a>
-                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+                            <a href="{{ route('admin.home') }}" class="btn btn-warning">ย้อนกลับ</a>
+                            <button type="submit" class="btn btn-primary">ยืนยัน</button>
 
                             @if ($errors->any())
                                 <div class="alert alert-danger mt-3">

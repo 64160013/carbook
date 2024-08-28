@@ -46,4 +46,8 @@ Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
 Route::post('/add-vehicle', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
 
 
+Route::get('/showCar', function () {
+    return view('vehicles/index');
+});
+
 

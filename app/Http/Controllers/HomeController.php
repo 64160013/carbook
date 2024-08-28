@@ -47,7 +47,9 @@ class HomeController extends Controller
      */
     public function AddVehicleForm()
     {
-        $car_icons = \App\Models\CarIcon::all();
+        $selectedIcons = Vehicle::pluck('icon_id')->toArray();                  // ดึงรายการไอคอนพาหนะที่ถูกเลือกไปแล้ว
+        $car_icons = CarIcon::whereNotIn('icon_id', $selectedIcons)->get();     // กรองที่ยังไม่ได้ถูกเลือก
+        // $car_icons = \App\Models\CarIcon::all();
         return view('addVehicle', compact('car_icons'));
     }
     
@@ -78,5 +80,9 @@ class HomeController extends Controller
         return redirect()->route('add.vehicle')->with('success', 'เพิ่มข้อมูลรถ สำเร็จ!!!');
     }
 
+
+
+
+    
 
 }

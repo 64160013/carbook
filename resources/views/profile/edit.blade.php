@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('แก้ไขข้อมูลส่วนตัว') }}</div>
+                <div class="card-header bg-warning text-center">{{ __('แก้ไขข้อมูลส่วนตัว') }}</div>
 
                 <div class="container mt-2">
                     @if (session('success'))
@@ -26,7 +26,7 @@
 
                         <!-- นามสกุล -->
                         <div class="mb-3">
-                            <label for="lname" class="form-label mt-2">ชื่อ</label>
+                            <label for="lname" class="form-label mt-2">นามสกุล</label>
                             <input type="text" name="lname" id="lname" class="form-control" value="{{ $user->lname }}">
                         </div>
 
@@ -103,8 +103,13 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group mt-4 text-center mb-3">         
-                            <a href="{{ route('home') }}" class="btn btn-warning">ย้อนกลับ</a>
+
+                        <div class="form-group mt-4 text-center mb-3"> 
+                            @if (auth()->user()->is_admin == 1)
+                                <a href="{{ route('admin.home') }}" class="btn btn-warning">ย้อนกลับ</a>
+                            @else
+                                <a href="{{ route('home') }}" class="btn btn-warning">ย้อนกลับ</a>
+                            @endif
                             <button type="submit" class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
                         </div>
                     </form>
