@@ -19,10 +19,14 @@
                 </div>
             </div>
 
+
+            <form action="{{ url('/vehicles') }}" method="get">
+                <button type="submit" class="btn btn-primary mt-3">แสดงข้อมูลรถ</button>
+            </form>
             <form action="{{ url('/add-vehicle') }}" method="get">
                 <button type="submit" class="btn btn-primary mt-3">เพิ่มรถ</button>
             </form>
-
+            
         </div>
     </div>
 </div>

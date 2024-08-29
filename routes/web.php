@@ -42,12 +42,11 @@ Route::put('/profile', [UserController::class, 'update'])->name('profile.update'
 // เพิ่มรถ
 Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
     ->name('add.vehicle')    
-    ->middleware(IsAdmin::class);;
+    ->middleware(IsAdmin::class);
 Route::post('/add-vehicle', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
 
 
-Route::get('/showCar', function () {
-    return view('vehicles/index');
-});
-
-
+//แสดงข้อมูลรถและเปลี่ยนสถานะ
+Route::get('/vehicles', [HomeController::class, 'showVehicles'])->name('show.vehicles')
+    ->middleware(IsAdmin::class);;
+Route::post('/vehicles/update-status/{id}', [HomeController::class, 'updateStatus'])->name('vehicles.updateStatus');

@@ -40,8 +40,9 @@ class HomeController extends Controller
         return view('adminHome');
     }
 
+
     /**
-     * Show the application dashboard.
+     * Add Vehicle Form
      *
      * 
      */
@@ -73,15 +74,40 @@ class HomeController extends Controller
             'car_regnumber' => $request->car_regnumber,
             'car_province' => $request->car_province,
 
-            // 'car_status' => 'Y', // or 'N', depending on your logic
-            'car_reason' => $request->car_reason, // Assuming you have this field in your form
         ]);
         
         return redirect()->route('add.vehicle')->with('success', 'เพิ่มข้อมูลรถ สำเร็จ!!!');
     }
 
 
+        /**
+     * Show and Change Status Vehicle 
+     *
+     * 
+     */
+    public function showVehicles()
+    {
+        $vehicles = Vehicle::all();
+        $car_icons = CarIcon::all();
 
+        return view('vehicles.index', compact('vehicles', 'car_icons'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // หารถยนต์ที่ต้องการเปลี่ยนสถานะ
+        $vehicle = Vehicle::find($id);
+
+        if ($vehicle) {
+            // เปลี่ยนสถานะ (Y = พร้อมใช้งาน, N = ไม่พร้อมใช้งาน)
+            $vehicle->car_status = $request->input('car_status');
+            $vehicle->save();
+
+            return redirect()->back()->with('success', 'สถานะของรถยนต์ถูกอัปเดตเรียบร้อยแล้ว');
+        } else {
+            return redirect()->back()->with('error', 'ไม่พบรถยนต์ที่ต้องการ');
+        }
+    }
 
     
 

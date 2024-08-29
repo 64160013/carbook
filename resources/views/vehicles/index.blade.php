@@ -1,49 +1,38 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <h1>ข้อมูลพาหนะ</h1>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>ประเภทพาหนะ</th>
-                <th>ทะเบียนรถ</th>
-                <th>จังหวัด</th>
-                <th>สถานะ</th>
-                <th>การจัดการ</th>
-            </tr>
-        </thead>
-        <tbody>
-           
+    <div class="container">
+        <h1>รายการรถทั้งหมด</h1>
+        <table class="table table-bordered ">
+            <thead class="text-center">
                 <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>
-                        <!-- Form for deleting vehicle -->
-                        <form action="" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">ลบ</button>
-                        </form>
-
-                        <!-- Form for toggling vehicle status -->
-                        <form action="" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn btn-primary">เปลี่ยนสถานะ</button>
-                        </form>
-                    </td>
+                    <!-- //รูปรถ -->
+                    <th>ประภทพาหนะ</th>  
+                    <th>หมายเลขทะเบียน</th>
+                    <th>สถานะ</th>
+                    <th>สถานะ</th>
                 </tr>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach ($vehicles as $vehicle)
+                    <tr>
+                        <td>
+                            @foreach ($car_icons as $car_icon)
+                                @if ($vehicle->icon_id == $car_icon->icon_id)
+                                    <img src="{{ asset('images/' . $car_icon->icon_img) }}" alt="Icon Image" width="50" height="50">
+                                    <a> : {{$car_icon->type_name}}</a>
+                                @endif
+                            @endforeach
+                        </td>
+                        <td>{{ $vehicle->car_category }} {{ $vehicle->car_regnumber }} {{ $vehicle->car_province }}</td>
+                        
+                        <td>{{ $vehicle->car_status }}</td>
+
+                        <td>{{ $vehicle->car }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        
+    </div>
 @endsection
