@@ -22,4 +22,10 @@ class Vehicle extends Model
         'car_province',
 
     ];
+    protected $primaryKey = 'car_id'; // กำหนด primary key
+    public $incrementing = true; // ถ้า car_id เป็น auto-increment
+    protected $keyType = 'int'; // ประเภทของ primary key
+
 }
+
+

@@ -81,7 +81,7 @@ class HomeController extends Controller
 
 
         /**
-     * Show and Change Status Vehicle 
+     * "Show" "Change Status" "Delete" Vehicle 
      *
      * 
      */
@@ -95,18 +95,33 @@ class HomeController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        // หารถยนต์ที่ต้องการเปลี่ยนสถานะ
         $vehicle = Vehicle::find($id);
 
         if ($vehicle) {
-            // เปลี่ยนสถานะ (Y = พร้อมใช้งาน, N = ไม่พร้อมใช้งาน)
-            $vehicle->car_status = $request->input('car_status');
+            $vehicle->car_status = $request->input("car_status_$id");   // รับค่าจากฟอร์ม
+            // ตรวจสอบว่าหากสถานะเป็น "ไม่พร้อม" ให้บันทึก car_reason
+            if ($vehicle->car_status == 'N') {
+                $vehicle->car_reason = $request->input("car_reason_$id");
+            } else {
+                $vehicle->car_reason = null;// ล้างค่า car_reason ถ้ารถพร้อมใช้งาน
+            }
             $vehicle->save();
-
-            return redirect()->back()->with('success', 'สถานะของรถยนต์ถูกอัปเดตเรียบร้อยแล้ว');
-        } else {
-            return redirect()->back()->with('error', 'ไม่พบรถยนต์ที่ต้องการ');
+            
+            return redirect()->route('show.vehicles')->with('success', 'อัปเดตสถานะเรียบร้อยแล้ว');
         }
+
+        // แจ้งเตือนหากไม่พบข้อมูล
+        return redirect()->route('show.vehicles')->with('error', 'ไม่พบข้อมูลรถ');
+    }
+
+    public function destroy($id)
+    {
+        // ค้นหาข้อมูลรถตาม car_id และทำการลบ
+        $vehicle = Vehicle::find($id);
+        if ($vehicle) {
+            $vehicle->delete();
+        }
+        return redirect()->route('show.vehicles');
     }
 
     

@@ -82,7 +82,7 @@
 
                         <!-- ปุ่ม -->
                         <div class="form-group mt-4 text-center">
-                            <a href="{{ route('admin.home') }}" class="btn btn-warning">ย้อนกลับ</a>
+                            <a href="{{ route('show.vehicles') }}" class="btn btn-warning">ย้อนกลับ</a>
                             <button type="submit" class="btn btn-primary">ยืนยัน</button>
 
                             @if ($errors->any())

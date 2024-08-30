@@ -39,6 +39,7 @@ Route::get('/admin/home', [HomeController::class, 'adminHome'])
 Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit');
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
 
+
 // เพิ่มรถ
 Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
     ->name('add.vehicle')    
@@ -46,7 +47,9 @@ Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
 Route::post('/add-vehicle', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
 
 
-//แสดงข้อมูลรถและเปลี่ยนสถานะ
+//แสดงข้อมูลรถ เปลี่ยนสถานะ ลบค่า
 Route::get('/vehicles', [HomeController::class, 'showVehicles'])->name('show.vehicles')
     ->middleware(IsAdmin::class);;
 Route::post('/vehicles/update-status/{id}', [HomeController::class, 'updateStatus'])->name('vehicles.updateStatus');
+Route::delete('/vehicles/{id}', [HomeController::class, 'destroy'])->name('vehicles.destroy');
+
