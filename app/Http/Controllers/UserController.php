@@ -42,17 +42,33 @@ class UserController extends Controller
             'signature_name' => 'nullable|image|mimes:png|max:1024|dimensions:width=530,height=120', // png
         ]);
 
-        if ($request->hasFile('signature_name')) {
-            // ลบรูปภาพเก่าถ้ามี
-            if ($user->signature_name) {
-                Storage::delete('public/' . $user->signature_name);
+        // if ($request->hasFile('signature_name')) {
+        //     // ลบรูปภาพเก่าถ้ามี
+        //     if ($user->signature_name) {
+        //         Storage::delete('public/' . $user->signature_name);
+        //     }
+
+        //     // อัปโหลดรูปภาพใหม่
+        //     $path = $request->file('signature_name')->store('signatures', 'public');
+        //     $validatedData['signature_name'] = $path;
+        // }
+
+        // ทำให้เข้าผ่าน url ไม่ได้้
+            if ($request->hasFile('signature_name')) {
+                // ลบรูปภาพเก่าถ้ามี
+                if ($user->signature_name) {
+                    Storage::delete('signatures/' . $user->signature_name);
+                }
+
+                // สร้างชื่อไฟล์ใหม่ที่มี ID ของผู้ใช้
+                $filename = $user->id . '_signature.' . $request->file('signature_name')->getClientOriginalExtension();
+
+                // อัปโหลดรูปภาพใหม่ไปที่โฟลเดอร์ storage/app/signatures โดยใช้ชื่อไฟล์ที่กำหนด
+                $path = $request->file('signature_name')->storeAs('signatures', $filename);
+
+                $validatedData['signature_name'] = $filename;
             }
-
-            // อัปโหลดรูปภาพใหม่
-            $path = $request->file('signature_name')->store('signatures', 'public');
-            $validatedData['signature_name'] = $path;
-        }
-
+            
         // อัพเดตข้อมูลผู้ใช้
         $user->update($validatedData);
 

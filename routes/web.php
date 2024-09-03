@@ -10,9 +10,10 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUsers;
-use App\Http\Controllers\UserController;
 use App\Models\User;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReqDocumentController;
+
 
 // เส้นทางสำหรับ FullCalendar
 Route::controller(FullCalendarController::class)->group(function () {
@@ -66,6 +67,40 @@ Route::get('/get-amphoes/{provinceId}', [ReqDocumentController::class, 'getAmpho
 Route::get('/get-districts/{amphoeId}', [ReqDocumentController::class, 'getDistricts']);
 
 
+// // loginแล้วเข้าถึงได้
+// use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Response;
 
-// Route::get('/amphoes/{province}', [ReqDocumentController::class, 'getAmphoes']);
-// Route::get('/districts/{amphoe}', [ReqDocumentController::class, 'getDistricts']);
+// Route::get('/signatures/{filename}', function ($filename) {
+//     $path = 'signatures/' . $filename;
+
+//     if (!Storage::exists($path)) {
+//         abort(404);
+//     }
+
+//     return Response::file(storage_path('app/' . $path));
+// })->middleware('auth'); // คุณสามารถเพิ่ม middleware อื่นๆ ตามต้องการ
+
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/signatures/{filename}', function ($filename) {
+    $path = 'signatures/' . $filename;
+
+    // ตรวจสอบว่ามีไฟล์อยู่ในระบบหรือไม่
+    if (!Storage::exists($path)) {
+        abort(404);
+    }
+
+    $userId = Auth::id();    // ดึง ID ของผู้ใช้ที่เข้าสู่ระบบ
+    
+    // ตรวจสอบว่า ID ของผู้ใช้ตรงกับ ID ที่อยู่ในชื่อไฟล์หรือไม่
+    if (strpos($filename, $userId . '_signature') !== 0) {
+        abort(403); // ห้ามเข้าถึงหาก ID ไม่ตรงกัน
+    }
+
+    // ส่งไฟล์กลับไปยังผู้ใช้
+    return Response::file(storage_path('app/' . $path));
+})->middleware('auth');
