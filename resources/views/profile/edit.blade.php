@@ -60,9 +60,9 @@
                             @endif
                         </div>
 
-                        <!-- แผนก -->
+                        <!-- ส่วนงาน -->
                         <div class="mb-3">
-                            <label for="division" class="form-label">แผนก</label>
+                            <label for="division" class="form-label">ส่วนงาน</label>
                             <p id="division" class="form-control @error('division') is-invalid @enderror">
                                 @foreach($divisions as $division)
                                     @if($user->division_id == $division->division_id)
@@ -113,7 +113,7 @@
                             @else
                                 <a href="{{ route('home') }}" class="btn btn-warning">ย้อนกลับ</a>
                             @endif
-                            <button type="submit" class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                            <button type="submit" class="btn btn-primary">อัปเดตข้อมูล</button>
                         </div>
                     </form>
 

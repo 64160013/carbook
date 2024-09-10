@@ -22,6 +22,10 @@
             <form action="{{ url('/vehicles') }}" method="get">
                 <button type="submit" class="btn btn-primary mt-3">แสดงข้อมูลรถ</button>
             </form>
+
+            <form action="{{ url('/admin/users') }}" method="get">
+                <button type="submit" class="btn btn-primary mt-3">จัดการข้อมูลผู้ใช้</button>
+            </form>
             
         </div>
     </div>

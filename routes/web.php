@@ -12,8 +12,8 @@ use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUsers;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReqDocumentController;
-
 
 // เส้นทางสำหรับ FullCalendar
 Route::controller(FullCalendarController::class)->group(function () {
@@ -29,36 +29,34 @@ Route::get('/', function () {
 // เส้นทางสำหรับการยืนยันตัวตน
 Auth::routes();
 
-// เส้นทางสำหรับหน้าแรก
-// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/home', [HomeController::class, 'index'])
     ->name('home')
-    ->middleware(IsUsers::class); // ใช้ middleware ที่คุณสร้าง
+    ->middleware(IsUsers::class); 
 
 
 // เส้นทางสำหรับหน้าแรกของผู้ดูแลระบบ
-Route::get('/admin/home', [HomeController::class, 'adminHome'])
-    ->name('admin.home')
+Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home')
     ->middleware(IsAdmin::class);
 
 // แก้ไขโปรไฟล์
-Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit');
+Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
 
 
-// เพิ่มรถ
-Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
-    ->name('add.vehicle')    
-    ->middleware(IsAdmin::class);
-Route::post('/add-vehicle', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
+// // เพิ่มรถ
+// Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
+//     ->name('add.vehicle')    
+//     ->middleware(IsAdmin::class);
+// Route::post('/vehicles', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
 
 
 //แสดงข้อมูลรถ เปลี่ยนสถานะ ลบค่า
-Route::get('/vehicles', [HomeController::class, 'showVehicles'])->name('show.vehicles')
-    ->middleware(IsAdmin::class);;
-Route::post('/vehicles/update-status/{id}', [HomeController::class, 'updateStatus'])->name('vehicles.updateStatus');
-Route::delete('/vehicles/{id}', [HomeController::class, 'destroy'])->name('vehicles.destroy');
+Route::get('/vehicles', [AdminController::class, 'showVehicles'])->name('show.vehicles')
+    ->middleware(IsAdmin::class);
+Route::post('/vehicles', [AdminController::class, 'storeVehicle'])->name('store.vehicle');
+Route::post('/vehicles/update-status/{id}', [AdminController::class, 'updateStatus'])->name('vehicles.updateStatus');
+Route::delete('/vehicles/{id}', [AdminController::class, 'destroy'])->name('vehicles.destroy');
 
 
 Route::get('/req-documents/create', [ReqDocumentController::class, 'create'])->name('req_documents.create');
@@ -95,7 +93,7 @@ Route::get('/signatures/{filename}', function ($filename) {
     }
 
     $userId = Auth::id();    // ดึง ID ของผู้ใช้ที่เข้าสู่ระบบ
-    
+
     // ตรวจสอบว่า ID ของผู้ใช้ตรงกับ ID ที่อยู่ในชื่อไฟล์หรือไม่
     if (strpos($filename, $userId . '_signature') !== 0) {
         abort(403); // ห้ามเข้าถึงหาก ID ไม่ตรงกัน
@@ -104,3 +102,14 @@ Route::get('/signatures/{filename}', function ($filename) {
     // ส่งไฟล์กลับไปยังผู้ใช้
     return Response::file(storage_path('app/' . $path));
 })->middleware('auth');
+
+
+
+//แอดมินแก้ไขข้อมูลผู้ใช้
+Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users')
+    ->middleware(IsAdmin::class);
+// routes/web.php
+Route::get('/admin/users/edit/{id}', [AdminController::class, 'editUser'])->name('admin.users.edit')
+    ->middleware(IsAdmin::class);
+Route::post('/admin/users/update/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+Route::post('/admin/users/delete/{id}', [AdminController::class, 'destroyUser'])->name('admin.users.delete');
