@@ -15,11 +15,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReqDocumentController;
 
-// เส้นทางสำหรับ FullCalendar
-Route::controller(FullCalendarController::class)->group(function () {
-    Route::get('fullcalendar', 'index');
-    Route::post('fullcalendarAjax', 'ajax');
-});
 
 // เส้นทางหลักของแอปพลิเคชัน
 Route::get('/', function () {
@@ -59,11 +54,14 @@ Route::post('/vehicles/update-status/{id}', [AdminController::class, 'updateStat
 Route::delete('/vehicles/{id}', [AdminController::class, 'destroy'])->name('vehicles.destroy');
 
 
-Route::get('/req-documents/create', [ReqDocumentController::class, 'create'])->name('req_documents.create');
-Route::post('/req-documents/store', [ReqDocumentController::class, 'store'])->name('req_documents.store');
+Route::get('/reqdocument', [ReqDocumentController::class, 'create'])->name('reqdocument.create');
+Route::post('/reqdocument', [ReqDocumentController::class, 'store'])->name('reqdocument.store');
 Route::get('/get-amphoes/{provinceId}', [ReqDocumentController::class, 'getAmphoes']);
 Route::get('/get-districts/{amphoeId}', [ReqDocumentController::class, 'getDistricts']);
 
+Route::get('/documents', [ReqDocumentController::class, 'index'])->name('documents.index');
+Route::get('/documents/create', [ReqDocumentController::class, 'create'])->name('documents.create');
+Route::post('/documents', [ReqDocumentController::class, 'store'])->name('documents.store');
 
 // // loginแล้วเข้าถึงได้
 // use Illuminate\Support\Facades\Storage;
