@@ -21,7 +21,13 @@ class RegisterController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (auth()->user() && auth()->user()->is_admin == 1) {
+                return $next($request); // ถ้าเป็นแอดมิน, อนุญาตให้ผ่าน
+            }
+            return redirect('/');
+        });
     }
 
     public function showRegistrationForm() {
