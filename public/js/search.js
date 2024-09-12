@@ -27,39 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-/**
-     *
-     *
-     * 
-     */
-// ---------------------ค้นหาด้วยชื่อ นามสกุล---------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchName'); // ใช้ช่องเดียวในการค้นหา
-    const table = document.querySelector('table');
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-    const nameIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ชื่อ-นามสกุล');
-    const positionIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ตำแหน่ง');
-
-    function filterByNameOrPosition() {
-        const searchValue = searchInput.value.toLowerCase().trim(); // ค่าที่จะค้นหา
-
-        rows.forEach(row => {
-            const nameCell = row.querySelectorAll('td')[nameIndex].textContent.toLowerCase().trim();
-            const positionCell = row.querySelectorAll('td')[positionIndex].textContent.toLowerCase().trim();
-
-            // แสดงแถวถ้าชื่อ-นามสกุลหรือตำแหน่งตรงกับคำค้นหา
-            if (nameCell.includes(searchValue) || positionCell.includes(searchValue)) {
-                row.style.display = ''; // แสดงแถว
-            } else {
-                row.style.display = 'none'; // ซ่อนแถว
-            }
-        });
-    }
-
-    searchInput.addEventListener('input', filterByNameOrPosition);
-});
-
 
 
 
