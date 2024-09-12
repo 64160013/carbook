@@ -11,7 +11,7 @@ use App\Models\Division;
 use App\Models\Department;
 use App\Models\Position;
 use App\Models\Role;
-
+use Illuminate\Support\Facades\Crypt;
 
 class AdminController extends Controller
 {
@@ -111,8 +111,9 @@ class AdminController extends Controller
     }
 
 
-    public function editUser($id)
+    public function editUser($encryptedId)
     {
+        $id = Crypt::decryptString($encryptedId);
         $user = User::findOrFail($id);
         $departments = Department::all();
         $divisions = Division::all();

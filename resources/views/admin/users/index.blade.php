@@ -91,12 +91,12 @@
                                             @endforeach
                                         </td>
                                         <td style="white-space: nowrap;">
-                                            <a href="{{ route('admin.users.edit', $user->id) }}"
+                                            <a href="{{ route('admin.users.edit', Crypt::encryptString($user->id)) }}"
                                                 class="btn btn-primary">
                                                 <i class="fa fa-edit"></i> แก้ไข
                                             </a>
                                             <form action="{{ route('admin.users.delete', $user->id) }}"
-                                                method="POST" style="display:inline-block;">
+                                                method="POST" style="display:inline-block;" onsubmit="return confirm('คุณแน่ใจว่าต้องการลบข้อมูลนี้หรือไม่?');">
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger">
                                                     <i class="fa fa-trash"></i> ลบ
