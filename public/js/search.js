@@ -34,20 +34,22 @@ document.addEventListener('DOMContentLoaded', function () {
      */
 // ---------------------ค้นหาด้วยชื่อ นามสกุล---------------------
 document.addEventListener('DOMContentLoaded', function () {
-    const searchName = document.getElementById('searchName');
+    const searchInput = document.getElementById('searchName'); // ใช้ช่องเดียวในการค้นหา
     const table = document.querySelector('table');
     const rows = Array.from(table.querySelectorAll('tbody tr'));
 
     const nameIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ชื่อ-นามสกุล');
-    
-    function filterByName() {
-        const searchValue = searchName.value.toLowerCase().trim();
+    const positionIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ตำแหน่ง');
+
+    function filterByNameOrPosition() {
+        const searchValue = searchInput.value.toLowerCase().trim(); // ค่าที่จะค้นหา
 
         rows.forEach(row => {
             const nameCell = row.querySelectorAll('td')[nameIndex].textContent.toLowerCase().trim();
-            
-            // แสดงแถวที่ตรงกับคำค้นหาหรือซ่อนแถวที่ไม่ตรง
-            if (nameCell.includes(searchValue)) {
+            const positionCell = row.querySelectorAll('td')[positionIndex].textContent.toLowerCase().trim();
+
+            // แสดงแถวถ้าชื่อ-นามสกุลหรือตำแหน่งตรงกับคำค้นหา
+            if (nameCell.includes(searchValue) || positionCell.includes(searchValue)) {
                 row.style.display = ''; // แสดงแถว
             } else {
                 row.style.display = 'none'; // ซ่อนแถว
@@ -55,60 +57,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    searchName.addEventListener('input', filterByName);
+    searchInput.addEventListener('input', filterByNameOrPosition);
 });
 
 
- /**
-     *
-     *
-     * 
-     */
-// ---------------------ค้นหาผู้ใช้ผานตัวกรอง---------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const filterDivision = document.getElementById('filterDivision');
-    const filterDepartment = document.getElementById('filterDepartment');
-    const filterPosition = document.getElementById('filterPosition');
-    const filterRole = document.getElementById('filterRole');
-    const table = document.querySelector('table');
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-    
-    // หา index ของแต่ละคอลัมน์
-    const divisionIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ส่วนงาน');
-    const departmentIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ฝ่ายงาน');
-    const positionIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'ตำแหน่ง');
-    const roleIndex = Array.from(table.querySelectorAll('thead th')).findIndex(th => th.textContent.trim() === 'Role');
 
-    function filterTable() {
-        const divisionValue = filterDivision.value.trim();
-        const departmentValue = filterDepartment.value.trim();
-        const positionValue = filterPosition.value.trim();
-        const roleValue = filterRole.value.trim();
 
-        rows.forEach(row => {
-            const divisionCell = row.querySelectorAll('td')[divisionIndex].textContent.trim();
-            const departmentCell = row.querySelectorAll('td')[departmentIndex].textContent.trim();
-            const positionCell = row.querySelectorAll('td')[positionIndex].textContent.trim();
-            const roleCell = row.querySelectorAll('td')[roleIndex].textContent.trim();
-
-            const divisionMatch = !divisionValue || divisionCell === divisionValue;
-            const departmentMatch = !departmentValue || departmentCell === departmentValue;
-            const positionMatch = !positionValue || positionCell === positionValue;
-            const roleMatch = !roleValue || roleCell === roleValue;
-
-            if (divisionMatch && departmentMatch && positionMatch && roleMatch) {
-                row.style.display = ''; // แสดงแถวที่ตรงกับตัวกรอง
-            } else {
-                row.style.display = 'none'; // ซ่อน
-            }
-        });
-    }
-
-    filterDivision.addEventListener('change', filterTable);
-    filterDepartment.addEventListener('change', filterTable);
-    filterPosition.addEventListener('change', filterTable);
-    filterRole.addEventListener('change', filterTable);
-});
 
 
  

@@ -101,13 +101,15 @@ class AdminController extends Controller
     //------------------------- ส่วนแก้ไขข้อมูลผู้ใช้ -------------------------
     public function index()
     {
-        $users = User::all(); 
+        // $users = User::all(); 
+        $users = User::paginate(10); // ดึงข้อมูลผู้ใช้ 10 รายการต่อหน้า
         $divisions = Division::all();
         $departments = Department::all();
         $positions = Position::all(); 
         $roles = Role::all();
         return view('admin.users.index', compact('users', 'divisions', 'departments', 'positions', 'roles'));
     }
+
 
     public function editUser($id)
     {
@@ -157,6 +159,7 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete(); // ลบข้อมูลผู้ใช้
-        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users')->with('success', 'ลบข้อมูลบุคลากรสำเร็จ.');
     }
+    
 }
