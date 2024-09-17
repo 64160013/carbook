@@ -16,11 +16,13 @@ class ReqDocumentController extends Controller
 {
     public function index()
     {
-        $documents = ReqDocument::with('user')->get(); // ดึงข้อมูลเอกสารพร้อมข้อมูล user
+        // ดึงข้อมูลเอกสารพร้อมผู้ใช้
+        $documents = ReqDocument::with('users')->get(); // เปลี่ยนจาก user เป็น users เพื่อดึงข้อมูลทั้งหมดที่เกี่ยวข้อง
 
         return view('document', compact('documents'));
-
     }
+
+    
     public function create()
     {
         $user = User::all();
@@ -30,7 +32,6 @@ class ReqDocumentController extends Controller
         $work_type = WorkType::all();
         return view('reqdocument', compact('provinces', 'amphoe', 'district','work_type','user'));
     }
-
 
 
     public function store(Request $request)
@@ -61,8 +62,8 @@ class ReqDocumentController extends Controller
             $filePath = $request->file('related_project')->store('projects');
         }
 
-        // Store the data in the database
-        ReqDocument::create([
+        // บันทึกข้อมูลลงในตาราง req_document
+        $document = ReqDocument::create([
             'companion_name' => $request->companion_name,
             'objective' => $request->objective,
             'related_project' => $filePath ?? null,
@@ -79,15 +80,23 @@ class ReqDocumentController extends Controller
             'amphoe_id' => $request->amphoe_id,
             'district_id' => $request->district_id,
             'work_id' => $request->work_id, 
-            'user_id' => Auth::user()->id,
-            'user_division' => Auth::user()->division->division_id ?? 'N/A',
-            'user_department' => Auth::user()->department->department_id ?? 'N/A',
+        ]);
 
+        // บันทึกความสัมพันธ์ระหว่างผู้ใช้และเอกสารในตาราง req_document_user
+        $document->users()->attach(Auth::user()->id, [
+            'name' => Auth::user()->name,
+            'lname' => Auth::user()->lname,
+            'signature_name' => Auth::user()->signature_name,
+            'division_id' => Auth::user()->division_id,
+            'department_id' => Auth::user()->department_id,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return redirect('/documents')->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
-
     }
+
+
     public function __construct()
     {
         $this->middleware('auth');

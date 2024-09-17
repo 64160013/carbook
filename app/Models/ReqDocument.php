@@ -26,9 +26,7 @@ class ReqDocument extends Model
         'amphoe_id',
         'district_id',
         'work_id',
-        'user_id',
-        'user_division',
-        'user_department'
+
     ];
     
 
@@ -52,22 +50,25 @@ class ReqDocument extends Model
         return $this->belongsTo(WorkType::class, 'work_id');
     }
     
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
     public function division()
     {
-        return $this->belongsTo(Division::class, 'user_division', 'division_id');
+        return $this->belongsTo(Division::class, 'division_id');
     }
-
+    
     public function department()
     {
-        return $this->belongsTo(Department::class, 'user_department', 'department_id');
+        return $this->belongsTo(Department::class, 'department_id');
     }
-
-
+    
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'req_document_user', 'req_document_id', 'user_id');
+    }
+    
+    public function reqDocumentUsers()
+    {
+        return $this->hasMany(ReqDocumentUser::class, 'req_document_id');
+    }
 
     public $timestamps = true;  // ใช้ timestamps ที่มีในตาราง
 }
