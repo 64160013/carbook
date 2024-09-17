@@ -57,5 +57,20 @@ class User extends Authenticatable
         return "https://api.dicebear.com/6.x/fun-emoji/svg?seed={$this->name}";
     }
     
+    
+    public function division()
+    {
+        return $this->belongsTo(Division::class, 'division_id', 'division_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'department_id');
+    }
+
+    public function reqDocuments()
+    {
+        return $this->hasMany(ReqDocument::class, 'user_id');
+    }
 
 }

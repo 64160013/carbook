@@ -3,29 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\ReqDocument;
 use App\Models\Province;
 use App\Models\Amphoe;
 use App\Models\District;
 use App\Models\WorkType;
-
+use App\Models\User;
 
 class ReqDocumentController extends Controller
 {
     public function index()
     {
-        $documents = ReqDocument::all(); // ดึงข้อมูลทั้งหมดจากตาราง req_document
+        $documents = ReqDocument::with('user')->get(); // ดึงข้อมูลเอกสารพร้อมข้อมูล user
+
         return view('document', compact('documents'));
+
     }
     public function create()
     {
+        $user = User::all();
         $provinces = Province::all();
-        $amphoe = Amphoe::all(); // ดึงข้อมูลอำเภอทั้งหมด
-        $district = District::all(); // ดึงข้อมูลตำบลทั้งหมด
-        $work_type = WorkType::all(); // สมมติว่าคุณมีโมเดล WorkType
-
-        return view('reqdocument', compact('provinces', 'amphoe', 'district','work_type'));
+        $amphoe = Amphoe::all(); 
+        $district = District::all();
+        $work_type = WorkType::all();
+        return view('reqdocument', compact('provinces', 'amphoe', 'district','work_type','user'));
     }
 
 
@@ -36,16 +39,16 @@ class ReqDocumentController extends Controller
         $request->validate([
             'companion_name' => 'required|string|max:255',
             'objective' => 'required|string|max:255',
+            'reservation_date' => 'required|date',
             'location' => 'required|string|max:255',
             'car_pickup' => 'required|string|max:255',
-            'reservation_date' => 'required|date',
+            'related_project' => 'nullable|mimes:pdf|max:2048', // ตรวจสอบไฟล์ที่แนบ
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
             'sum_companion' => 'required|integer',
             'car_type' => 'required|string|max:255',
-            'related_project' => 'nullable|mimes:pdf|max:2048', // ตรวจสอบไฟล์ที่แนบ
             'provinces_id' => 'required|exists:provinces,provinces_id',
             'amphoe_id' => 'required|exists:amphoe,amphoe_id',
             'district_id' => 'required|exists:district,district_id',
@@ -76,11 +79,14 @@ class ReqDocumentController extends Controller
             'amphoe_id' => $request->amphoe_id,
             'district_id' => $request->district_id,
             'work_id' => $request->work_id, 
+            'user_id' => Auth::user()->id,
+            'user_division' => Auth::user()->division->division_id ?? 'N/A',
+            'user_department' => Auth::user()->department->department_id ?? 'N/A',
 
         ]);
 
         return redirect('/documents')->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
-        
+
     }
     public function __construct()
     {
@@ -98,5 +104,5 @@ class ReqDocumentController extends Controller
         $districts = District::where('amphoe_id', $amphoeId)->get(['district_id as id', 'name_th as name']);
         return response()->json($districts);
     }
-}
 
+}

@@ -23,9 +23,40 @@
                     <p class="mb-0">
                         {{ __('ประเภทงาน: ') . ($document->workType->work_name ?? 'N/A') }} <!-- เพิ่มการแสดงประเภทงาน -->
                     </p>
-
                 </div>
                 <div class="card-body">
+
+                    <!-- ข้อมูลผู้ขอ -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">{{ __('ข้อมูลผู้ขอ') }}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"><strong>{{ __('ชื่อผู้ขอ') }}</strong></label>
+                                    <p class="form-control-static">{{ $document->user->name ?? 'N/A' }}</p>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+    <label class="form-label"><strong>{{ __('ส่วนงาน') }}</strong></label>
+    <p class="form-control-static">{{ $document->division->division_name ?? 'N/A' }}</p>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label"><strong>{{ __('ฝ่ายงาน') }}</strong></label>
+    <p class="form-control-static">{{ $document->department->department_name ?? 'N/A' }}</p>
+</div>
+
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"><strong>{{ __('ลงชื่อผู้ขอ') }}</strong></label>
+                                    <p class="form-control-static">{{ $document->user->signature_name ?? 'N/A' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- ข้อมูลการเดินทาง -->
                     <div class="card mb-3">
@@ -50,12 +81,14 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>{{ __('วันที่ไป') }}</strong></label>
                                     <p class="form-control-static">
-                                        {{ \Carbon\Carbon::parse($document->start_date)->format('d-m-Y') }}</p>
+                                        {{ \Carbon\Carbon::parse($document->start_date)->format('d-m-Y') }}
+                                    </p>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>{{ __('วันที่กลับ') }}</strong></label>
                                     <p class="form-control-static">
-                                        {{ \Carbon\Carbon::parse($document->end_date)->format('d-m-Y') }}</p>
+                                        {{ \Carbon\Carbon::parse($document->end_date)->format('d-m-Y') }}
+                                    </p>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>{{ __('เวลาไป') }}</strong></label>
@@ -121,8 +154,6 @@
 
                 </div>
             </div>
-
-            
         @endforeach
     @endif
 </div>
