@@ -33,27 +33,28 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                            @foreach($document->users as $user)
+                            @foreach($document->reqDocumentUsers as $docUser)
     <div class="col-md-6 mb-3">
         <label class="form-label"><strong>{{ __('ชื่อผู้ขอ') }}</strong></label>
-        <p class="form-control-static">{{ $user->name ?? 'N/A' }} {{ $user->lname ?? 'N/A' }}</p>
+        <p class="form-control-static">{{ $docUser->name ?? 'N/A' }} {{ $docUser->lname ?? 'N/A' }}</p>
     </div>
 
     <div class="col-md-6 mb-3">
         <label class="form-label"><strong>{{ __('ลงชื่อผู้ขอ') }}</strong></label>
-        <p class="form-control-static">{{ $user->signature_name ?? 'N/A' }}</p>
+        <p class="form-control-static">{{ $docUser->signature_name ?? 'N/A' }}</p>
     </div>
 
     <div class="col-md-6 mb-3">
         <label class="form-label"><strong>{{ __('ส่วนงาน') }}</strong></label>
-        <p class="form-control-static">{{ $user->division->division_name ?? 'N/A' }}</p>
+        <p class="form-control-static">{{ $docUser->division->division_name ?? 'N/A' }}</p>
     </div>
 
     <div class="col-md-6 mb-3">
         <label class="form-label"><strong>{{ __('ฝ่ายงาน') }}</strong></label>
-        <p class="form-control-static">{{ $user->department->department_name ?? 'N/A' }}</p>
+        <p class="form-control-static">{{ $docUser->department->department_name ?? 'N/A' }}</p>
     </div>
 @endforeach
+
 
 
 

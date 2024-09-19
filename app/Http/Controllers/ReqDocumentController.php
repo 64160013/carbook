@@ -84,11 +84,6 @@ class ReqDocumentController extends Controller
 
         // บันทึกความสัมพันธ์ระหว่างผู้ใช้และเอกสารในตาราง req_document_user
         $document->users()->attach(Auth::user()->id, [
-            'name' => Auth::user()->name,
-            'lname' => Auth::user()->lname,
-            'signature_name' => Auth::user()->signature_name,
-            'division_id' => Auth::user()->division_id,
-            'department_id' => Auth::user()->department_id,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
