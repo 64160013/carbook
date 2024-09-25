@@ -15,14 +15,14 @@ use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReqDocumentController;
-use App\Http\Controllers\ReqDocumentUserController;
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\StatusAllowController;
+use App\Http\Controllers\DocumentController;
 
 
 // เส้นทางหลักของแอปพลิเคชัน
 Route::get('/', function () {
     return view('welcome');
-});
+})->name(name: 'welcome');
 
 // เส้นทางสำหรับการยืนยันตัวตน
 Auth::routes();
@@ -30,7 +30,7 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])
     ->name('home')
-    ->middleware(IsUsers::class); 
+    ->middleware(IsUsers::class);
 
 
 // เส้นทางสำหรับหน้าแรกของผู้ดูแลระบบ
@@ -116,6 +116,5 @@ Route::post('/admin/users/delete/{id}', [AdminController::class, 'destroyUser'])
 Route::any('/admin/users/search', [AdminController::class, 'searchUsers'])->name('admin.users.search')
     ->middleware(IsAdmin::class);
 
-Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
-Route::get('/permission/{reqDocumentUser}', [PermissionController::class, 'show'])->name('permission.show');
-Route::put('/permission/{reqDocumentUser}/status', [PermissionController::class, 'updateStatus'])->name('permission.updateStatus');
+
+    Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');

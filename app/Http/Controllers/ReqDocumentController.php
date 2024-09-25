@@ -16,21 +16,33 @@ class ReqDocumentController extends Controller
 {
     public function index()
     {
-        // ดึงข้อมูลเอกสารพร้อมผู้ใช้
-        $documents = ReqDocument::with('users')->get(); // เปลี่ยนจาก user เป็น users เพื่อดึงข้อมูลทั้งหมดที่เกี่ยวข้อง
+        $user = auth()->user(); // ตรวจสอบว่าคุณได้รับวัตถุผู้ใช้หรือไม่
 
-        return view('document', compact('documents'));
+        // ตรวจสอบว่าวัตถุผู้ใช้มีการกำหนดค่า is_admin
+        if ($user && $user->is_admin) {
+            // หากผู้ใช้เป็นแอดมิน ให้ดึงเอกสารทั้งหมด
+            $documents = ReqDocument::all();
+            $users = User::all(); // ดึงข้อมูลผู้ใช้ทั้งหมดถ้าต้องการ
+        } else {
+            // หากไม่ใช่แอดมิน ให้ดึงเอกสารที่เกี่ยวข้องกับผู้ใช้
+            $documents = ReqDocument::whereHas('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id); // ใช้ user_id ของผู้ใช้ปัจจุบัน
+            })->get();
+            $users = []; // หรือไม่กำหนดค่าอะไรเลย
+        }
+
+        return view('document', compact('documents', 'users'));
     }
 
-    
+
     public function create()
     {
         $user = User::all();
         $provinces = Province::all();
-        $amphoe = Amphoe::all(); 
+        $amphoe = Amphoe::all();
         $district = District::all();
         $work_type = WorkType::all();
-        return view('reqdocument', compact('provinces', 'amphoe', 'district','work_type','user'));
+        return view('reqdocument', compact('provinces', 'amphoe', 'district', 'work_type', 'user'));
     }
 
 
@@ -53,7 +65,7 @@ class ReqDocumentController extends Controller
             'provinces_id' => 'required|exists:provinces,provinces_id',
             'amphoe_id' => 'required|exists:amphoe,amphoe_id',
             'district_id' => 'required|exists:district,district_id',
-            'work_id' => 'required|exists:work_type,work_id', 
+            'work_id' => 'required|exists:work_type,work_id',
         ]);
 
         // จัดการการอัปโหลดไฟล์
@@ -79,9 +91,10 @@ class ReqDocumentController extends Controller
             'provinces_id' => $request->provinces_id,
             'amphoe_id' => $request->amphoe_id,
             'district_id' => $request->district_id,
-            'work_id' => $request->work_id, 
+            'work_id' => $request->work_id,
         ]);
 
+     
         // บันทึกความสัมพันธ์ระหว่างผู้ใช้และเอกสารในตาราง req_document_user
         $document->users()->attach(Auth::user()->id, [
             'name' => Auth::user()->name,
