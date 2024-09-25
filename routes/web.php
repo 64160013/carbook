@@ -15,6 +15,8 @@ use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReqDocumentController;
+use App\Http\Controllers\ReqDocumentUserController;
+use App\Http\Controllers\PermissionController;
 
 
 // เส้นทางหลักของแอปพลิเคชัน
@@ -113,3 +115,7 @@ Route::post('/admin/users/update/{id}', [AdminController::class, 'updateUser'])-
 Route::post('/admin/users/delete/{id}', [AdminController::class, 'destroyUser'])->name('admin.users.delete');
 Route::any('/admin/users/search', [AdminController::class, 'searchUsers'])->name('admin.users.search')
     ->middleware(IsAdmin::class);
+
+Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+Route::get('/permission/{reqDocumentUser}', [PermissionController::class, 'show'])->name('permission.show');
+Route::put('/permission/{reqDocumentUser}/status', [PermissionController::class, 'updateStatus'])->name('permission.updateStatus');

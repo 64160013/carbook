@@ -13,6 +13,11 @@ class ReqDocumentUser extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function reqDocument()
+    {
+        return $this->belongsTo(ReqDocument::class, 'req_document_id');
+    }
     
     public function division()
     {

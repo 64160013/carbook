@@ -65,10 +65,10 @@ class ReqDocument extends Model
         return $this->belongsToMany(User::class, 'req_document_user', 'req_document_id', 'user_id');
     }
     
-    // public function reqDocumentUsers()
-    // {
-    //     return $this->hasMany(ReqDocumentUser::class, 'req_document_id');
-    // }
+    public function reqDocumentUsers()
+    {
+        return $this->hasMany(ReqDocumentUser::class, 'req_document_id');
+    }
 
     public $timestamps = true;  // ใช้ timestamps ที่มีในตาราง
 }
