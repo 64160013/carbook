@@ -12,20 +12,23 @@ class DocumentController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-
+        $user = auth()->user(); // ดึงข้อมูลผู้ใช้ปัจจุบัน
+    
+        // ตรวจสอบว่าผู้ใช้เป็น admin หรือไม่
         if ($user->is_admin) {
-            // แสดงรายการทั้งหมดสำหรับ admin
-            $documents = Document::all();
+            // ถ้าเป็น admin ให้ดึงข้อมูลทั้งหมด
+            $documents = ReqDocument::all();
         } else {
-            // แสดงเฉพาะรายการที่ผู้ใช้คนนั้นเป็นผู้ส่ง
-            // ตรวจสอบให้แน่ใจว่าใช้ user_id ที่ถูกต้อง
-            $documents = Document::where('user_id', $user->id)->get(); // ใช้ user_id แทน id
+            // ถ้าไม่ใช่ admin ให้ดึงข้อมูลเฉพาะที่ผู้ใช้เป็นคนส่ง
+            $documents = ReqDocument::whereHas('reqDocumentUsers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->get();
         }
-
-        return view('documents.index', compact('documents'));
+    
+        return view('document-history', compact('documents'));
     }
-
+    
+    
 
     public function store(Request $request)
     {
@@ -52,6 +55,18 @@ class DocumentController extends Controller
             $reviewers = User::where('role_id', 9)->pluck('id')->toArray();
         } elseif ($user->division_id == 7) {
             $reviewers = User::where('role_id', 10)->pluck('id')->toArray();
+        } elseif ($user->division_id == 2) {
+
+            // ตรวจสอบค่า department_id
+            if ($user->department_id == 1) {
+                $reviewers = User::where('role_id', 13)->pluck('id')->toArray();
+            } elseif ($user->department_id == 2) {
+                $reviewers = User::where('role_id', 14)->pluck('id')->toArray();
+            } elseif ($user->department_id == 3) {
+                $reviewers = User::where('role_id', 15)->pluck('id')->toArray();
+            } elseif ($user->department_id == 4) {
+                $reviewers = User::where('role_id', 16)->pluck('id')->toArray();
+            }
         }
 
         // เชื่อมโยงผู้ตรวจสอบกับเอกสาร โดยบันทึกลงใน req_document_user
@@ -65,13 +80,14 @@ class DocumentController extends Controller
         return redirect()->route('documents.index')->with('success', 'ฟอร์มถูกส่งแล้ว');
     }
 
+
     // ฟังก์ชันแสดงหน้าตรวจสอบ (reviewForm)
     public function reviewForm()
     {
         $user = auth()->user();
         
         // ตรวจสอบว่าเป็นผู้ตรวจสอบหรือไม่ โดยดูจาก role_id
-        $isReviewer = in_array($user->role_id, [4, 6, 7, 8, 9, 10]);
+        $isReviewer = in_array($user->role_id, [4, 6, 7, 8, 9, 10, 13, 14, 15, 16]);
 
         if ($isReviewer) {
             // ผู้ใช้เป็นผู้ตรวจสอบ แสดงเฉพาะฟอร์มที่ต้องตรวจสอบตาม division_id
@@ -91,6 +107,19 @@ class DocumentController extends Controller
                             $query->where('req_document_user.division_id', 6);
                         } elseif ($user->role_id == 10) {
                             $query->where('req_document_user.division_id', 7);
+
+                        } elseif ($user->role_id == 13) {
+                            $query->where('req_document_user.division_id', 2)
+                                ->where('req_document_user.department_id', 1);
+                        } elseif ($user->role_id == 14) {
+                            $query->where('req_document_user.division_id', 2)
+                                ->where('req_document_user.department_id', 2);
+                        } elseif ($user->role_id == 15) {
+                            $query->where('req_document_user.division_id', 2)
+                                ->where('req_document_user.department_id', 3);
+                        } elseif ($user->role_id == 16) {
+                            $query->where('req_document_user.division_id', 2)
+                                ->where('req_document_user.department_id', 4);
                         }
                     });
             })->orderBy('created_at', 'desc')->get();
@@ -103,6 +132,7 @@ class DocumentController extends Controller
 
         return view('reviewform', compact('documents'));
     }
+
 
 
 

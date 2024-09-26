@@ -19,6 +19,7 @@ use App\Http\Controllers\StatusAllowController;
 use App\Http\Controllers\DocumentController;
 
 
+
 // เส้นทางหลักของแอปพลิเคชัน
 Route::get('/', function () {
     return view('welcome');
@@ -42,12 +43,6 @@ Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
 
 
-// // เพิ่มรถ
-// Route::get('/add-vehicle', [HomeController::class, 'AddVehicleForm'])
-//     ->name('add.vehicle')    
-//     ->middleware(IsAdmin::class);
-// Route::post('/vehicles', [HomeController::class, 'storeVehicle'])->name('store.vehicle');
-
 
 //แสดงข้อมูลรถ เปลี่ยนสถานะ ลบค่า
 Route::get('/vehicles', [AdminController::class, 'showVehicles'])->name('show.vehicles')
@@ -62,23 +57,6 @@ Route::post('/reqdocument', [ReqDocumentController::class, 'store'])->name('reqd
 Route::get('/get-amphoes/{provinceId}', [ReqDocumentController::class, 'getAmphoes']);
 Route::get('/get-districts/{amphoeId}', [ReqDocumentController::class, 'getDistricts']);
 
-Route::get('/documents', [ReqDocumentController::class, 'index'])->name('documents.index');
-Route::get('/documents/create', [ReqDocumentController::class, 'create'])->name('documents.create');
-Route::post('/documents', [ReqDocumentController::class, 'store'])->name('documents.store');
-
-// // loginแล้วเข้าถึงได้
-// use Illuminate\Support\Facades\Storage;
-// use Illuminate\Support\Facades\Response;
-
-// Route::get('/signatures/{filename}', function ($filename) {
-//     $path = 'signatures/' . $filename;
-
-//     if (!Storage::exists($path)) {
-//         abort(404);
-//     }
-
-//     return Response::file(storage_path('app/' . $path));
-// })->middleware('auth'); // คุณสามารถเพิ่ม middleware อื่นๆ ตามต้องการ
 
 
 use Illuminate\Support\Facades\Storage;
@@ -117,4 +95,7 @@ Route::any('/admin/users/search', [AdminController::class, 'searchUsers'])->name
     ->middleware(IsAdmin::class);
 
 
-    Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
+// ประวัติการยื่นขอ
+Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
+Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
+
