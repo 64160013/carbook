@@ -8,6 +8,9 @@ class ReqDocument extends Model
     protected $table = 'req_document';
 
     protected $primaryKey = 'document_id';
+    public $incrementing = true; 
+    protected $keyType = 'int'; 
+
 
     protected $fillable = [
         'companion_name',
@@ -67,8 +70,7 @@ class ReqDocument extends Model
 
     public function reqDocumentUsers()
     {
-        return $this->belongsToMany(User::class, 'req_document_user', 'req_document_id', 'user_id')
-                    ->withTimestamps();
+        return $this->hasMany(ReqDocumentUser::class, 'req_document_id', 'document_id');
     }
 
     public $timestamps = true;  // ใช้ timestamps ที่มีในตาราง

@@ -87,7 +87,7 @@
                                         class="lni lni-users"></i><span>{{ __('จัดการข้อมูลผู้ใช้') }}</span></a></li>
                             <li class="sidebar-item"><a href="{{ route('store.vehicle') }}" class="sidebar-link"><i
                                         class="lni lni-car"></i><span>{{ __('จัดการข้อมูลรถ') }}</span></a></li>
-                            <li class="sidebar-item"><a href="{{ route('documents.history') }}" class="sidebar-link"><i
+                            <li class="sidebar-item"><a href="{{ route('admin.users.form') }}" class="sidebar-link"><i
                                         class="lni lni-files"></i><span>{{ __('รายการคำขออนุญาตทั้งหมด') }}</span></a></li>
 
                         <!-- navdar พนักงาน -->

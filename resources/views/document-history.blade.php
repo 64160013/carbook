@@ -1,18 +1,11 @@
-<!-- document-history.blade.php -->
 @extends('layouts.app')
 
 @section('content')
     <div class="container">
         <h2>ประวัติการยื่นขอ</h2>
-    @if($documents->isEmpty())
-        <div class="alert alert-info">
-            {{ __('ไม่มีฟอร์มสำหรับการตรวจสอบ') }}
-        </div>
-    @else
-        
-        @if (auth()->user()->is_admin == 1)
-            <div>
-                test
+        @if($documents->isEmpty())
+            <div class="alert alert-info">
+                {{ __('ไม่มีฟอร์มสำหรับการตรวจสอบ') }}
             </div>
         @else
             @foreach($documents->groupBy(function($date) {
@@ -22,6 +15,7 @@
                     <div class="card-header">{{ $month }}</div>
                     <div class="card-body">
                         @foreach($groupedDocuments as $document)
+                        
                             <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="d-flex justify-content-between align-items-center" style="background-color: #FFC107; padding: 10px;">
@@ -35,7 +29,9 @@
                                         </div>
                                         <div>
                                             <!-- ส่ง document id ไปยัง route -->
-                                            <a href="{{ route('documents.review', ['id' => $document->id]) }}" class="btn btn-primary">ดูรายละเอียด</a>
+                                            <!-- <a href="{{ route('documents.review', ['id' => $document->id]) }}">Review</a> -->
+                                            <a href="{{ route('documents.review') }}?id={{ $document->document_id }}" class="btn btn-primary">ดูรายละเอียด</a>
+
                                         </div>
                                     </div>
                                 </div>
@@ -46,5 +42,4 @@
             @endforeach
         @endif
     </div>
-    @endif
 @endsection

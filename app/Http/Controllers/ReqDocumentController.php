@@ -91,7 +91,7 @@ class ReqDocumentController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect('/documents')->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
+        return redirect('/document-history')->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     }
 
 

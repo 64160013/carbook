@@ -12,6 +12,8 @@ use App\Models\Department;
 use App\Models\Position;
 use App\Models\Role;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\ReqDocument;
+use App\Models\ReqDocumentUser;
 
 class AdminController extends Controller
 {
@@ -194,5 +196,22 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users');
     }
+    
 
+
+        /**
+     *
+     *
+     * 
+     */
+    //------------------------- แสดงรายการคำขอ -------------------------
+    public function showform()
+    {
+        $user = auth()->user(); // ดึงข้อมูลผู้ใช้ปัจจุบัน
+        $documents = ReqDocument::all(); // ดึงข้อมูลทั้งหมดจาก ReqDocument
+    
+        // ส่งข้อมูลไปยัง view admin.user.form
+        return view('admin.users.form', compact('documents'));
+    }
+    
 }

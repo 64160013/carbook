@@ -93,9 +93,16 @@ Route::post('/admin/users/update/{id}', [AdminController::class, 'updateUser'])-
 Route::post('/admin/users/delete/{id}', [AdminController::class, 'destroyUser'])->name('admin.users.delete');
 Route::any('/admin/users/search', [AdminController::class, 'searchUsers'])->name('admin.users.search')
     ->middleware(IsAdmin::class);
+Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('admin.users.form')
+    ->middleware(IsAdmin::class);
 
-
-// ประวัติการยื่นขอ
+//แสดงประวัติการขอ
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
+//แสดงรายละเอียดคำขอ
 Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
+
+
+Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+Route::get('/permission/{reqDocumentUser}', [PermissionController::class, 'show'])->name('permission.show');
+Route::put('/permission/{reqDocumentUser}/status', [PermissionController::class, 'updateStatus'])->name('permission.updateStatus');
 
