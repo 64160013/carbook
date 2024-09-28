@@ -10,6 +10,7 @@ class ReqDocument extends Model
     protected $primaryKey = 'document_id';
     public $incrementing = true; 
     protected $keyType = 'int'; 
+    public $timestamps = true;  // ใช้ timestamps ที่มีในตาราง
 
 
     protected $fillable = [
@@ -73,5 +74,9 @@ class ReqDocument extends Model
         return $this->hasMany(ReqDocumentUser::class, 'req_document_id', 'document_id');
     }
 
-    public $timestamps = true;  // ใช้ timestamps ที่มีในตาราง
+    public function isEmpty()
+    {
+        return empty($this->content);
+    }
+
 }

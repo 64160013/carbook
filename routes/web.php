@@ -84,7 +84,7 @@ Route::get('/signatures/{filename}', function ($filename) {
 
 
 
-//แอดมินแก้ไขข้อมูลผู้ใช้
+//แอดมินแก้ไขข้อมูลผู้ใช้ ค้นหา ดูรายละเอียดคำขออนญาต
 Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users')
     ->middleware(IsAdmin::class);
 Route::get('/admin/users/edit/{id}', [AdminController::class, 'editUser'])->name('admin.users.edit')
@@ -96,10 +96,18 @@ Route::any('/admin/users/search', [AdminController::class, 'searchUsers'])->name
 Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('admin.users.form')
     ->middleware(IsAdmin::class);
 
-//แสดงประวัติการขอ
+//แสดงประวัติการขอ และ แสดงรายละเอียดคำขอ
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
-//แสดงรายละเอียดคำขอ
 Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
+
+Route::get('/permission-form', [DocumentController::class, 'permission'])->name('documents.index');
+
+// Route สำหรับหน้าใหม่
+// Route::get('/permission-form-allow', [DocumentController::class, 'permissionAllow'])->name('documents.action');
+// Route::get('/permission-form-allow/{id}', [DocumentController::class, 'permissionAllow'])->name('documents.action');
+Route::get('/permission-form-allow', [DocumentController::class, 'permissionAllow'])->name('documents.action');
+Route::get('/documents', [DocumentController::class, 'show'])->name('documents.show');
+
 
 
 Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');

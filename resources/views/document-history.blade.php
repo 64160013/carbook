@@ -20,12 +20,12 @@
                                 <div class="col-md-12">
                                     <div class="d-flex justify-content-between align-items-center" style="background-color: #FFC107; padding: 10px;">
                                         <div>
-                                            <strong>หัวข้อ: {{ $document->objective }}</strong><br>
-                                            วันที่ไป: {{ \Carbon\Carbon::parse($document->start_date)->format('d F Y') }}<br>
-                                            วันที่กลับ: {{ \Carbon\Carbon::parse($document->end_date)->format('d F Y') }}<br>
+                                            <strong>วัตถุประสงค์: {{ $document->objective }}</strong><br>
+                                            สถานที่: {{ $document->location }}<br>
+                                            วันที่ไป: {{ \Carbon\Carbon::parse($document->start_date)->translatedFormat('d F Y') }}<br>
+                                            วันที่กลับ: {{ \Carbon\Carbon::parse($document->end_date)->translatedFormat('d F Y') }}<br>
                                             เวลาไป: {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.<br>
                                             เวลากลับ: {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.<br>
-                                            test: {{ $document->title }}
                                         </div>
                                         <div>
                                             <!-- ส่ง document id ไปยัง route -->
