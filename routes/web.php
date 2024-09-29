@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReqDocumentController;
-use App\Http\Controllers\StatusAllowController;
 use App\Http\Controllers\DocumentController;
 
 
@@ -100,13 +99,10 @@ Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('adm
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
 Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
 
-Route::get('/permission-form', [DocumentController::class, 'permission'])->name('documents.index');
 
-// Route สำหรับหน้าใหม่
-// Route::get('/permission-form-allow', [DocumentController::class, 'permissionAllow'])->name('documents.action');
-// Route::get('/permission-form-allow/{id}', [DocumentController::class, 'permissionAllow'])->name('documents.action');
-Route::get('/permission-form-allow', [DocumentController::class, 'permissionAllow'])->name('documents.action');
-Route::get('/documents', [DocumentController::class, 'show'])->name('documents.show');
+Route::get('/permission-form', [DocumentController::class, 'permission'])->name('documents.index');
+Route::get('/permission-form-allow', [DocumentController::class, 'show'])->name('documents.show');
+Route::post('/update-status', [DocumentController::class, 'updateStatus'])->name('documents.updateStatus');
 
 
 

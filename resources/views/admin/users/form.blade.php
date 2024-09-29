@@ -22,7 +22,8 @@
                     <th>วัตถุประสงค์</th>
                     <th>วันที่เดินทางไป</th>
                     <th>วันที่เดินทางกลับ</th>
-                    <th>สถานะคำขอ</th>
+                    <th>division</th>
+                    <th>ขอdepartment</th>
                     <th>PDF</th>
                 </tr>
             </thead>
@@ -46,14 +47,23 @@
                             เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
                         </td> <!-- วันที่เดินทางกลับ -->
                         <td>
-                            @if ($document->status == 'approved')
+                            @if ($document->allow_division == 'approved')
                                 <span class="badge bg-success">อนุมัติ</span>
-                            @elseif ($document->status == 'pending')
+                            @elseif ($document->allow_division == 'pending')
                                 <span class="badge bg-warning">รอดำเนินการ</span>
                             @else
                                 <span class="badge bg-danger">ถูกปฏิเสธ</span>
                             @endif
-                        </td> <!-- สถานะคำขอ -->
+                        </td>
+                        <td>
+                            @if ($document->allow_department == 'approved')
+                                <span class="badge bg-success">อนุมัติ</span>
+                            @elseif ($document->allow_department == 'pending')
+                                <span class="badge bg-warning">รอดำเนินการ</span>
+                            @else
+                                <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                            @endif
+                        </td>
                         <td>
                             
                         </td> <!-- ปุ่มดาวน์โหลด PDF -->

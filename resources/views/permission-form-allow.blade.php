@@ -15,6 +15,30 @@
         test
     @else
         @foreach($documents as $document)
+            <!-- หัวหน้างาน division -->
+            @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16]))
+                <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
+                    @csrf
+                    <input type="hidden" name="document_id" value="{{ $document->document_id }}">
+                    
+                    @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
+                        <label>ความคิดเห็นหัวหน้าฝ่าย:</label>
+                        <input type="radio" name="statusdivision" value="approved"> อนุญาต
+                        <input type="radio" name="statusdivision" value="rejected"> ไม่อนุญาต
+                    @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
+                        <label>ความคิดเห็นหัวหน้างานวิจัย:</label>
+                        <input type="radio" name="statusdepartment" value="approved"> อนุญาต
+                        <input type="radio" name="statusdepartment" value="rejected"> ไม่อนุญาต
+                    @endif
+
+                    <button type="submit">บันทึก</button>
+                </form>
+            @endif
+
+
+
+
+
             <div class="card mb-4 shadow-sm border-1">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">{{ __('เอกสาร ที่ : ') . $document->document_id }}</h5>
