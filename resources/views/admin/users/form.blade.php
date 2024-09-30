@@ -23,7 +23,10 @@
                     <th>วันที่เดินทางไป</th>
                     <th>วันที่เดินทางกลับ</th>
                     <th>division</th>
-                    <th>ขอdepartment</th>
+                    <th>department</th>
+                    <th>คนสั่งรถ</th>
+                    <th>หัวหน้าสำนักงาน</th>
+                    <th>ผู้อำนวยการ</th>
                     <th>PDF</th>
                 </tr>
             </thead>
@@ -65,7 +68,33 @@
                             @endif
                         </td>
                         <td>
-                            
+                            @if ($document->allow_opcar == 'approved')
+                                <span class="badge bg-success">อนุมัติ</span>
+                            @elseif ($document->allow_opcar == 'pending')
+                                <span class="badge bg-warning">รอดำเนินการ</span>
+                            @else
+                                <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($document->allow_officer == 'approved')
+                                <span class="badge bg-success">อนุมัติ</span>
+                            @elseif ($document->allow_officer == 'pending')
+                                <span class="badge bg-warning">รอดำเนินการ</span>
+                            @else
+                                <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($document->allow_director == 'approved')
+                                <span class="badge bg-success">อนุมัติ</span>
+                            @elseif ($document->allow_director == 'pending')
+                                <span class="badge bg-warning">รอดำเนินการ</span>
+                            @else
+                                <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                            @endif
+                        </td>
+                        <td>
                         </td> <!-- ปุ่มดาวน์โหลด PDF -->
                     </tr>
                     @endforeach

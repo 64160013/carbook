@@ -16,7 +16,7 @@
     @else
         @foreach($documents as $document)
             <!-- หัวหน้างาน division -->
-            @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16]))
+            @if (in_array(auth()->user()->role_id, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16]))
                 <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
                     @csrf
                     <input type="hidden" name="document_id" value="{{ $document->document_id }}">
@@ -29,6 +29,18 @@
                         <label>ความคิดเห็นหัวหน้างานวิจัย:</label>
                         <input type="radio" name="statusdepartment" value="approved"> อนุญาต
                         <input type="radio" name="statusdepartment" value="rejected"> ไม่อนุญาต
+                    @elseif (in_array(auth()->user()->role_id, [12]))
+                        <label>ความคิดเห็นคนสั่งรถ:</label>
+                        <input type="radio" name="statusopcar" value="approved"> อนุญาต
+                        <input type="radio" name="statusopcar" value="rejected"> ไม่อนุญาต
+                    @elseif (in_array(auth()->user()->role_id, [2]))
+                        <label>ความคิดเห็นหัวหน้าสำนักงาน:</label>
+                        <input type="radio" name="statusofficer" value="approved"> อนุญาต
+                        <input type="radio" name="statusofficer" value="rejected"> ไม่อนุญาต
+                    @elseif (in_array(auth()->user()->role_id, [3]))
+                        <label>ความคิดเห็นผู้อำนวยการ:</label>
+                        <input type="radio" name="statusdirector" value="approved"> อนุญาต
+                        <input type="radio" name="statusdirector" value="rejected"> ไม่อนุญาต
                     @endif
 
                     <button type="submit">บันทึก</button>
