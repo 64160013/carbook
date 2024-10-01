@@ -59,6 +59,7 @@
                                     </div>
                                     <div>
                                         {{-- ปุ่มเพื่อดูรายละเอียดของเอกสาร --}}
+                                        <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" class="btn btn-outline-primary">ดูสถานะ</a>
                                         <a href="{{ route('documents.review') }}?id={{ $document->document_id }}" class="btn btn-primary">ดูรายละเอียด</a>
                                     </div>
                                 </div>

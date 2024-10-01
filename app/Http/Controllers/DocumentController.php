@@ -41,6 +41,18 @@ class DocumentController extends Controller
 
         return view('reviewform', compact('document'));
     }
+
+    public function reviewStatus(Request $request)
+    {
+        $id = $request->input('id');
+        if (!$id) {
+            return redirect()->route('documents.status')->with('error', 'ไม่พบข้อมูลเอกสาร');
+        }
+
+        $document = ReqDocument::with(['reqDocumentUsers'])->findOrFail($id);
+
+        return view('reviewstatus', compact('document'));
+    }
     
 
 
@@ -63,11 +75,12 @@ class DocumentController extends Controller
                     $this->applyDivisionRoleFilter($query, $user->role_id);
                 });
         });
-
+        
         // ดึงเอกสารที่มี allow_division = 'approved'
         $approvedDivision = ReqDocument::where('allow_division', 'approved');
         $approvedOpcar = ReqDocument::where('allow_opcar', 'approved');
         $approvedOfficer = ReqDocument::where('allow_officer', 'approved');
+        $approvedDirector = ReqDocument::where('allow_director', 'approved');
 
         if ($isReviewer) {
             // ดึงเอกสารที่ต้องตรวจสอบและผ่านเงื่อนไข
@@ -80,22 +93,28 @@ class DocumentController extends Controller
 
             $documents = $userDocuments->get()
                 ->merge($reviewDocuments->get())
-                ->sortBy('created_at');
+                ->sortBy('document_id');
 
         } elseif ($user->role_id == 12) {
             $documents = $approvedDivision
-                ->orderBy('created_at', 'asc')
+                ->orderBy('document_id', 'asc')
                 ->get();
 
         } elseif ($user->role_id == 2) {
             $documents = $approvedOpcar
-                ->orderBy('created_at', 'asc')
+                ->orderBy('document_id', 'asc')
                 ->get();
 
         } elseif ($user->role_id == 3) {
             $documents = $approvedOfficer
-                ->orderBy('created_at', 'asc')
+                ->orderBy('document_id', 'asc')
                 ->get();
+
+        } elseif ($user->role_id == 11) {
+            $documents = $approvedDirector
+                ->orderBy('document_id', 'asc')
+                ->get();
+            return view('driver.schedule', compact('documents'));
         }
 
         return view('permission-form', compact('documents'));
@@ -247,23 +266,18 @@ class DocumentController extends Controller
             if ($statusdivision) {
                 $document->allow_division = $statusdivision;
             }
-
             if ($statusdepartment) {
                 $document->allow_department = $statusdepartment;
             }
-
             if ($statusopcar) {
                 $document->allow_opcar = $statusopcar;
             }
-
             if ($statusofficer) {
                 $document->allow_officer = $statusofficer;
             }
-
             if ($statusdirector) {
                 $document->allow_director = $statusdirector;
-            }
-            
+            }      
             $document->save();
 
             return redirect()->route('documents.index')
@@ -273,11 +287,6 @@ class DocumentController extends Controller
                             ->with('error', 'ไม่พบเอกสาร');
         }
     }
-
-   
-       
-
-
 
 
 

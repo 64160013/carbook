@@ -90,14 +90,15 @@
                             <li class="sidebar-item"><a href="{{ route('admin.users.form') }}" class="sidebar-link"><i
                                         class="lni lni-files"></i><span>{{ __('รายการคำขออนุญาตทั้งหมด') }}</span></a></li>
 
-                        <!-- navdar พนักงาน -->
+                            <!-- navdar พนักงาน -->
                         @elseif ((auth()->user()->role_id == 1))
                             <li class="sidebar-item"><a href="{{ route('home') }}" class="sidebar-link"><i
                                         class="lni lni-home"></i><span>{{ __('หน้าหลัก') }}</span></a></li>
                             <li class="sidebar-item"><a href="{{ route('documents.history') }}" class="sidebar-link"><i
                                         class="lni lni-files"></i><span>{{ __('รายการคำขออนุญาต') }}</span></a></li>
-                            
-                        <!-- navdar คนอนุมัติ -->
+                            <!-- เมนูสำหรับคนขับรถ -->
+                        
+                            <!-- navdar คนอนุมัติ -->
                         @else
                             <li class="sidebar-item"><a href="{{ route('home') }}" class="sidebar-link"><i
                                         class="lni lni-home"></i><span>{{ __('หน้าหลัก') }}</span></a></li>

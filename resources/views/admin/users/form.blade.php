@@ -6,8 +6,6 @@
     <div class="container">
     @if (auth()->user()->is_admin == 1)
         <h2>รายการคำขอทั้งหมด</h2>
-    @else        
-        <h2>ประวัติการยื่นขอ</h2>
     @endif
 
     @if($documents->isEmpty())
@@ -18,6 +16,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>ชื่อ-นามสกุล</th>
                     <th>วัตถุประสงค์</th>
                     <th>วันที่เดินทางไป</th>
@@ -39,7 +38,8 @@
                             @php
                                 $requester = $document->reqDocumentUsers->first();
                             @endphp
-                        <td>{{ $requester->name }} {{ $requester->lname }}</td> <!-- ชื่อผู้ใช้ -->
+                            <td>{{ $requester->id }}</td>
+                            <td>{{ $requester->name }} {{ $requester->lname }}</td> <!-- ชื่อผู้ใช้ -->
                         <td>{{ $document->objective }}</td> <!-- วัตถุประสงค์ -->
                         <td>
                             {{ \Carbon\Carbon::parse($document->start_date)->format('d F Y') }}<br>

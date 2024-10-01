@@ -12,7 +12,6 @@
         <div class="alert alert-info">
             {{ __('ไม่มีเอกสารที่บันทึก') }}
         </div>
-        test
     @else
         @foreach($documents as $document)
             <!-- หัวหน้างาน division -->
@@ -29,6 +28,7 @@
                         <label>ความคิดเห็นหัวหน้างานวิจัย:</label>
                         <input type="radio" name="statusdepartment" value="approved"> อนุญาต
                         <input type="radio" name="statusdepartment" value="rejected"> ไม่อนุญาต
+                    <!-- คนสั่งรถ -->
                     @elseif (in_array(auth()->user()->role_id, [12]))
                         <label>ความคิดเห็นคนสั่งรถ:</label>
                         <input type="radio" name="statusopcar" value="approved"> อนุญาต
@@ -42,7 +42,6 @@
                         <input type="radio" name="statusdirector" value="approved"> อนุญาต
                         <input type="radio" name="statusdirector" value="rejected"> ไม่อนุญาต
                     @endif
-
                     <button type="submit">บันทึก</button>
                 </form>
             @endif

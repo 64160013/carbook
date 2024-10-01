@@ -70,7 +70,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                            
+
                         </div>
                     </div>
                 </div>
@@ -355,6 +355,7 @@
 
 
 <script type="text/javascript">
+    // เมื่อเปลี่ยนแปลงจังหวัด
     $('#provinces_id').on('change', function () {
         var provinceId = $(this).val();
         $('#amphoe_id').empty().append('<option value="" disabled selected>{{ __('เลือกอำเภอ') }}</option>');
@@ -378,6 +379,7 @@
         }
     });
 
+    // เมื่อเปลี่ยนแปลงอำเภอ
     $('#amphoe_id').on('change', function () {
         var amphoeId = $(this).val();
         $('#district_id').empty().append('<option value="" disabled selected>{{ __('เลือกตำบล') }}</option>');
@@ -401,34 +403,55 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-    function convertToBuddhistDate(date) {
-        var buddhistYear = date.getFullYear() + 543;
-        return buddhistYear + '-' +
-            String(date.getMonth() + 1).padStart(2, '0') + '-' +
-            String(date.getDate()).padStart(2, '0');
-    }
+        // ฟังก์ชันเพื่อแปลงวันที่เป็นปีพุทธ
+        function convertToBuddhistDate(date) {
+            var buddhistYear = date.getFullYear() + 543;
+            return buddhistYear + '-' +
+                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(date.getDate()).padStart(2, '0');
+        }
 
-    var todayUTC = new Date();
-    var todayThailand = new Date(todayUTC.getTime() + (7 * 60 * 60 * 1000));
-    document.getElementById('reservation_date').value = convertToBuddhistDate(todayThailand);
+        // ตั้งค่าวันที่ปัจจุบันเป็นวันที่จอง
+        var todayUTC = new Date();
+        var todayThailand = new Date(todayUTC.getTime() + (7 * 60 * 60 * 1000));
+        document.getElementById('reservation_date').value = convertToBuddhistDate(todayThailand);
 
-    // ฟังก์ชันเพื่ออัปเดตจำนวนผู้ร่วมเดินทาง
-    function updateCompanionCount() {
-        var companionText = document.getElementById('companion_name').value;
-        // แยกชื่อด้วยทั้งการขึ้นบรรทัดใหม่และเครื่องหมายจุลภาค จากนั้นกรองค่าที่ว่างออก
-        var names = companionText.split(/\n|,\s*/).filter(function (name) {
-            return name.trim().length > 0;
+        // ตรวจสอบเมื่อเลือกวันที่ไป
+        document.getElementById('start_date').addEventListener('change', function () {
+            const startDate = this.value;
+            document.getElementById('end_date').setAttribute('min', startDate); // วันที่กลับต้องไม่ต่ำกว่าวันที่ไป
         });
-        document.getElementById('sum_companion').value = names.length || 0; // ตั้งค่าเป็น 0 หากไม่มีชื่อ
-    }
+        // ตรวจสอบเมื่อเลือกวันที่กลับ
+        document.getElementById('end_date').addEventListener('change', function () {
+            const startDate = new Date(document.getElementById('start_date').value);
+            const endDate = new Date(this.value);
+            if (endDate < startDate) {
+                alert('วันที่กลับต้องมากกว่าหรือเท่ากับวันที่ไป');
+                this.value = ''; // เคลียร์ค่าถ้าผู้ใช้เลือกวันผิด
+            }
+        });
 
-    // แนบฟังก์ชัน `updateCompanionCount` กับเหตุการณ์ `input` ของพื้นที่กรอกข้อมูล
-    document.getElementById('companion_name').addEventListener('input', updateCompanionCount);
-
-    // ตั้งค่าเริ่มต้น `sum_companion` เป็น 0 เมื่อหน้าโหลด
-    updateCompanionCount();
-});
-
+        // ฟังก์ชันเพื่ออัปเดตจำนวนผู้ร่วมเดินทาง
+        function updateCompanionCount() {
+            var companionText = document.getElementById('companion_name').value;
+            var names = companionText.split(/\n|,\s*/).filter(function (name) {
+                return name.trim().length > 0;
+            });
+            document.getElementById('sum_companion').value = names.length || 0; // ตั้งค่าเป็น 0 หากไม่มีชื่อ
+        }
+        // แนบฟังก์ชัน `updateCompanionCount` กับเหตุการณ์ `input` ของพื้นที่กรอกข้อมูล
+        document.getElementById('companion_name').addEventListener('input', updateCompanionCount);
+        updateCompanionCount(); // ตั้งค่าเริ่มต้น `sum_companion` เป็น 0 เมื่อหน้าโหลด
+        // ฟังก์ชันเพื่อให้วันที่ไปและวันที่กลับไม่สามารถเลือกวันย้อนหลัง
+        function setMinDates() {
+            const today = new Date();
+            const minDate = today.toISOString().split('T')[0]; // แปลงเป็นรูปแบบ YYYY-MM-DD
+            document.getElementById('start_date').setAttribute('min', minDate);
+            document.getElementById('end_date').setAttribute('min', minDate);
+        }
+        setMinDates(); // เรียกฟังก์ชันเมื่อโหลดหน้า
+    });
 </script>
+
 
 @endsection
