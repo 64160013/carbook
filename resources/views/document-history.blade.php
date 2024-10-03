@@ -59,7 +59,21 @@
                                     </div>
                                     <div>
                                         {{-- ปุ่มเพื่อดูรายละเอียดของเอกสาร --}}
-                                        <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" class="btn btn-outline-primary">ดูสถานะ</a>
+                                        @foreach($document->reqDocumentUsers as $docUser)
+                                            @if ($docUser->division_id == 2)
+                                                {{-- ตรวจสอบ allow_department เมื่อ division_id == 2 --}}
+                                                @if ($document->allow_department == 'pending')
+                                                    <span class="badge bg-warning">รอหัวหน้างานพิจารณา</span>
+                                                @elseif ($document->allow_department == 'approved')
+                                                    @include('partials.allow_status', ['document' => $document])
+                                                @else
+                                                    <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
+                                                @endif
+                                            @else
+                                                {{-- ข้ามการตรวจสอบ allow_department --}}
+                                                @include('partials.allow_status', ['document' => $document])
+                                            @endif
+                                        @endforeach
                                         <a href="{{ route('documents.review') }}?id={{ $document->document_id }}" class="btn btn-primary">ดูรายละเอียด</a>
                                     </div>
                                 </div>

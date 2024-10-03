@@ -6,6 +6,7 @@ use App\Models\ReqDocument;
 use App\Models\ReqDocumentUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Vehicle;
 
 class DocumentController extends Controller
 {
@@ -26,7 +27,7 @@ class DocumentController extends Controller
 
             return view('document-history', compact('documents'));
         } else {
-            return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
+            return redirect()->route('login')->with('error', 'Please log in.');
         }
     }
       
@@ -74,16 +75,17 @@ class DocumentController extends Controller
                 ->where(function ($query) use ($user) {
                     $this->applyDivisionRoleFilter($query, $user->role_id);
                 });
-        });
-        
+        })->orderBy('document_id', 'desc'); // เรียงลำดับจากมากไปน้อย
+
         // ดึงเอกสารที่มี allow_division = 'approved'
         $approvedDivision = ReqDocument::where('allow_division', 'approved');
         $approvedOpcar = ReqDocument::where('allow_opcar', 'approved');
         $approvedOfficer = ReqDocument::where('allow_officer', 'approved');
         $approvedDirector = ReqDocument::where('allow_director', 'approved');
 
+        // ตรวจสอบเอกสารตาม role_id และเงื่อนไข division_id = 2
         if ($isReviewer) {
-            // ดึงเอกสารที่ต้องตรวจสอบและผ่านเงื่อนไข
+            // เอกสารที่ต้องตรวจสอบ (นอกเหนือจากที่ผู้ใช้ส่งเอง)
             $reviewDocuments = ReqDocument::whereHas('reqDocumentUsers', function ($query) use ($user) {
                 $query->where('req_document_user.user_id', '!=', $user->id)
                     ->where(function ($query) use ($user) {
@@ -93,81 +95,89 @@ class DocumentController extends Controller
 
             $documents = $userDocuments->get()
                 ->merge($reviewDocuments->get())
-                ->sortBy('document_id');
+                ->sortByDesc('document_id'); // เรียงจากมากไปน้อย
 
         } elseif ($user->role_id == 12) {
+            // เอกสารที่ต้องส่งไปยัง role_id = 12
             $documents = $approvedDivision
-                ->orderBy('document_id', 'asc')
+                ->orderBy('document_id', 'desc') 
                 ->get();
 
         } elseif ($user->role_id == 2) {
             $documents = $approvedOpcar
-                ->orderBy('document_id', 'asc')
+                ->orderBy('document_id', 'desc') 
                 ->get();
 
         } elseif ($user->role_id == 3) {
             $documents = $approvedOfficer
-                ->orderBy('document_id', 'asc')
+                ->orderBy('document_id', 'desc') 
                 ->get();
 
         } elseif ($user->role_id == 11) {
             $documents = $approvedDirector
-                ->orderBy('document_id', 'asc')
+                ->orderBy('document_id', 'desc') 
                 ->get();
             return view('driver.schedule', compact('documents'));
+
+        } elseif ($user->role_id == 5) {
+            // เอกสารที่ allow_department = 'approved' และส่งไปยัง role_id = 5
+            $documents = ReqDocument::where('allow_department', 'approved')
+                ->whereHas('reqDocumentUsers', function ($query) {
+                    $query->where('req_document_user.division_id', 2);
+                })
+                ->orderBy('document_id', 'desc')
+                ->get();
         }
 
         return view('permission-form', compact('documents'));
 
     } else {
-        return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
+        return redirect()->route('login')->with('error', 'Please log in.');
     }
 }
 
-
-
-    private function applyDivisionRoleFilter($query, $roleId)
-    {
-        switch ($roleId) {
-            case 4:
-                $query->where('req_document_user.division_id', 1);
-                break;
-            case 6:
-                $query->where('req_document_user.division_id', 3);
-                break;
-            case 7:
-                $query->where('req_document_user.division_id', 4);
-                break;
-            case 8:
-                $query->where('req_document_user.division_id', 5);
-                break;
-            case 9:
-                $query->where('req_document_user.division_id', 6);
-                break;
-            case 10:
-                $query->where('req_document_user.division_id', 7);
-                break;
-            case 13:
-                $query->where('req_document_user.division_id', 2)
-                    ->where('req_document_user.department_id', 1);
-                break;
-            case 14:
-                $query->where('req_document_user.division_id', 2)
-                    ->where('req_document_user.department_id', 2);
-                break;
-            case 15:
-                $query->where('req_document_user.division_id', 2)
-                    ->where('req_document_user.department_id', 3);
-                break;
-            case 16:
-                $query->where('req_document_user.division_id', 2)
-                    ->where('req_document_user.department_id', 4);
-                break;
-            default:
+private function applyDivisionRoleFilter($query, $roleId)
+{
+    switch ($roleId) {
+        case 4:
+            $query->where('req_document_user.division_id', 1);
+            break;
+        case 6:
+            $query->where('req_document_user.division_id', 3);
+            break;
+        case 7:
+            $query->where('req_document_user.division_id', 4);
+            break;
+        case 8:
+            $query->where('req_document_user.division_id', 5);
+            break;
+        case 9:
+            $query->where('req_document_user.division_id', 6);
+            break;
+        case 10:
+            $query->where('req_document_user.division_id', 7);
+            break;
+        case 13:
+            $query->where('req_document_user.division_id', 2)
+                ->where('req_document_user.department_id', 1);
+            break;
+        case 14:
+            $query->where('req_document_user.division_id', 2)
+                ->where('req_document_user.department_id', 2);
+            break;
+        case 15:
+            $query->where('req_document_user.division_id', 2)
+                ->where('req_document_user.department_id', 3);
+            break;
+        case 16:
+            $query->where('req_document_user.division_id', 2)
+                ->where('req_document_user.department_id', 4);
+            break;
+        default:
                 break;      //roleId ไม่ตรงกับเงื่อนไข
 
-        }
     }
+}
 
     // public function permission()
     // {
@@ -286,6 +296,8 @@ class DocumentController extends Controller
             return redirect()->route('documents.show')
                             ->with('error', 'ไม่พบเอกสาร');
         }
+
+        $vehicles = Vehicle::all();
     }
 
 
