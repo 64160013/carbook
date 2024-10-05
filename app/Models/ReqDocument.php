@@ -79,4 +79,8 @@ class ReqDocument extends Model
         return empty($this->content);
     }
 
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
+    }
 }

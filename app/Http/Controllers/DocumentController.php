@@ -261,44 +261,156 @@ private function applyDivisionRoleFilter($query, $roleId)
      *
      * 
      */
-    public function updateStatus(Request $request)
-    {
-        $documentId = $request->input('document_id');
-        $statusdivision = $request->input('statusdivision');
-        $statusdepartment = $request->input('statusdepartment');
-        $statusopcar = $request->input('statusopcar');
-        $statusofficer = $request->input('statusofficer');
-        $statusdirector = $request->input('statusdirector');
+//     public function updateStatus(Request $request)
+// {
 
-        $document = ReqDocument::where('document_id', $documentId)->first();
+//     $vehicles = Vehicle::all(); 
 
-        if ($document) {
-            if ($statusdivision) {
-                $document->allow_division = $statusdivision;
-            }
-            if ($statusdepartment) {
-                $document->allow_department = $statusdepartment;
-            }
-            if ($statusopcar) {
-                $document->allow_opcar = $statusopcar;
-            }
-            if ($statusofficer) {
-                $document->allow_officer = $statusofficer;
-            }
-            if ($statusdirector) {
-                $document->allow_director = $statusdirector;
-            }      
-            $document->save();
+//     $documentId = $request->input('document_id');
+//     $statusdivision = $request->input('statusdivision');
+//     $statusdepartment = $request->input('statusdepartment');
+//     $statusopcar = $request->input('statusopcar');
+//     $statusofficer = $request->input('statusofficer');
+//     $statusdirector = $request->input('statusdirector');
+//     $notallowedReason = $request->input('notallowed_reason'); // เพิ่มการรับค่าเหตุผล
 
-            return redirect()->route('documents.index')
-                            ->with('success', 'สถานะถูกอัปเดตเรียบร้อยแล้ว');
-        } else {
-            return redirect()->route('documents.show')
-                            ->with('error', 'ไม่พบเอกสาร');
+//     $document = ReqDocument::where('document_id', $documentId)->first();
+
+//     if ($document) {
+//         if ($statusdivision) {
+//             $document->allow_division = $statusdivision;
+//             if ($statusdivision == 'rejected' && $request->input('notallowed_reason_division')) {
+//                 $document->notallowed_reason = $request->input('notallowed_reason_division');
+//             } else {
+//                 $document->notallowed_reason = null;
+//             }
+//         }
+
+//         if ($statusdepartment) {
+//             $document->allow_department = $statusdepartment;
+//             if ($statusdepartment == 'rejected' && $request->input('notallowed_reason_department')) {
+//                 $document->notallowed_reason = $request->input('notallowed_reason_department');
+//             } else {
+//                 $document->notallowed_reason = null;
+//             }
+//         }
+
+//         if ($statusopcar) {
+//             $document->allow_opcar = $statusopcar;
+//             if ($statusopcar == 'rejected' && $notallowedReason) {
+//                 $document->notallowed_reason = $notallowedReason;
+//             } else {
+//                 $document->notallowed_reason = null; 
+//             }
+//         }
+        
+//         if ($statusofficer) {
+//             $document->allow_officer = $statusofficer;
+//             if ($statusofficer == 'rejected' && $request->input('notallowed_reason_officer')) {
+//                 $document->notallowed_reason = $request->input('notallowed_reason_officer');
+//             } else {
+//                 $document->notallowed_reason = null;
+//             }
+//         }
+
+//         if ($statusdirector) {
+//             $document->allow_director = $statusdirector;
+//             if ($statusdirector == 'rejected' && $request->input('notallowed_reason_director')) {
+//                 $document->notallowed_reason = $request->input('notallowed_reason_director');
+//             } else {
+//                 $document->notallowed_reason = null;
+//             }
+//         }
+//         $document->save();
+
+//         return redirect()->route('documents.index')
+//                          ->with('success', 'สถานะถูกอัปเดตเรียบร้อยแล้ว');
+//     } else {
+//         return redirect()->route('documents.show')
+//                          ->with('error', 'ไม่พบเอกสาร');
+//     }
+// }
+
+public function updateStatus(Request $request)
+{
+    // ดึงข้อมูลจากตาราง Vehicle เพื่อแสดงใน view
+    $vehicles = Vehicle::all(); 
+
+    // รับข้อมูลจากฟอร์ม
+    $documentId = $request->input('document_id');
+    $statusdivision = $request->input('statusdivision');
+    $statusdepartment = $request->input('statusdepartment');
+    $statusopcar = $request->input('statusopcar');
+    $statusofficer = $request->input('statusofficer');
+    $statusdirector = $request->input('statusdirector');
+    $notallowedReason = $request->input('notallowed_reason'); // เพิ่มการรับค่าเหตุผล
+    $carId = $request->input('car_id'); // รับค่า car_id จากฟอร์ม
+
+    // ค้นหาเอกสารตาม document_id
+    $document = ReqDocument::where('document_id', $documentId)->first();
+
+    if ($document) {
+        // อัปเดตสถานะต่าง ๆ
+        if ($statusdivision) {
+            $document->allow_division = $statusdivision;
+            if ($statusdivision == 'rejected' && $request->input('notallowed_reason_division')) {
+                $document->notallowed_reason = $request->input('notallowed_reason_division');
+            } else {
+                $document->notallowed_reason = null;
+            }
         }
 
-        $vehicles = Vehicle::all();
+        if ($statusdepartment) {
+            $document->allow_department = $statusdepartment;
+            if ($statusdepartment == 'rejected' && $request->input('notallowed_reason_department')) {
+                $document->notallowed_reason = $request->input('notallowed_reason_department');
+            } else {
+                $document->notallowed_reason = null;
+            }
+        }
+
+        if ($statusopcar) {
+            $document->allow_opcar = $statusopcar;
+            if ($statusopcar == 'rejected' && $notallowedReason) {
+                $document->notallowed_reason = $notallowedReason;
+            } else {
+                $document->notallowed_reason = null; 
+            }
+        }
+        
+        if ($statusofficer) {
+            $document->allow_officer = $statusofficer;
+            if ($statusofficer == 'rejected' && $request->input('notallowed_reason_officer')) {
+                $document->notallowed_reason = $request->input('notallowed_reason_officer');
+            } else {
+                $document->notallowed_reason = null;
+            }
+        }
+
+        if ($statusdirector) {
+            $document->allow_director = $statusdirector;
+            if ($statusdirector == 'rejected' && $request->input('notallowed_reason_director')) {
+                $document->notallowed_reason = $request->input('notallowed_reason_director');
+            } else {
+                $document->notallowed_reason = null;
+            }
+        }
+
+        // เพิ่ม car_id ที่เลือกจากฟอร์มลงใน ReqDocument
+        if ($carId) {
+            $document->car_id = $carId; // เก็บ car_id ไว้ใน document
+        }
+
+        // บันทึกข้อมูล
+        $document->save();
+
+        return redirect()->route('documents.index')
+                         ->with('success', 'สถานะถูกอัปเดตเรียบร้อยแล้ว');
+    } else {
+        return redirect()->route('documents.show')
+                         ->with('error', 'ไม่พบเอกสาร');
     }
+}
 
 
 

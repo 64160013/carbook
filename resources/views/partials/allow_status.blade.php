@@ -13,13 +13,25 @@
                 <span class="badge bg-success">อนุมัติคำร้อง</span>
             @else
                 <span class="badge bg-danger">ผู้อำนวยการไม่อนุมัติ</span>
+                @if ($document->notallowed_reason)
+                    <br><span>เหตุผล : {{ $document->notallowed_reason }}</span>
+                @endif
             @endif
         @else
             <span class="badge bg-danger">หัวหน้าสำนักงานไม่อนุมัติ</span>
+            @if ($document->notallowed_reason)
+                <br><span>เหตุผล : {{ $document->notallowed_reason }}</span>
+            @endif
         @endif
     @else
         <span class="badge bg-danger">คนสั่งรถไม่อนุมัติ</span>
+        @if ($document->notallowed_reason)
+            <br><span>เหตุผล : {{ $document->notallowed_reason }}</span>
+        @endif
     @endif
 @else
     <span class="badge bg-danger">หัวหน้าฝ่ายไม่อนุมัติ</span>
+    @if ($document->notallowed_reason)
+        <br><span>เหตุผล : {{ $document->notallowed_reason }}</span>
+    @endif
 @endif

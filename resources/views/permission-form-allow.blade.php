@@ -19,36 +19,93 @@
                 <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
                     @csrf
                     <input type="hidden" name="document_id" value="{{ $document->document_id }}">
-                    
-                    @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
-                        <label>ความคิดเห็นหัวหน้าฝ่าย:</label>
-                        <input type="radio" name="statusdivision" value="approved"> อนุญาต
-                        <input type="radio" name="statusdivision" value="rejected"> ไม่อนุญาต
-                    @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
-                        <label>ความคิดเห็นหัวหน้างานวิจัย:</label>
-                        <input type="radio" name="statusdepartment" value="approved"> อนุญาต
-                        <input type="radio" name="statusdepartment" value="rejected"> ไม่อนุญาต
-                    <!-- คนสั่งรถ -->
-                    @elseif (in_array(auth()->user()->role_id, [12]))
-                        <label>ความคิดเห็นคนสั่งรถ:</label>
-                        <input type="radio" name="statusopcar" value="approved"> อนุญาต
-                        <input type="radio" name="statusopcar" value="rejected"> ไม่อนุญาต
-                    @elseif (in_array(auth()->user()->role_id, [2]))
-                        <label>ความคิดเห็นหัวหน้าสำนักงาน:</label>
-                        <input type="radio" name="statusofficer" value="approved"> อนุญาต
-                        <input type="radio" name="statusofficer" value="rejected"> ไม่อนุญาต
-                    @elseif (in_array(auth()->user()->role_id, [3]))
-                        <label>ความคิดเห็นผู้อำนวยการ:</label>
-                        <input type="radio" name="statusdirector" value="approved"> อนุญาต
-                        <input type="radio" name="statusdirector" value="rejected"> ไม่อนุญาต
-                    @endif
-                    <button type="submit">บันทึก</button>
-                </form>
 
-                <!-- @if (in_array(auth()->user()->role_id, [12]))
-                
-                @endif -->
+                    @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
+                        @if ($document->allow_division == 'pending')
+                            <label>ความคิดเห็นหัวหน้าฝ่าย:</label>
+                            <input type="radio" name="statusdivision" value="approved" onchange="document.getElementById('reason_field_division').style.display='none';"> อนุญาต
+                            <input type="radio" name="statusdivision" value="rejected" onchange="document.getElementById('reason_field_division').style.display='block';"> ไม่อนุญาต
+
+                            <div id="reason_field_division" style="display: none;">
+                                <label>เหตุผลที่ไม่อนุญาต:</label>
+                                <input type="text" name="notallowed_reason_division" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_division', $document->notallowed_reason) }}">
+                            </div>
+                            <button type="submit">บันทึก</button>
+                        @endif
+
+                    @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
+                        @if ($document->allow_department == 'pending')
+                            <label>ความคิดเห็นหัวหน้างานวิจัย:</label>
+                            <input type="radio" name="statusdepartment" value="approved" onchange="document.getElementById('reason_field_department').style.display='none';"> อนุญาต
+                            <input type="radio" name="statusdepartment" value="rejected" onchange="document.getElementById('reason_field_department').style.display='block';"> ไม่อนุญาต
+
+                            <div id="reason_field_department" style="display: none;">
+                                <label>เหตุผลที่ไม่อนุญาต:</label>
+                                <input type="text" name="notallowed_reason_department" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_department', $document->notallowed_reason) }}">
+                            </div>
+                            <button type="submit">บันทึก</button>
+                        @endif
+
+                    @elseif (in_array(auth()->user()->role_id, [12]))
+                        @if ($document->allow_opcar == 'pending')
+                            <label>ความคิดเห็นคนสั่งรถ:</label>
+                            <input type="radio" name="statusopcar" value="approved" onchange="document.getElementById('reason_field_opcar').style.display='none';"> อนุญาต
+                            <input type="radio" name="statusopcar" value="rejected" onchange="document.getElementById('reason_field_opcar').style.display='block';"> ไม่อนุญาต
+
+                            <div id="reason_field_opcar" style="display: none;">
+                                <label>เหตุผลที่ไม่อนุญาต:</label>
+                                <input type="text" name="notallowed_reason" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
+                            </div>
+                            <button type="submit">บันทึก</button><br>
+
+                            <form action="{{ route('documents.updateStatus') }}" method="POST">
+    @csrf
+    <input type="hidden" name="document_id" value="{{ $document->document_id }}">
+
+    <label for="vehicle">เลือกยานพาหนะ:</label>
+    <select name="car_id" id="vehicle" class="form-control">
+        @foreach($vehicles as $vehicle)
+            <option value="{{ $vehicle->id }}">{{ $vehicle->car_regnumber }} - {{ $vehicle->car_province }}</option>
+        @endforeach
+    </select>
+
+    
+    <button type="submit" class="btn btn-primary">บันทึกสถานะ</button>
+</form>
+
+
+                        @endif
+
+                    @elseif (in_array(auth()->user()->role_id, [2]))
+                        @if ($document->allow_officer == 'pending')
+                            <label>ความคิดเห็นหัวหน้าสำนักงาน:</label>
+                            <input type="radio" name="statusofficer" value="approved" onchange="document.getElementById('reason_field_officer').style.display='none';"> อนุญาต
+                            <input type="radio" name="statusofficer" value="rejected" onchange="document.getElementById('reason_field_officer').style.display='block';"> ไม่อนุญาต
+
+                            <div id="reason_field_officer" style="display: none;">
+                                <label>เหตุผลที่ไม่อนุญาต:</label>
+                                <input type="text" name="notallowed_reason_officer" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_officer', $document->notallowed_reason) }}">
+                            </div>
+                            <button type="submit">บันทึก</button>
+                        @endif
+
+                    @elseif (in_array(auth()->user()->role_id, [3]))
+                        @if ($document->allow_director == 'pending')
+                            <label>ความคิดเห็นผู้อำนวยการ:</label>
+                            <input type="radio" name="statusdirector" value="approved" onchange="document.getElementById('reason_field_director').style.display='none';"> อนุญาต
+                            <input type="radio" name="statusdirector" value="rejected" onchange="document.getElementById('reason_field_director').style.display='block';"> ไม่อนุญาต
+
+                            <div id="reason_field_director" style="display: none;">
+                                <label>เหตุผลที่ไม่อนุญาต:</label>
+                                <input type="text" name="notallowed_reason_director" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_director', $document->notallowed_reason) }}">
+                            </div>
+                            <button type="submit">บันทึก</button>
+                        @endif
+                    @endif
+                </form>
             @endif
+
+
 
 
 

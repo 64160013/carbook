@@ -89,9 +89,6 @@
 
             <div class="text-center mb-4">
                 <h4>สถานะปัจจุบัน : 
-                    <span >อยู่ระหว่างพิจารณา</span>
-                </h4>
-                <h4>สถานะปัจจุบัน : 
                     <span >
                     @foreach($document->reqDocumentUsers as $docUser)
                         @if ($docUser->division_id == 2)
@@ -102,14 +99,18 @@
                                 @include('partials.allow_status', ['document' => $document])
                             @else
                                 <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
+                                @if ($document->notallowed_reason)
+                                    <br><span>เหตุผล: {{ $document->notallowed_reason }}</span>
+                                @endif
                             @endif
                         @else
                             {{-- ข้ามการตรวจสอบ allow_department --}}
                             @include('partials.allow_status', ['document' => $document])
                         @endif
                     @endforeach
-                    </span>
+                    </span>                    
                 </h4>
+                
             </div>
 
             <div class="text-center">

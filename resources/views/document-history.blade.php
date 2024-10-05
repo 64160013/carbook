@@ -59,7 +59,7 @@
                                     </div>
                                     <div>
                                         {{-- ปุ่มเพื่อดูรายละเอียดของเอกสาร --}}
-                                        @foreach($document->reqDocumentUsers as $docUser)
+                                        <!-- @foreach($document->reqDocumentUsers as $docUser)
                                             @if ($docUser->division_id == 2)
                                                 {{-- ตรวจสอบ allow_department เมื่อ division_id == 2 --}}
                                                 @if ($document->allow_department == 'pending')
@@ -73,7 +73,7 @@
                                                 {{-- ข้ามการตรวจสอบ allow_department --}}
                                                 @include('partials.allow_status', ['document' => $document])
                                             @endif
-                                        @endforeach
+                                        @endforeach -->
                                         <a href="{{ route('documents.review') }}?id={{ $document->document_id }}" class="btn btn-primary">ดูรายละเอียด</a>
                                     </div>
                                 </div>
