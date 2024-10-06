@@ -23,12 +23,12 @@
                     @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
                         @if ($document->allow_division == 'pending')
                             <label>ความคิดเห็นหัวหน้าฝ่าย:</label>
-                            <input type="radio" name="statusdivision" value="approved" onchange="document.getElementById('reason_field_division').style.display='none';"> อนุญาต
-                            <input type="radio" name="statusdivision" value="rejected" onchange="document.getElementById('reason_field_division').style.display='block';"> ไม่อนุญาต
+                            <input type="radio" name="statusdivision" value="approved" onchange="toggleDivisionReasonField(false)"> อนุญาต
+                            <input type="radio" name="statusdivision" value="rejected" onchange="toggleDivisionReasonField(true)"> ไม่อนุญาต
 
                             <div id="reason_field_division" style="display: none;">
                                 <label>เหตุผลที่ไม่อนุญาต:</label>
-                                <input type="text" name="notallowed_reason_division" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_division', $document->notallowed_reason) }}">
+                                <input type="text" id="notallowed_reason_division" name="notallowed_reason_division" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_division', $document->notallowed_reason) }}">
                             </div>
                             <button type="submit">บันทึก</button>
                         @endif
@@ -36,12 +36,12 @@
                     @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
                         @if ($document->allow_department == 'pending')
                             <label>ความคิดเห็นหัวหน้างานวิจัย:</label>
-                            <input type="radio" name="statusdepartment" value="approved" onchange="document.getElementById('reason_field_department').style.display='none';"> อนุญาต
-                            <input type="radio" name="statusdepartment" value="rejected" onchange="document.getElementById('reason_field_department').style.display='block';"> ไม่อนุญาต
+                            <input type="radio" name="statusdepartment" value="approved" onchange="toggleDepartmentReasonField(false)"> อนุญาต
+                            <input type="radio" name="statusdepartment" value="rejected" onchange="toggleDepartmentReasonField(true)"> ไม่อนุญาต
 
                             <div id="reason_field_department" style="display: none;">
                                 <label>เหตุผลที่ไม่อนุญาต:</label>
-                                <input type="text" name="notallowed_reason_department" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_department', $document->notallowed_reason) }}">
+                                <input type="text" id="notallowed_reason_department" name="notallowed_reason_department" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason_department', $document->notallowed_reason) }}">
                             </div>
                             <button type="submit">บันทึก</button>
                         @endif
@@ -49,38 +49,55 @@
                     @elseif (in_array(auth()->user()->role_id, [12]))
                         @if ($document->allow_opcar == 'pending')
                             <label>ความคิดเห็นคนสั่งรถ:</label>
-                            <input type="radio" name="statusopcar" value="approved" onchange="document.getElementById('reason_field_opcar').style.display='none';"> อนุญาต
-                            <input type="radio" name="statusopcar" value="rejected" onchange="document.getElementById('reason_field_opcar').style.display='block';"> ไม่อนุญาต
+                            <input type="radio" name="statusopcar" value="approved" onchange="toggleReasonField(false)"> อนุญาต
+                            <input type="radio" name="statusopcar" value="rejected" onchange="toggleReasonField(true)"> ไม่อนุญาต
 
                             <div id="reason_field_opcar" style="display: none;">
                                 <label>เหตุผลที่ไม่อนุญาต:</label>
-                                <input type="text" name="notallowed_reason" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
+                                <input type="text" id="notallowed_reason" name="notallowed_reason" placeholder="กรุณาระบุเหตุผล" value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
                             </div>
-                            <button type="submit">บันทึก</button><br>
 
-                            <form action="{{ route('documents.updateStatus') }}" method="POST">
-    @csrf
-    <input type="hidden" name="document_id" value="{{ $document->document_id }}">
+                            <select id="vehicle" class="form-control @error('car_id') is-invalid @enderror" name="car_id" required>
+                                <option value="" disabled selected>{{ __('เลือกยานพาหนะ') }}</option>
+                                @foreach($vehicles as $vehicle)
+                                    @if ($vehicle -> car_status == 'Y')
+                                        <option value="{{ $vehicle->car_id }}" {{ old('car_id') == $vehicle->car_id ? 'selected' : '' }}>
+                                        {{ $vehicle->car_category }} {{ $vehicle->car_regnumber }} {{ $vehicle->car_province }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('car_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
 
-    <label for="vehicle">เลือกยานพาหนะ:</label>
-    <select name="car_id" id="vehicle" class="form-control">
-        @foreach($vehicles as $vehicle)
-            <option value="{{ $vehicle->id }}">{{ $vehicle->car_regnumber }} - {{ $vehicle->car_province }}</option>
-        @endforeach
-    </select>
+                            <select id="users" class="form-control @error('car_id') is-invalid @enderror mt-2" name="carman" required>
+                                <option value="" disabled selected>{{ __('เลือกคนขับรถ') }}</option>
+                                @foreach($users as $user)
+                                    @if ($user -> role_id == 11)
+                                        <option value="{{ $user->id }}" {{ old('id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }} {{ $user->lname }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('carman')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
 
-    
-    <button type="submit" class="btn btn-primary">บันทึกสถานะ</button>
-</form>
-
-
+                            <input type="hidden" name="document_id" value="{{ $document->document_id }}">
+                            <button type="submit" class="mt-2">บันทึก</button>
                         @endif
 
                     @elseif (in_array(auth()->user()->role_id, [2]))
                         @if ($document->allow_officer == 'pending')
                             <label>ความคิดเห็นหัวหน้าสำนักงาน:</label>
-                            <input type="radio" name="statusofficer" value="approved" onchange="document.getElementById('reason_field_officer').style.display='none';"> อนุญาต
-                            <input type="radio" name="statusofficer" value="rejected" onchange="document.getElementById('reason_field_officer').style.display='block';"> ไม่อนุญาต
+                            <input type="radio" name="statusofficer" value="approved" onchange="toggleOfficerReasonField(false)"> อนุญาต
+                            <input type="radio" name="statusofficer" value="rejected" onchange="toggleOfficerReasonField(true)"> ไม่อนุญาต
 
                             <div id="reason_field_officer" style="display: none;">
                                 <label>เหตุผลที่ไม่อนุญาต:</label>
@@ -92,8 +109,8 @@
                     @elseif (in_array(auth()->user()->role_id, [3]))
                         @if ($document->allow_director == 'pending')
                             <label>ความคิดเห็นผู้อำนวยการ:</label>
-                            <input type="radio" name="statusdirector" value="approved" onchange="document.getElementById('reason_field_director').style.display='none';"> อนุญาต
-                            <input type="radio" name="statusdirector" value="rejected" onchange="document.getElementById('reason_field_director').style.display='block';"> ไม่อนุญาต
+                            <input type="radio" name="statusdirector" value="approved" onchange="toggleDirectorReasonField(false)"> อนุญาต
+                            <input type="radio" name="statusdirector" value="rejected" onchange="toggleDirectorReasonField(true)"> ไม่อนุญาต
 
                             <div id="reason_field_director" style="display: none;">
                                 <label>เหตุผลที่ไม่อนุญาต:</label>
@@ -102,8 +119,77 @@
                             <button type="submit">บันทึก</button>
                         @endif
                     @endif
+
+<script>
+function toggleDivisionReasonField(isRejected) {
+    const reasonField = document.getElementById('reason_field_division');
+    const notallowedReasonInput = document.getElementById('notallowed_reason_division');
+
+    if (isRejected) {
+        reasonField.style.display = 'block';
+        notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+    } else {
+        reasonField.style.display = 'none';
+        notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+    }
+}
+
+function toggleDepartmentReasonField(isRejected) {
+    const reasonField = document.getElementById('reason_field_department');
+    const notallowedReasonInput = document.getElementById('notallowed_reason_department');
+
+    if (isRejected) {
+        reasonField.style.display = 'block';
+        notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+    } else {
+        reasonField.style.display = 'none';
+        notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+    }
+}
+
+function toggleOfficerReasonField(isRejected) {
+    const reasonField = document.getElementById('reason_field_officer');
+    const notallowedReasonInput = document.getElementsByName('notallowed_reason_officer')[0];
+
+    if (isRejected) {
+        reasonField.style.display = 'block';
+        notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+    } else {
+        reasonField.style.display = 'none';
+        notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+    }
+}
+
+function toggleDirectorReasonField(isRejected) {
+    const reasonField = document.getElementById('reason_field_director');
+    const notallowedReasonInput = document.getElementsByName('notallowed_reason_director')[0];
+
+    if (isRejected) {
+        reasonField.style.display = 'block';
+        notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+    } else {
+        reasonField.style.display = 'none';
+        notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+    }
+}
+
+function toggleReasonField(isRejected) {
+    const reasonField = document.getElementById('reason_field_opcar');
+    const notallowedReasonInput = document.getElementById('notallowed_reason');
+
+    if (isRejected) {
+        reasonField.style.display = 'block';
+        notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+    } else {
+        reasonField.style.display = 'none';
+        notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+    }
+}
+</script>
+
                 </form>
             @endif
+
 
 
 
