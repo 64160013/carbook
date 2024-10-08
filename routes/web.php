@@ -107,3 +107,7 @@ Route::get('/permission-form-allow', [DocumentController::class, 'show'])->name(
 Route::post('/update-status', [DocumentController::class, 'updateStatus'])->name('documents.updateStatus');
 
 
+Route::get('/reportdocument', function () {
+    return view('driver.reportdocument');
+})->name('report');
+Route::post('/report/submit', [ReportDocumentController::class, 'submit'])->name('report.submit');
