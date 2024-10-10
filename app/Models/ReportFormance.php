@@ -33,4 +33,10 @@ class ReportFormance extends Model
 
     // ถ้าตารางนี้ไม่มี timestamp (created_at, updated_at) ให้ระบุดังนี้
     public $timestamps = false;
+
+    public function reqDocument()
+    {
+        return $this->belongsTo(ReqDocument::class);
+    }
+    
 }

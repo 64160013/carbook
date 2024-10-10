@@ -25,6 +25,7 @@
                     <th>รายละเอียด</th>
                     <th>สถานะ</th>
                     <th>รายละเอียด</th>
+                    <th>รายงาน</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,6 +61,13 @@
                     <td>
                         <a href="{{ route('documents.show', ['id' => $document->document_id]) }}" class="btn btn-primary">
                             <i class="fas fa-info-circle"></i> รายละเอียด
+                        </a>
+                    </td>
+                    <td>
+                        <!-- <a href="{{ route('report.index') }}" class="btn btn-primary"> -->
+                        <a href="{{ route('report.index', ['id' => $document->document_id]) }}" class="btn btn-primary">
+
+                            <i class="fas fa-info-circle"></i> รายงาน
                         </a>
                     </td>
                 </tr>
