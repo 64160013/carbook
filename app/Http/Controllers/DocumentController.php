@@ -102,6 +102,8 @@ class DocumentController extends Controller
                 $documents = $approvedDivision
                     ->orderBy('document_id', 'desc') 
                     ->get();
+                // return view('opcar.op_permission-form', compact('documents'));
+                
 
             } elseif ($user->role_id == 2) {        //หัวหน้าสำนักงาน
                 $documents = $approvedOpcar

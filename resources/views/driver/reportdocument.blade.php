@@ -39,6 +39,7 @@
     <div class="card shadow-sm">
         <form action="{{ route('report.submit') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="document_id" value="{{ $documents->document_id }}">
 
             <!-- Officer Information and Trip Information in a two-column layout -->
             <div class="row mb-4">
@@ -53,7 +54,7 @@
                                 <label for="officer_name" class="col-sm-3 col-form-label text-right">ข้าพระเจ้า :</label>
                                 <div class="col-sm-9">
                                     <input type="text" name="name" id="name" class="form-control" 
-                                        value="{{ $documents->carmanUser->name }} {{ $documents->carmanUser->lname }}">
+                                        value="{{ $documents->carmanUser->name }} {{ $documents->carmanUser->lname }}" readonly>
                                 </div>
                                 
                             </div>
@@ -61,14 +62,14 @@
                                 <label for="registration" class="col-sm-3 col-form-label text-right">หมายเลขทะเบียน :</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" id="registration" name="registration" 
-                                    value="{{ $documents->vehicle->car_category }} {{ $documents->vehicle->car_regnumber }} {{ $documents->vehicle->car_province }}">
+                                    value="{{ $documents->vehicle->car_category }} {{ $documents->vehicle->car_regnumber }} {{ $documents->vehicle->car_province }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="province" class="col-sm-3 col-form-label text-right">จังหวัดที่เดินทางไป :</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" id="province" name="province" 
-                                    value="{{ $documents->province->name_th }} ">
+                                    value="{{ $documents->province->name_th }} " readonly>
                                 </div>
                             </div>
                         </div>
@@ -109,9 +110,9 @@
                             </div>
 
                             <div class="form-group row mb-4">
-                                <label for="total_companion" class="col-sm-5 col-form-label text-right">{{ __('ผู้รวมเดินทาง') }}</label>
+                                <label for="total_companion" class="col-sm-5 col-form-label text-right">{{ __('ผู้ร่วมเดินทาง') }}</label>
                                 <div class="col-sm-7">
-                                    <input type="number" class="form-control @error('total_companion') is-invalid @enderror" id="total_companion" name="total_companion" value="{{ old('total_companion') }}" required>
+                                    <input type="number" class="form-control @error('total_companion') is-invalid @enderror" id="total_companion" name="total_companion" value="{{ old('total_companion') }}" required min="1">
                                 </div>
                                 @error('total_companion')
                                     <span class="invalid-feedback" role="alert">
@@ -245,7 +246,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-right">การปฏิบัติงานเป็นไปด้วยความเรียบร้อย :</label>
+                        <label class="col-sm-3 col-form-label text-right">การปฏิบัติงานครั้งนี้เป็นไปด้วยความเรียบร้อยใช่หรือมไม่ :</label>
 
                         <div class="col-sm-9">
                             <div class="form-check">
@@ -259,7 +260,7 @@
                             </div>
 
                             <div class="form-group mt-2 d-none" id="remarks_container">
-                                <label for="remarks" class="col-sm-3 col-form-label text-right">อื่น ๆ :</label>
+                                <label for="remarks" class="col-sm-3 col-form-label text-right">เนื่องจาก :</label>
                                 <div class="col-sm-9">
                                     <textarea class="form-control" id="remarks" name="comment_issue" rows="3"></textarea>
                                 </div>
@@ -292,7 +293,8 @@
                     <div class="form-group row">
                         <label for="signature" class="col-sm-3 col-form-label text-right">ลายเซ็นผู้ส่ง :</label>
                         <div class="col-sm-9">
-                        
+            
+
                         </div>
                     </div>
                 </div>

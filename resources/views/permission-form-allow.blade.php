@@ -14,305 +14,319 @@
         </div>
     @else
         @foreach($documents as $document)
-            <!-- หัวหน้างาน division -->
+    <!-- หัวหน้างาน division -->
             @if (in_array(auth()->user()->role_id, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16]))
                 <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
                     @csrf
                     <input type="hidden" name="document_id" value="{{ $document->document_id }}">
-                        @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
-                            @if ($document->allow_division == 'pending')
-                                <div class="card mb-4 shadow-sm border-1">
-                                    <div class="card-header bg-light">
-                                        <h6 class="mb-0">{{ __('อัพเดตสถานะเอกสาร') }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <label>{{ __('ความคิดเห็นหัวหน้าฝ่าย:') }}</label>
-                                        <div class="d-flex">
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="statusdivision" value="approved" id="approve_division" onchange="toggleDivisionReasonField(false)">
-                                                <label class="form-check-label" for="approve_division">{{ __('อนุญาต') }}</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="statusdivision" value="rejected" id="reject_division" onchange="toggleDivisionReasonField(true)">
-                                                <label class="form-check-label" for="reject_division">{{ __('ไม่อนุญาต') }}</label>
-                                            </div>
+                    @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
+                        @if ($document->allow_division == 'pending')
+                            <div class="card mb-4 shadow-sm border-1">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">{{ __('อัพเดตสถานะเอกสาร') }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <label>{{ __('ความคิดเห็นหัวหน้าฝ่าย:') }}</label>
+                                    <div class="d-flex">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="radio" name="statusdivision" value="approved"
+                                                id="approve_division" onchange="toggleDivisionReasonField(false)">
+                                            <label class="form-check-label" for="approve_division">{{ __('อนุญาต') }}</label>
                                         </div>
-                                        <div id="reason_field_division" style="display: none;">
-                                            <label for="notallowed_reason_division">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                            <input type="text" id="notallowed_reason_division" name="notallowed_reason_division"
-                                                placeholder="{{ __('กรุณาระบุเหตุผล') }}" value="{{ old('notallowed_reason_division', $document->notallowed_reason) }}">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="statusdivision" value="rejected"
+                                                id="reject_division" onchange="toggleDivisionReasonField(true)">
+                                            <label class="form-check-label" for="reject_division">{{ __('ไม่อนุญาต') }}</label>
                                         </div>
                                     </div>
-                                    <div class="card-footer text-right">
-                                        <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-                                    </div>  
-                                </div> 
-                            @endif                                    
-
-                        @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
-                            @if ($document->allow_department == 'pending')
-                                <div class="card mb-4 shadow-sm border-1">
-                                    <div class="card-header bg-light">
-                                        <h6 class="mb-0">{{ __('อัพเดตสถานะเอกสาร') }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <label>{{ __('ความคิดเห็นหัวหน้างานวิจัย:') }}</label>
-                                        <div class="d-flex">
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="statusdepartment" value="approved" id="approve_department" onchange="toggleDepartmentReasonField(false)">
-                                                <label class="form-check-label" for="approve_department">{{ __('อนุญาต') }}</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="statusdepartment" value="rejected" id="reject_department" onchange="toggleDepartmentReasonField(true)">
-                                                <label class="form-check-label" for="reject_department">{{ __('ไม่อนุญาต') }}</label>
-                                            </div>
-                                        </div>
-                                        <div id="reason_field_department" style="display: none;">
-                                            <label for="notallowed_reason_department">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                            <input type="text" id="notallowed_reason_department" name="notallowed_reason_department"
-                                                placeholder="{{ __('กรุณาระบุเหตุผล') }}" value="{{ old('notallowed_reason_department', $document->notallowed_reason) }}">
-                                        </div>
-                                    </div> 
-                                    <div class="card-footer text-right">
-                                        <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-                                    </div>  
-                                </div>                                     
-                            @endif
-
-                        @elseif (in_array(auth()->user()->role_id, [12]))
-                            @if ($document->allow_opcar == 'pending')
-                                <div class="card mb-4 shadow-sm border-1">
-                                    <div class="card-header bg-light">
-                                        <h6 class="mb-0">{{ __('ความคิดเห็นคนสั่งรถ:') }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="d-flex mb-3">
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="statusopcar" value="approved" id="approve_opcar" onchange="toggleReasonField(false); toggleVehicleAndDriver(true)">
-                                                <label class="form-check-label" for="approve_opcar">{{ __('อนุญาต') }}</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="statusopcar" value="rejected" id="reject_opcar" onchange="toggleReasonField(true); toggleVehicleAndDriver(false)">
-                                                <label class="form-check-label" for="reject_opcar">{{ __('ไม่อนุญาต') }}</label>
-                                            </div>
-                                        </div>
-
-                                        <div id="reason_field_opcar" style="display: none;">
-                                            <label for="notallowed_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                            <input type="text" id="notallowed_reason" name="notallowed_reason" 
-                                                placeholder="{{ __('กรุณาระบุเหตุผล') }}" 
-                                                value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
-                                        </div>
-
-                                        <div id="vehicle_driver_section" style="display: none;">
-                                            <select id="vehicle" class="form-control @error('car_id') is-invalid @enderror mt-3" name="car_id" required>
-                                                <option value="" disabled selected>{{ __('เลือกยานพาหนะ') }}</option>
-                                                @foreach($vehicles as $vehicle)
-                                                    @if ($vehicle->car_status == 'Y')
-                                                        <option value="{{ $vehicle->car_id }}" {{ old('car_id') == $vehicle->car_id ? 'selected' : '' }}>
-                                                            {{ $vehicle->car_category }} {{ $vehicle->car_regnumber }} {{ $vehicle->car_province }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                            @error('car_id')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-
-                                            <select id="users" class="form-control @error('carman') is-invalid @enderror mt-2" name="carman" required>
-                                                <option value="" disabled selected>{{ __('เลือกคนขับรถ') }}</option>
-                                                @foreach($users as $user)
-                                                    @if ($user->role_id == 11)
-                                                        <option value="{{ $user->id }}" {{ old('carman') == $user->id ? 'selected' : '' }}>
-                                                            {{ $user->name }} {{ $user->lname }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                            @error('carman')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="card-footer text-right">
-                                        <button type="submit" class="btn btn-primary mt-2">{{ __('บันทึก') }}</button>
+                                    <div id="reason_field_division" style="display: none;">
+                                        <label for="notallowed_reason_division">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                        <input type="text" id="notallowed_reason_division" name="notallowed_reason_division"
+                                            placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                            value="{{ old('notallowed_reason_division', $document->notallowed_reason) }}">
                                     </div>
                                 </div>
-                            @endif
-
-                        @elseif (in_array(auth()->user()->role_id, [2]))
-                            @if ($document->allow_officer == 'pending')
-                                <div class="card mb-4 shadow-sm border-1">
-                                    <div class="card-header bg-light">
-                                        <h6 class="mb-0">{{ __('ความคิดเห็นหัวหน้าสำนักงาน:') }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="d-flex mb-3">
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="statusofficer" value="approved" id="approve_officer" onchange="toggleOfficerReasonField(false)">
-                                                <label class="form-check-label" for="approve_officer">{{ __('อนุญาต') }}</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="statusofficer" value="rejected" id="reject_officer" onchange="toggleOfficerReasonField(true)">
-                                                <label class="form-check-label" for="reject_officer">{{ __('ไม่อนุญาต') }}</label>
-                                            </div>
-                                        </div>
-
-                                        <div id="reason_field_officer" style="display: none;">
-                                            <label for="notallowed_reason_officer">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                            <input type="text" id="notallowed_reason_officer" name="notallowed_reason_officer" 
-                                                placeholder="{{ __('กรุณาระบุเหตุผล') }}" 
-                                                value="{{ old('notallowed_reason_officer', $document->notallowed_reason) }}">
-                                        </div>
-                                    </div>
-                                    <div class="card-footer text-right">
-                                        <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-                                    </div>  
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
                                 </div>
-                            @endif
-
-                        @elseif (in_array(auth()->user()->role_id, [3]))
-                        @if ($document->allow_director == 'pending')
-    <div class="card mb-4 shadow-sm border-1">
-        <div class="card-header bg-light">
-            <h6 class="mb-0">{{ __('ความคิดเห็นผู้อำนวยการ:') }}</h6>
-        </div>
-        <div class="card-body">
-            <div class="d-flex mb-3">
-                <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="statusdirector" value="approved" id="approve_director" onchange="toggleDirectorReasonField(false)">
-                    <label class="form-check-label" for="approve_director">{{ __('อนุญาต') }}</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="statusdirector" value="rejected" id="reject_director" onchange="toggleDirectorReasonField(true)">
-                    <label class="form-check-label" for="reject_director">{{ __('ไม่อนุญาต') }}</label>
-                </div>
-            </div>
-
-            <div id="reason_field_director" style="display: none;">
-                <label for="notallowed_reason_director">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                <input type="text" id="notallowed_reason_director" name="notallowed_reason_director" 
-                       placeholder="{{ __('กรุณาระบุเหตุผล') }}" 
-                       value="{{ old('notallowed_reason_director', $document->notallowed_reason) }}">
-            </div>
-        </div>
-        <div class="card-footer text-right">
-            <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-        </div>  
-    </div>
-@endif
-
-
-
-                            
-                            
-
-                        
-
+                            </div>
                         @endif
+
+                    @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
+                        @if ($document->allow_department == 'pending')
+                            <div class="card mb-4 shadow-sm border-1">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">{{ __('อัพเดตสถานะเอกสาร') }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <label>{{ __('ความคิดเห็นหัวหน้างานวิจัย:') }}</label>
+                                    <div class="d-flex">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="radio" name="statusdepartment" value="approved"
+                                                id="approve_department" onchange="toggleDepartmentReasonField(false)">
+                                            <label class="form-check-label" for="approve_department">{{ __('อนุญาต') }}</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="statusdepartment" value="rejected"
+                                                id="reject_department" onchange="toggleDepartmentReasonField(true)">
+                                            <label class="form-check-label" for="reject_department">{{ __('ไม่อนุญาต') }}</label>
+                                        </div>
+                                    </div>
+                                    <div id="reason_field_department" style="display: none;">
+                                        <label for="notallowed_reason_department">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                        <input type="text" id="notallowed_reason_department" name="notallowed_reason_department"
+                                            placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                            value="{{ old('notallowed_reason_department', $document->notallowed_reason) }}">
+                                    </div>
+                                </div>
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                                </div>
+                            </div>
+                        @endif
+
+                    @elseif (in_array(auth()->user()->role_id, [12]))
+                    @if ($document->allow_opcar == 'pending')
+                    <div class="card mb-4 shadow-sm border-1">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">{{ __('ความคิดเห็นคนสั่งรถ:') }}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" name="statusopcar" value="approved"
+                                        id="approve_opcar" onchange="toggleReasonField(false); toggleVehicleAndDriver(true)">
+                                    <label class="form-check-label" for="approve_opcar">{{ __('อนุญาต') }}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="statusopcar" value="rejected"
+                                        id="reject_opcar" onchange="toggleReasonField(true); toggleVehicleAndDriver(false)">
+                                    <label class="form-check-label" for="reject_opcar">{{ __('ไม่อนุญาต') }}</label>
+                                </div>
+                            </div>
+
+                            <div id="reason_field_opcar" style="display: none;">
+                                <label for="notallowed_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                <input type="text" id="notallowed_reason" name="notallowed_reason"
+                                    placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                    value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
+                            </div>
+
+                            <div id="vehicle_driver_section" style="display: none;">
+                                <select id="vehicle" class="form-control @error('car_id') is-invalid @enderror mt-3" name="car_id"
+                                    required>
+                                    <option value="" disabled selected>{{ __('เลือกยานพาหนะ') }}</option>
+                                    @foreach($vehicles as $vehicle)
+                                        @if ($vehicle->car_status == 'Y')
+                                            <option value="{{ $vehicle->car_id }}" {{ old('car_id') == $vehicle->car_id ? 'selected' : '' }}>
+                                                {{ $vehicle->car_category }} {{ $vehicle->car_regnumber }} {{ $vehicle->car_province }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('car_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                                <select id="users" class="form-control @error('carman') is-invalid @enderror mt-2" name="carman"
+                                                    required>
+                                                    <option value="" disabled selected>{{ __('เลือกคนขับรถ') }}</option>
+                                                    @foreach($users as $user)
+                                                        @if ($user->role_id == 11)
+                                                            <option value="{{ $user->id }}" {{ old('carman') == $user->id ? 'selected' : '' }}>
+                                                                {{ $user->name }} {{ $user->lname }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                @error('carman')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-primary mt-2">{{ __('บันทึก') }}</button>
+                                        </div>
+                                    </div>
+                                    @endif
+
+                                @elseif (in_array(auth()->user()->role_id, [2]))
+                                    @if ($document->allow_officer == 'pending')
+                                        <div class="card mb-4 shadow-sm border-1">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">{{ __('ความคิดเห็นหัวหน้าสำนักงาน:') }}</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex mb-3">
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input" type="radio" name="statusofficer" value="approved"
+                                                            id="approve_officer" onchange="toggleOfficerReasonField(false)">
+                                                        <label class="form-check-label" for="approve_officer">{{ __('อนุญาต') }}</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="statusofficer" value="rejected"
+                                                            id="reject_officer" onchange="toggleOfficerReasonField(true)">
+                                                        <label class="form-check-label" for="reject_officer">{{ __('ไม่อนุญาต') }}</label>
+                                                    </div>
+                                                </div>
+
+                                                <div id="reason_field_officer" style="display: none;">
+                                                    <label for="notallowed_reason_officer">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                                    <input type="text" id="notallowed_reason_officer" name="notallowed_reason_officer"
+                                                        placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                                        value="{{ old('notallowed_reason_officer', $document->notallowed_reason) }}">
+                                                </div>
+                                            </div>
+                                            <div class="card-footer text-right">
+                                                <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                @elseif (in_array(auth()->user()->role_id, [3]))
+                    @if ($document->allow_director == 'pending')
+                        <div class="card mb-4 shadow-sm border-1">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">{{ __('ความคิดเห็นผู้อำนวยการ:') }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex mb-3">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="statusdirector" value="approved"
+                                            id="approve_director" onchange="toggleDirectorReasonField(false)">
+                                        <label class="form-check-label" for="approve_director">{{ __('อนุญาต') }}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="statusdirector" value="rejected"
+                                            id="reject_director" onchange="toggleDirectorReasonField(true)">
+                                        <label class="form-check-label" for="reject_director">{{ __('ไม่อนุญาต') }}</label>
+                                    </div>
+                                </div>
+
+                                <div id="reason_field_director" style="display: none;">
+                                    <label for="notallowed_reason_director">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                    <input type="text" id="notallowed_reason_director" name="notallowed_reason_director"
+                                        placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                        value="{{ old('notallowed_reason_director', $document->notallowed_reason) }}">
+                                </div>
+                            </div>
+                            <div class="card-footer text-right">
+                                <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                            </div>
+                        </div>
+                    @endif
+
+
+
+
+
+
+
+
+                    @endif
                 </form>
             @endif
 
 
-        
 
-<script>
-    function toggleDivisionReasonField(isRejected) {
-        const reasonField = document.getElementById('reason_field_division');
-        const notallowedReasonInput = document.getElementById('notallowed_reason_division');
 
-        if (isRejected) {
-            reasonField.style.display = 'block';
-            notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
-        } else {
-            reasonField.style.display = 'none';
-            notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+    <script>
+        function toggleDivisionReasonField(isRejected) {
+            const reasonField = document.getElementById('reason_field_division');
+            const notallowedReasonInput = document.getElementById('notallowed_reason_division');
+
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+            } else {
+                reasonField.style.display = 'none';
+                notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            }
         }
-    }
 
-    function toggleDepartmentReasonField(isRejected) {
-        const reasonField = document.getElementById('reason_field_department');
-        const notallowedReasonInput = document.getElementById('notallowed_reason_department');
+        function toggleDepartmentReasonField(isRejected) {
+            const reasonField = document.getElementById('reason_field_department');
+            const notallowedReasonInput = document.getElementById('notallowed_reason_department');
 
-        if (isRejected) {
-            reasonField.style.display = 'block';
-            notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
-        } else {
-            reasonField.style.display = 'none';
-            notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+            } else {
+                reasonField.style.display = 'none';
+                notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            }
         }
-    }
 
-    function toggleOfficerReasonField(isRejected) {
-        const reasonField = document.getElementById('reason_field_officer');
-        const notallowedReasonInput = document.getElementsByName('notallowed_reason_officer')[0];
+        function toggleOfficerReasonField(isRejected) {
+            const reasonField = document.getElementById('reason_field_officer');
+            const notallowedReasonInput = document.getElementsByName('notallowed_reason_officer')[0];
 
-        if (isRejected) {
-            reasonField.style.display = 'block';
-            notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
-        } else {
-            reasonField.style.display = 'none';
-            notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+            } else {
+                reasonField.style.display = 'none';
+                notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            }
         }
-    }
 
-    function toggleDirectorReasonField(isRejected) {
-        const reasonField = document.getElementById('reason_field_director');
-        const notallowedReasonInput = document.getElementsByName('notallowed_reason_director')[0];
+        function toggleDirectorReasonField(isRejected) {
+            const reasonField = document.getElementById('reason_field_director');
+            const notallowedReasonInput = document.getElementsByName('notallowed_reason_director')[0];
 
-        if (isRejected) {
-            reasonField.style.display = 'block';
-            notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
-        } else {
-            reasonField.style.display = 'none';
-            notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+            } else {
+                reasonField.style.display = 'none';
+                notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            }
         }
-    }
 
-    // function toggleReasonField(isRejected) {
-    //     const reasonField = document.getElementById('reason_field_opcar');
-    //     const notallowedReasonInput = document.getElementById('notallowed_reason');
+        // function toggleReasonField(isRejected) {
+        //     const reasonField = document.getElementById('reason_field_opcar');
+        //     const notallowedReasonInput = document.getElementById('notallowed_reason');
 
-    //     if (isRejected) {
-    //         reasonField.style.display = 'block';
-    //         notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
-    //     } else {
-    //         reasonField.style.display = 'none';
-    //         notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
-    //     }
-    // }
-    function toggleReasonField(isRejected) {
-    const reasonField = document.getElementById('reason_field_opcar');
-    const notallowedReasonInput = document.getElementById('notallowed_reason');
+        //     if (isRejected) {
+        //         reasonField.style.display = 'block';
+        //         notallowedReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+        //     } else {
+        //         reasonField.style.display = 'none';
+        //         notallowedReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+        //     }
+        // }
+        function toggleReasonField(isRejected) {
+            const reasonField = document.getElementById('reason_field_opcar');
+            const notallowedReasonInput = document.getElementById('notallowed_reason');
 
-    if (isRejected) {
-        reasonField.style.display = 'block';
-        notallowedReasonInput.setAttribute('required', 'required');
-    } else {
-        reasonField.style.display = 'none';
-        notallowedReasonInput.removeAttribute('required');
-    }
-}
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                notallowedReasonInput.setAttribute('required', 'required');
+            } else {
+                reasonField.style.display = 'none';
+                notallowedReasonInput.removeAttribute('required');
+            }
+        }
 
-function toggleVehicleAndDriver(isApproved) {
-    const vehicleDriverSection = document.getElementById('vehicle_driver_section');
+        function toggleVehicleAndDriver(isApproved) {
+            const vehicleDriverSection = document.getElementById('vehicle_driver_section');
 
-    if (isApproved) {
-        vehicleDriverSection.style.display = 'block';
-    } else {
-        vehicleDriverSection.style.display = 'none';
-    }
-}
+            if (isApproved) {
+                vehicleDriverSection.style.display = 'block';
+            } else {
+                vehicleDriverSection.style.display = 'none';
+            }
+        }
 
-</script>
+    </script>
 
 
- 
+
             <div class="card mb-4 shadow-sm border-1">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">{{ __('เอกสาร ที่ : ') . $document->document_id }}</h5>
@@ -335,7 +349,7 @@ function toggleVehicleAndDriver(isApproved) {
                                         {{ optional($document->reqDocumentUsers->first())->name ?? 'N/A' }}
                                         {{ optional($document->reqDocumentUsers->first())->lname ?? 'N/A' }}
                                     </td>
-                                    
+
                                 </tr>
                                 <tr>
                                     <td>
@@ -346,7 +360,7 @@ function toggleVehicleAndDriver(isApproved) {
                                         <strong>{{ __('ฝ่ายงาน') }}:</strong>
                                         {{ optional($document->reqDocumentUsers->first()->department)->department_name ?? 'N/A' }}
                                     </td>
-                                    
+
                                 </tr>
                             </table>
                         </div>
@@ -356,7 +370,7 @@ function toggleVehicleAndDriver(isApproved) {
                             <h6 class="text-muted">{{ __('ข้อมูลการเดินทาง') }}</h6>
                             <table class="table table-borderless">
                                 <tr>
-                                <td><strong>{{ __('วัตถุประสงค์') }}:</strong> {{ $document->objective ?? 'N/A' }}</td>
+                                    <td><strong>{{ __('วัตถุประสงค์') }}:</strong> {{ $document->objective ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -396,7 +410,7 @@ function toggleVehicleAndDriver(isApproved) {
                                     <td>
                                         <strong>{{ __('ผู้ร่วมเดินทางทั้งหมด') }}:</strong> {{ $document->sum_companion }}
                                     </td>
-                                    
+
                                 </tr>
                                 <tr>
                                     <td><strong>{{ __('วันที่ไป') }}:</strong>
@@ -451,9 +465,22 @@ function toggleVehicleAndDriver(isApproved) {
                             <p>{{ optional($document->reqDocumentUsers->first())->signature_name ?? 'N/A' }}</p>
                         </div>
 
+                        <div class="mt-4" style="text-align: right; margin-right: 50px;">
+                            <strong>{{ __('ลงชื่อผู้ขอ:') }}</strong>
+                            @if(optional($document->reqDocumentUsers->first())->signature_name)
+                                <img src="{{ Storage::url('signatures/' . optional($document->reqDocumentUsers->first())->signature_name) }}"
+                                    alt="Signature" style="max-width: 200px;">
+                            @else
+                                <p>{{ 'N/A' }}</p>
+                            @endif
+                        </div>
+
+
                     </div>
 
-        @endforeach
+                    
+                </div>
+            </div>
+        @endforeach   
     @endif
-    </div>
 @endsection
