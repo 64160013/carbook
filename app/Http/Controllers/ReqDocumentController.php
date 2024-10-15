@@ -12,6 +12,7 @@ use App\Models\District;
 use App\Models\WorkType;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Models\CarIcon;
 
 
 class ReqDocumentController extends Controller
@@ -30,7 +31,9 @@ class ReqDocumentController extends Controller
         $district = District::all();
         $work_type = WorkType::all();
         $vehicles = Vehicle::all();
-        return view('reqdocument', compact('provinces', 'amphoe', 'district', 'work_type', 'user','vehicles'));
+        $caricon = CarIcon::all();
+        
+        return view('reqdocument', compact('provinces', 'amphoe', 'district', 'work_type', 'user','vehicles','caricon'));
     }
 
 

@@ -110,3 +110,12 @@ Route::post('/update-status', [DocumentController::class, 'updateStatus'])->name
 
 Route::get('/report[id]', [ReportDocumentController::class, 'index'])->name('report.index');
 Route::post('/report', [ReportDocumentController::class, 'store'])->name('report.submit');
+
+
+
+  
+
+  
+use App\Http\Controllers\PDFController;
+    
+Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
