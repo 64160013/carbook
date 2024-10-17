@@ -96,6 +96,9 @@ Route::any('/admin/users/search', [AdminController::class, 'searchUsers'])->name
     ->middleware(IsAdmin::class);
 Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('admin.users.form')
     ->middleware(IsAdmin::class);
+    
+    Route::get('/admin/users/searchform', [AdminController::class, 'searchForm'])->name('admin.users.searchform');
+
 
 //แสดงประวัติการขอ และ แสดงรายละเอียดคำขอ
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
