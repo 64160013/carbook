@@ -54,7 +54,7 @@
                                             return \Carbon\Carbon::parse($date->created_at)->format('F Y');
                                         }) as $month => $groupedDocuments)
                                         @foreach($groupedDocuments as $document)
-                                            <tr>
+                                            <tr class="text-center">
                                                 @php
                                                     $requester = $document->reqDocumentUsers->first();
                                                 @endphp
@@ -90,14 +90,18 @@
 
                                                 <td>
                                                     <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
-                                                        class="btn btn-outline-primary">สถานะ</a>
+                                                        class="btn btn-outline-primary">สถานะ</a>           
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}" class="btn btn-outline-primary">
-                                                        สถานะ
-                                                    </a>
+                                                    @if ($document->allow_director != 'pending')
+                                                        <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}" 
+                                                            class="btn btn-outline-primary"> PDF
+                                                        </a>    
+                                                    @else
+                                                        <button type="button" class="btn btn-secondary" disabled>PDF</button>
+                                                    @endif
+                                                    
                                                 </td>
-
                                             </tr>
                                         @endforeach
                                     @endforeach

@@ -31,7 +31,7 @@
             @endphp
 
             @foreach($documents->groupBy(function ($date) use ($groupedBy) {
-                        return \Carbon\Carbon::parse($date->$groupedBy)->format('F Y');
+                        return \Carbon\Carbon::parse($date->$groupedBy)->format('F Y', 'th');
                     }) as $month => $groupedDocuments)
                     <div class="card mb-4">
                         {{-- Header ของการ์ดจะแสดงเดือน --}}
@@ -119,16 +119,35 @@
 
                                         <div class="d-flex justify-content-between align-items-center border p-3 rounded shadow-sm {{ $borderColor }}"
                                             style="background-color: #f8f9fa;">
-                                            <div>
-                                                <strong>วัตถุประสงค์: {{ $document->objective }}</strong><br>
-                                                สถานที่: {{ $document->location }}<br>
-                                                วันที่ทำเรื่อง:
-                                                {{ \Carbon\Carbon::parse($document->reservation_date)->translatedFormat('d F Y') }}<br>
-                                                วันที่ไป: {{ \Carbon\Carbon::parse($document->start_date)->translatedFormat('d F Y') }}<br>
-                                                วันที่กลับ: {{ \Carbon\Carbon::parse($document->end_date)->translatedFormat('d F Y') }}<br>
-                                                เวลาไป: {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.<br>
-                                                เวลากลับ: {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.<br>
+                                            <div class="d-flex justify-content-between">
+                                                <div style="flex: 2; margin-right: 40px;">
+                                                    <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">วัตถุประสงค์: {{ $document->objective }}</strong><br>        สถานที่: {{ $document->location }}<br>
+                                                    วันที่ไป: 
+                                                    <span>
+                                                        {{ 
+                                                            \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->start_date)->addYears(543)->format('Y') 
+                                                        }}
+                                                    </span><br>
+                                                    เวลาไป: {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.
+                                                </div>
+
+                                                <div style="flex: 2; white-space: nowrap; overflow: visible;">
+                                                    <br>วันที่ทำเรื่อง: {{ \Carbon\Carbon::parse($document->reservation_date)->translatedFormat('d F Y') }}<br>
+                                                    วันที่กลับ:
+                                                    <span>
+                                                        {{ 
+                                                            \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->end_date)->addYears(543)->format('Y') 
+                                                        }}
+                                                    </span><br>        
+                                                    เวลากลับ: {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
+                                                </div>
                                             </div>
+
+
 
                                             <div>
                                                 @foreach($document->reqDocumentUsers as $docUser)

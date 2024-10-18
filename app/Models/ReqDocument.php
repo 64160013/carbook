@@ -92,9 +92,15 @@ class ReqDocument extends Model
     }
 
     public function reportFormance()
-{
-    return $this->hasOne(ReportFormance::class, 'req_document_id', 'document_id');
-}
+    {
+        return $this->hasOne(ReportFormance::class, 'req_document_id', 'document_id');
+    }
+
+    public function DivisionAllowBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by_division');
+    }
+    
 
 
 }

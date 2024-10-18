@@ -22,7 +22,7 @@ class PDFController extends Controller
         $id = $request->input('id');
     
         // ดึงข้อมูลเอกสารที่เกี่ยวข้องด้วย findOrFail และความสัมพันธ์ต่างๆ
-        $documents = ReqDocument::with(['reqDocumentUsers', 'users', 'province', 'vehicle','carmanUser'])
+        $documents = ReqDocument::with(['reqDocumentUsers', 'users', 'province', 'vehicle','carmanUser','DivisionAllowBy'])
                                 ->findOrFail($id);
     
         $data = [

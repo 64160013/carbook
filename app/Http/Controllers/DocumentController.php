@@ -20,11 +20,11 @@ class DocumentController extends Controller
     {
         if (auth()->check()) {
             $user = auth()->user();
-
+    
             $documents = ReqDocument::whereHas('reqDocumentUsers', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
-            })->get();
-
+            })->orderBy('created_at', 'desc')->get();
+    
             return view('document-history', compact('documents'));
         } else {
             return redirect()->route('login');
@@ -201,7 +201,6 @@ class DocumentController extends Controller
      */
     public function updateStatus(Request $request)
     {
-
         // รับข้อมูลจากฟอร์ม
         $documentId = $request->input('document_id');
         $statusdivision = $request->input('statusdivision');
@@ -215,9 +214,10 @@ class DocumentController extends Controller
         $document = ReqDocument::where('document_id', $documentId)->first();
 
         if ($document) {
-            // อัปเดตสถานะต่าง ๆ
+            // อัปเดตสถานะต่าง ๆ พร้อมบันทึกผู้อนุญาต
             if ($statusdivision) {
                 $document->allow_division = $statusdivision;
+                $document->approved_by_division = auth()->user()->id; // เก็บค่าผู้อนุญาต
                 if ($statusdivision == 'rejected' && $request->input('notallowed_reason_division')) {
                     $document->notallowed_reason = $request->input('notallowed_reason_division');
                 } else {
@@ -227,6 +227,7 @@ class DocumentController extends Controller
 
             if ($statusdepartment) {
                 $document->allow_department = $statusdepartment;
+                $document->approved_by_department = auth()->user()->id; // เก็บค่าผู้อนุญาต
                 if ($statusdepartment == 'rejected' && $request->input('notallowed_reason_department')) {
                     $document->notallowed_reason = $request->input('notallowed_reason_department');
                 } else {
@@ -236,15 +237,17 @@ class DocumentController extends Controller
 
             if ($statusopcar) {
                 $document->allow_opcar = $statusopcar;
+                $document->approved_by_opcar = auth()->user()->id; // เก็บค่าผู้อนุญาต
                 if ($statusopcar == 'rejected' && $notallowedReason) {
                     $document->notallowed_reason = $notallowedReason;
                 } else {
                     $document->notallowed_reason = null; 
                 }
             }
-            
+
             if ($statusofficer) {
                 $document->allow_officer = $statusofficer;
+                $document->approved_by_officer = auth()->user()->id; // เก็บค่าผู้อนุญาต
                 if ($statusofficer == 'rejected' && $request->input('notallowed_reason_officer')) {
                     $document->notallowed_reason = $request->input('notallowed_reason_officer');
                 } else {
@@ -254,6 +257,7 @@ class DocumentController extends Controller
 
             if ($statusdirector) {
                 $document->allow_director = $statusdirector;
+                $document->approved_by_director = auth()->user()->id; // เก็บค่าผู้อนุญาต
                 if ($statusdirector == 'rejected' && $request->input('notallowed_reason_director')) {
                     $document->notallowed_reason = $request->input('notallowed_reason_director');
                 } else {
@@ -265,7 +269,6 @@ class DocumentController extends Controller
             if (auth()->user()->role_id == 12) {
                 $document->car_id = $request->input('car_id');
                 $document->carman = $request->input('carman');
-
             }
 
             // บันทึกข้อมูล
@@ -278,6 +281,7 @@ class DocumentController extends Controller
                             ->with('error', 'ไม่พบเอกสาร');
         }
     }
+
 
 
 

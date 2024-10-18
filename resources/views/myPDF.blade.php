@@ -136,7 +136,18 @@
                 </span> 
                 )
             </p>
-            <p style="line-height: 1.7; margin-left: 25"><span class="line" ></span> หัวหน้าฝ่าย</p>
+            <p style="line-height: 1; margin-left: 25"><span class="line" style="text-align: center;">
+                {{ $documents->DivisionAllowBy->name }} {{ $documents->DivisionAllowBy->lname }}
+                </span> หัวหน้าฝ่าย
+            </p>
+            <!-- <p style="line-height: 1; margin-left: 25; text-align: center;">
+                <span class="line" style="text-overflow: ellipsis; white-space: nowrap;">
+                    {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->name : 'ยังไม่มีการอนุญาต' }} 
+                    {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->lname : '' }}
+                </span>
+                หัวหน้าฝ่าย
+            </p> -->
+
         </div>
         <p>
             โปรดพิจารณาอนุญาตให้ใช้รถยนต์หมานเลขทะเบียน <span class="line" style="width:100px; padding-left: 10px;">
@@ -151,17 +162,9 @@
         <!-- <p><span class="line" style="width: 605px; line-height: 0.9; padding-left: 30px;">2s</span></p> -->
 
             @foreach($documents->reqDocumentUsers as $docUser)
-                
-                <img src="{{ asset('storage/signatures/' . $docUser->signature_name) }}" alt="ไม่ขึ้นจ้าา" width="150" class="img-fluid mt-2">
+                <!-- {{$docUser->signature_name}} -->
+                <img src="{{ Storage::url('signatures/' . $docUser->signature_name) }}"  width="150" class="img-fluid mt-2">
             @endforeach 
-
-            @foreach($documents->reqDocumentUsers as $docUser)
-    <img src="{{ Storage::url('signatures/' . $docUser->signature_name) }}" alt="Signature Image" width="150" class="img-fluid mt-2">
-@endforeach 
-<br>
-<img src="{{ asset('images/BIMS_TH.png') }}" alt="BIMS TH">
-
-           
 
     </div>
 </body>
