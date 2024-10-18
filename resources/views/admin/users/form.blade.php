@@ -92,9 +92,12 @@
                                                     <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
                                                         class="btn btn-outline-primary">สถานะ</a>
                                                 </td>
-                                                <td>   
-                                                    รอก่อง
+                                                <td>
+                                                    <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}" class="btn btn-outline-primary">
+                                                        สถานะ
+                                                    </a>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     @endforeach

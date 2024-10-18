@@ -2,25 +2,26 @@ StartFontMetrics 4.1
 Notice Converted by PHP-font-lib
 Comment https://github.com/dompdf/php-font-lib
 EncodingScheme FontSpecific
-FontName TH Sarabun New
+FontName TH SarabunPSK
 FontSubfamily Bold
-UniqueID SuppakitChalermlarp.PSK.DesignLTD.: THSarabunNewBold: 2011
-FullName THSarabunNew-Bold
-Version Version 1.35 2011 
-PostScriptName THSarabunNew-Bold
-Trademark TH Sarabun New Bold is a trademark of Mr.Suppakit Chalermlarp, PSK. Design LTD..
-Manufacturer Mr.Suppakit Chalermlarp, RSAD.Design LTD.
-Designer Mr.Suppakit CHALERMLARP
-FontVendorURL https://www.facebook.com/suppakit.ch
-FontDesignerURL mailto:typethai@gmail.com
+UniqueID SuppakitChalermlarp.PSK.DesignLTD.: TH SarabunPSK: 2006
+FullName TH SarabunPSK Bold
+Version Version 1.1  2006
+PostScriptName THSarabunPSK-Bold
+Manufacturer Suppakit Chalermlarp.  PSK. Design LTD.
+Designer Suppakit CHALERMLARP
+FontDesignerURL mailto:pskfont@yahoo.com
+PreferredFamily TH SarabunPSK
+PreferredSubfamily Bold
+CompatibleFullName 呈⁓慲慢畮偓䬠䉯汤
 Weight Bold
 ItalicAngle 0
 IsFixedPitch false
 UnderlineThickness 30
 UnderlinePosition -35
 FontHeightOffset 30
-Ascender 844
-Descender -457
+Ascender 850
+Descender -250
 FontBBox -466 -457 947 844
 StartCharMetrics 510
 U 32 ; WX 226 ; N space ; G 496
@@ -118,7 +119,9 @@ U 123 ; WX 255 ; N braceleft ; G 92
 U 124 ; WX 177 ; N bar ; G 93
 U 125 ; WX 255 ; N braceright ; G 94
 U 126 ; WX 422 ; N asciitilde ; G 95
-U 160 ; WX 226 ; N nbspace ; G 1
+U 142 ; WX 451 ; N Zcaron ; G 202
+U 158 ; WX 358 ; N zcaron ; G 203
+U 160 ; WX 220 ; N nbspace ; G 1
 U 161 ; WX 168 ; N exclamdown ; G 100
 U 162 ; WX 480 ; N cent ; G 101
 U 163 ; WX 480 ; N sterling ; G 102

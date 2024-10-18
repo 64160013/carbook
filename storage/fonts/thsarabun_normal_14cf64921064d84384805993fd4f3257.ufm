@@ -2,27 +2,28 @@ StartFontMetrics 4.1
 Notice Converted by PHP-font-lib
 Comment https://github.com/dompdf/php-font-lib
 EncodingScheme FontSpecific
-FontName TH Sarabun New
+FontName TH SarabunPSK
 FontSubfamily Regular
-UniqueID SuppakitChalermlarp.PSK.DesignLTD.: THSarabunNew: 2011
-FullName THSarabunNew
-Version Version 1.35 2011
-PostScriptName THSarabunNew
-Trademark TH Sarabun New is a trademark of Mr.Suppakit Chalermlarp, PSK. Design LTD..
-Manufacturer Mr.Suppakit Chalermlarp, RSAD.Design LTD.
-Designer Mr.Suppakit CHALERMLARP
-FontVendorURL https://www.facebook.com/suppakit.ch
-FontDesignerURL mailto:typethai@gmail.com
+UniqueID SuppakitChalermlarp.PSK.DesignLTD.: TH SarabunPSK: 2006
+FullName TH SarabunPSK
+Version Version 1.1  2006
+PostScriptName THSarabunPSK
+Manufacturer Suppakit Chalermlarp.  PSK. Design LTD.
+Designer Suppakit CHALERMLARP
+FontDesignerURL mailto:pskfont@yahoo.com
+PreferredFamily TH SarabunPSK
+PreferredSubfamily Regular
+CompatibleFullName 呈⁓慲慢畮偓?
 Weight Medium
 ItalicAngle 0
 IsFixedPitch false
 UnderlineThickness 30
 UnderlinePosition -35
 FontHeightOffset 30
-Ascender 844
-Descender -457
+Ascender 850
+Descender -250
 FontBBox -427 -421 947 836
-StartCharMetrics 511
+StartCharMetrics 510
 U 32 ; WX 216 ; N space ; G 496
 U 33 ; WX 147 ; N exclam ; G 2
 U 34 ; WX 208 ; N quotedbl ; G 3
@@ -118,6 +119,8 @@ U 123 ; WX 208 ; N braceleft ; G 92
 U 124 ; WX 153 ; N bar ; G 93
 U 125 ; WX 208 ; N braceright ; G 94
 U 126 ; WX 416 ; N asciitilde ; G 95
+U 142 ; WX 424 ; N Zcaron ; G 202
+U 158 ; WX 321 ; N zcaron ; G 203
 U 160 ; WX 216 ; N nbspace ; G 1
 U 161 ; WX 151 ; N exclamdown ; G 100
 U 162 ; WX 411 ; N cent ; G 101
@@ -131,7 +134,7 @@ U 169 ; WX 536 ; N copyright ; G 108
 U 170 ; WX 246 ; N ordfeminine ; G 109
 U 171 ; WX 298 ; N guillemotleft ; G 110
 U 172 ; WX 420 ; N logicalnot ; G 111
-U 173 ; WX 216 ; N uni00AD ; G 509
+U 173 ; WX 216 ; N hyphen ; G 14
 U 174 ; WX 536 ; N registered ; G 112
 U 175 ; WX 352 ; N macron ; G 113
 U 176 ; WX 212 ; N degree ; G 114
@@ -585,7 +588,7 @@ KPX five copyright -30
 KPX five ordfeminine -30
 KPX five guillemotleft -30
 KPX five logicalnot -30
-KPX five uni00AD -30
+KPX five hyphen -30
 KPX five twosuperior -30
 KPX five threesuperior -30
 KPX five acute -30
@@ -619,7 +622,7 @@ KPX seven copyright -30
 KPX seven ordfeminine -30
 KPX seven guillemotleft -30
 KPX seven logicalnot -30
-KPX seven uni00AD -30
+KPX seven hyphen -30
 KPX seven twosuperior -30
 KPX seven acute -30
 KPX seven mu -30
@@ -644,7 +647,7 @@ KPX eight copyright -20
 KPX eight ordfeminine -20
 KPX eight guillemotleft -20
 KPX eight logicalnot -20
-KPX eight uni00AD -20
+KPX eight hyphen -20
 KPX eight twosuperior -20
 KPX eight acute -20
 KPX eight mu -20
@@ -682,7 +685,7 @@ KPX colon copyright -25
 KPX colon ordfeminine -25
 KPX colon guillemotleft -25
 KPX colon logicalnot -25
-KPX colon uni00AD -25
+KPX colon hyphen -25
 KPX colon twosuperior -25
 KPX colon threesuperior -20
 KPX colon acute -25
@@ -726,7 +729,7 @@ KPX Eacute copyright -25
 KPX Eacute ordfeminine -25
 KPX Eacute guillemotleft -25
 KPX Eacute logicalnot -25
-KPX Eacute uni00AD -25
+KPX Eacute hyphen -25
 KPX Eacute twosuperior -25
 KPX Eacute threesuperior -20
 KPX Eacute acute -25

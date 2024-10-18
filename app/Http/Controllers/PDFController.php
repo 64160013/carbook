@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\ReqDocument;
+use App\Models\ReqDocumentUser ;
+
 use PDF;
     
 class PDFController extends Controller
@@ -13,19 +16,26 @@ class PDFController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generatePDF()
+    public function generatePDF(Request $request)
     {
-        $users = User::get();
+        // รับค่า id จาก request
+        $id = $request->input('id');
+    
+        // ดึงข้อมูลเอกสารที่เกี่ยวข้องด้วย findOrFail และความสัมพันธ์ต่างๆ
+        $documents = ReqDocument::with(['reqDocumentUsers', 'users', 'province', 'vehicle','carmanUser'])
+                                ->findOrFail($id);
     
         $data = [
-            'title' => 'Welcome to ItSolutionStuff.com',
-            'date' => date('m/d/Y'),
-            'users' => $users
-        ]; 
-              
+            'title' => 'Document Report',
+            'documents' => $documents  // ส่งข้อมูล $documents ไปที่ view
+        ];
+    
+        // สร้าง PDF จาก view 'myPDF' โดยส่ง $data
         $pdf = PDF::loadView('myPDF', $data);
-       
-        // ใช้ stream แทน download เพื่อแสดง PDF บนเบราว์เซอร์
-        return $pdf->stream('itsolutionstuff.pdf');
+    
+        // แสดง PDF ในเบราว์เซอร์
+        return $pdf->stream('document_report.pdf');
     }
+    
+
 }

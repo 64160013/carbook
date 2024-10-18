@@ -18,6 +18,7 @@ use App\Http\Controllers\ReqDocumentController;
 use App\Http\Controllers\DocumentController;
 // use App\Http\Controllers\DriverScheduleController;
 use App\Http\Controllers\ReportDocumentController;
+use App\Http\Controllers\PDFController;
 
 
 
@@ -119,6 +120,6 @@ Route::post('/report', [ReportDocumentController::class, 'store'])->name('report
   
 
   
-use App\Http\Controllers\PDFController;
+
     
-Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
+Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('PDF.document');
