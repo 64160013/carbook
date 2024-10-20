@@ -125,7 +125,12 @@
             </div>
 
             <div class="text-center">
-                <a href="#" class="btn btn-warning">แก้ไขแบบฟอร์มเพิ่มเติม</a>
+                <!-- <a href="#" class="btn btn-warning">แก้ไขแบบฟอร์มเพิ่มเติม</a> -->
+                <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}" class="btn btn-warning">
+    {{ __('แก้ไขเอกสาร') }}
+</a>
+
+
                 <a href="#" class="btn btn-danger">ต้องการยกเลิกคำขอ</a>
                 @if (auth()->user()->is_admin == 1)
                     <a href="{{ route('admin.users.form') }}" class="btn btn-secondary">ย้อนกลับ</a>

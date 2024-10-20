@@ -7,6 +7,10 @@ use App\Models\ReqDocumentUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use App\Models\Province;
+use App\Models\Amphoe;
+use App\Models\District;
+use App\Models\Document;
 
 class DocumentController extends Controller
 {
@@ -292,6 +296,69 @@ class DocumentController extends Controller
             return redirect()->route('documents.show')
                             ->with('error', 'ไม่พบเอกสาร');
         }
+    }
+
+
+    /**
+     * Edit Document
+     *
+     * 
+     */
+    public function edit(Request $request)
+{
+    $id = $request->query('id'); // รับค่า id จาก query string
+    
+    if (!$id) {
+        return redirect()->route('documents.history')->with('error', 'ไม่พบข้อมูลเอกสาร');
+    }
+
+    $document = ReqDocument::with(['reqDocumentUsers', 'workType', 'province', 'amphoe', 'district'])->findOrFail($id);
+
+    return view('editDocument', compact('document'));
+}
+
+    
+
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'objective' => 'required|string|max:255',
+            'companion_name' => 'nullable|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'location' => 'required|string|max:255',
+            'car_type' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'amphoe' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+        ]);
+
+        $document = ReqDocument::find($id);
+
+        if (!$document) {
+            return redirect()->route('documents.history')->with('error', 'ไม่พบเอกสาร');
+        }
+
+        // อัพเดตข้อมูลเอกสาร
+        $document->objective = $request->input('objective');
+        $document->companion_name = $request->input('companion_name');
+        $document->start_date = $request->input('start_date');
+        $document->end_date = $request->input('end_date');
+        $document->start_time = $request->input('start_time');
+        $document->end_time = $request->input('end_time');
+        $document->location = $request->input('location');
+        $document->car_type = $request->input('car_type');
+        // อัพเดตข้อมูลจังหวัด อำเภอ และตำบล
+        // $document->province_id = Province::where('name_th', $request->input('province'))->first()->id ?? null;
+        // $document->amphoe_id = Amphoe::where('name_th', $request->input('amphoe'))->first()->id ?? null;
+        // $document->district_id = District::where('name_th', $request->input('district'))->first()->id ?? null;
+
+        $document->save();
+
+        return redirect()->route('documents.history')->with('success', 'บันทึกการแก้ไขสำเร็จ');
     }
 
 
