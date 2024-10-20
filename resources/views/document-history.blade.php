@@ -168,6 +168,8 @@
                                                 @endforeach
                                                 <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
                                                     class="btn btn-primary">ดูรายละเอียด</a>
+                                                <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
+                                                    class="btn btn-outline-primary">สถานะ</a>   
                                             </div>
                                         </div>
                                     </div>

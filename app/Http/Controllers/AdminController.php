@@ -213,7 +213,7 @@ class AdminController extends Controller
     
         // ส่งข้อมูลไปยัง view admin.user.form
         return view('admin.users.form', compact('documents'));
-    }
+    }    
     // public function searchForm(Request $request)
     // {
     //     $q = $request->input('q');

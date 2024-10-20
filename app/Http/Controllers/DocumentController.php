@@ -102,7 +102,7 @@ class DocumentController extends Controller
                 $documents = $approvedDivision
                     ->orderBy('document_id', 'desc') 
                     ->get();
-                // return view('opcar.op_permission-form', compact('documents'));
+                return view('opcar.op_permission-form', compact('documents'));
                 
 
             } elseif ($user->role_id == 2) {        //หัวหน้าสำนักงาน
@@ -195,7 +195,7 @@ class DocumentController extends Controller
     }
     
     /**
-     * "updateStatus" "SelectDriver" "SelectCar"
+     * "updateStatus" "SelectDriver" "SelectCar" "ShowStatus"
      *
      * 
      */
@@ -209,6 +209,8 @@ class DocumentController extends Controller
         $statusofficer = $request->input('statusofficer');
         $statusdirector = $request->input('statusdirector');
         $notallowedReason = $request->input('notallowed_reason'); // เพิ่มการรับค่าเหตุผล
+        $statuscarman = $request->input('statuscarman');
+        $carmanReason = $request->input('carman_reason'); // เพิ่มการรับค่าเหตุผล
 
         // ค้นหาเอกสารตาม document_id
         $document = ReqDocument::where('document_id', $documentId)->first();
@@ -265,6 +267,16 @@ class DocumentController extends Controller
                 }
             }
 
+            if ($statuscarman) {
+                $document->allow_carman = $statuscarman;
+                $document->approved_by_carman = auth()->user()->id; // เก็บค่าผู้อนุญาต
+                if ($statuscarman == 'rejected' && $carmanReason) {
+                    $document->carman_reason = $carmanReason;
+                } else {
+                    $document->carman_reason = null;
+                }
+            }
+
             // เพิ่ม car_id เฉพาะผู้ใช้ที่มี role_id = 12 เท่านั้น
             if (auth()->user()->role_id == 12) {
                 $document->car_id = $request->input('car_id');
@@ -281,7 +293,6 @@ class DocumentController extends Controller
                             ->with('error', 'ไม่พบเอกสาร');
         }
     }
-
 
 
 

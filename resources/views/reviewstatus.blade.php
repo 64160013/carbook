@@ -127,7 +127,11 @@
             <div class="text-center">
                 <a href="#" class="btn btn-warning">แก้ไขแบบฟอร์มเพิ่มเติม</a>
                 <a href="#" class="btn btn-danger">ต้องการยกเลิกคำขอ</a>
-                <a href="{{ route('admin.users.form') }}" class="btn btn-secondary">ย้อนกลับ</a>
+                @if (auth()->user()->is_admin == 1)
+                    <a href="{{ route('admin.users.form') }}" class="btn btn-secondary">ย้อนกลับ</a>
+                @else
+                    <a href="{{ route('documents.history') }}" class="btn btn-secondary">ย้อนกลับ</a>
+                @endif
             </div>
         </div>
     </div>

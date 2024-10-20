@@ -15,7 +15,7 @@
     @else
     @foreach($documents as $document)
     <!-- หัวหน้างาน division -->
-    @if (in_array(auth()->user()->role_id, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16]))
+    @if (in_array(auth()->user()->role_id, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 11, 13, 14, 15, 16]))
     <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
         @csrf
         <input type="hidden" name="document_id" value="{{ $document->document_id }}">
@@ -219,7 +219,39 @@
                     </div>
                 </div>
             @endif
-        @endif
+            @elseif (in_array(auth()->user()->role_id, [11]))
+                @if ($document->allow_carman == 'pending')
+                    <div class="card mb-4 shadow-sm border-1">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">{{ __('คนขับรถรับทราบงาน:') }}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" name="statuscarman" value="approved"
+                                        id="approve_carman" onchange="toggleCarmanReasonField(false)">
+                                    <label class="form-check-label" for="approve_carman">{{ __('รับทราบ') }}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="statuscarman" value="rejected"
+                                        id="reject_carman" onchange="toggleCarmanReasonField(true)">
+                                    <label class="form-check-label" for="reject_carman">{{ __('ไม่สามารถรับงานได้') }}</label>
+                                </div>
+                            </div>
+
+                            <div id="reason_field_carman" style="display: none;">
+                                <label for="carman_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                <input type="text" id="carman_reason" name="carman_reason"
+                                    placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                    value="{{ old('carman_reason', $document->carman_reason) }}">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                        </div>
+                    </div>
+                @endif
+            @endif
     </form>
     @endif
 
@@ -266,6 +298,20 @@
             }
         }
 
+        function toggleCarmanReasonField(isRejected) {
+            const reasonField = document.getElementById('reason_field_carman');
+            const carmanReasonInput = document.getElementsByName('carman_reason')[0];
+
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                carmanReasonInput.setAttribute('required', 'required'); // ตั้งให้เป็น required
+            } else {
+                reasonField.style.display = 'none';
+                carmanReasonInput.removeAttribute('required'); // ไม่ต้องการ required
+            }
+        }
+
+
         function toggleDirectorReasonField(isRejected) {
             const reasonField = document.getElementById('reason_field_director');
             const notallowedReasonInput = document.getElementsByName('notallowed_reason_director')[0];
@@ -280,36 +326,36 @@
         }
 
         function toggleReasonField(isRejected) {
-    const reasonField = document.getElementById('reason_field_opcar');
-    const notallowedReasonInput = document.getElementById('notallowed_reason');
+            const reasonField = document.getElementById('reason_field_opcar');
+            const notallowedReasonInput = document.getElementById('notallowed_reason');
 
-    if (isRejected) {
-        reasonField.style.display = 'block';
-        notallowedReasonInput.setAttribute('required', 'required');
-    } else {
-        reasonField.style.display = 'none';
-        notallowedReasonInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
-        notallowedReasonInput.value = ''; // ล้างค่าในฟิลด์เหตุผล
-    }
-}
+            if (isRejected) {
+                reasonField.style.display = 'block';
+                notallowedReasonInput.setAttribute('required', 'required');
+            } else {
+                reasonField.style.display = 'none';
+                notallowedReasonInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
+                notallowedReasonInput.value = ''; // ล้างค่าในฟิลด์เหตุผล
+            }
+        }
 
-function toggleVehicleAndDriver(isApproved) {
-    const vehicleDriverSection = document.getElementById('vehicle_driver_section');
-    const vehicleInput = document.getElementById('vehicle');
-    const driverInput = document.getElementById('users');
+        function toggleVehicleAndDriver(isApproved) {
+            const vehicleDriverSection = document.getElementById('vehicle_driver_section');
+            const vehicleInput = document.getElementById('vehicle');
+            const driverInput = document.getElementById('users');
 
-    if (isApproved) {
-        vehicleDriverSection.style.display = 'block';
-        vehicleInput.setAttribute('required', 'required');
-        driverInput.setAttribute('required', 'required');
-    } else {
-        vehicleDriverSection.style.display = 'none';
-        vehicleInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
-        driverInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
-        vehicleInput.value = ''; // ล้างค่ารถที่เลือก
-        driverInput.value = ''; // ล้างค่าคนขับที่เลือก
-    }
-}
+            if (isApproved) {
+                vehicleDriverSection.style.display = 'block';
+                vehicleInput.setAttribute('required', 'required');
+                driverInput.setAttribute('required', 'required');
+            } else {
+                vehicleDriverSection.style.display = 'none';
+                vehicleInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
+                driverInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
+                vehicleInput.value = ''; // ล้างค่ารถที่เลือก
+                driverInput.value = ''; // ล้างค่าคนขับที่เลือก
+            }
+        }
 
 
     </script>

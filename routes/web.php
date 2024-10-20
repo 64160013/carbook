@@ -120,3 +120,4 @@ Route::get('/reportdoc/show/{id}', [ReportDocumentController::class, 'show'])->n
 
     
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('PDF.document');
+Route::get('/report/showRepDoc/pdf', [PDFController::class, 'generateReportPDF'])->name('report.showRepDoc.pdf');
