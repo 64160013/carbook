@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ReqDocument;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ReportFormance;
 use App\Models\User;
 
 
@@ -74,6 +75,18 @@ class ReportDocumentController extends Controller
         return redirect()->route('documents.index')->with('success', 'เพิ่มข้อมูลรายงานสำเร็จ!');
     }
     
+    public function show($id)
+    {
+        // ดึงข้อมูลรายงานตาม ID
+        $report = ReportFormance::findOrFail($id); // ใช้ findOrFail เพื่อดึงข้อมูลหรือแสดง 404 หากไม่พบ
+
+        // ดึงข้อมูลเอกสารที่เกี่ยวข้อง
+        $documents = ReqDocument::with(['reqDocumentUsers', 'users', 'province', 'vehicle'])
+            ->where('document_id', $report->req_document_id) // ตรวจสอบว่ามีการเชื่อมโยง ID กับเอกสารที่เกี่ยวข้อง
+            ->first();
+
+        return view('driver.showrepdoc', compact('report', 'documents'));
+    }
 
 
 }

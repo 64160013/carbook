@@ -70,8 +70,11 @@
                         <a href="{{ route('report.index', ['id' => $document->document_id]) }}" class="btn btn-warning">
                             <i class="bi bi-file-text-fill"></i> รายงาน
                         </a>
-
-                        
+                    </td>
+                    <td>
+                        <a href="{{ route('reportdoc.show', ['id' => $document->document_id]) }}" class="btn btn-warning">
+                            <i class="bi bi-file-text-fill"></i> รายงาน
+                        </a>
                     </td>
                 </tr>
             @endforeach

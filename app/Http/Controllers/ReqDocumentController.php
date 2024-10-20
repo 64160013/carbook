@@ -59,7 +59,9 @@ class ReqDocumentController extends Controller
             'work_id' => 'required|exists:work_type,work_id',
             'car_id' => 'nullable|exists:vehicles,car_id',
             'carman' => 'nullable|exists:user,id',
+            'car_controller' => 'required|exists:users,id',
         ]);
+        $companions = explode(',', $request->input('companions_hidden'));
     
         // จัดการการอัปโหลดไฟล์
         $filePath = null;
@@ -92,6 +94,7 @@ class ReqDocumentController extends Controller
             'work_id' => $request->work_id,
             'car_id' => $carId, // บันทึก car_id เฉพาะ role_id == 12 เท่านั้น
             'carman' => $carMan,
+            'car_controller' => $request->input('car_controller'),
         ]);
 
     
@@ -105,6 +108,13 @@ class ReqDocumentController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        
+        foreach ($companions as $companionId) {
+            // ตรวจสอบว่า $companionId เป็นตัวเลขหรือไม่ (ป้องกันข้อผิดพลาดจากข้อมูลที่ไม่ถูกต้อง)
+            if (is_numeric($companionId)) {
+                $document->companions()->attach($companionId);
+            }
+        }
     
         return redirect('/document-history')->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     }

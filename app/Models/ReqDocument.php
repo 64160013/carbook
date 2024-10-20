@@ -32,6 +32,7 @@ class ReqDocument extends Model
         'work_id',
         'car_id',
         'carman',
+        'car_controller',
 
     ];
 
@@ -73,7 +74,7 @@ class ReqDocument extends Model
 
     public function reqDocumentUsers()
     {
-        return $this->hasMany(ReqDocumentUser::class, 'req_document_id', 'document_id');
+        return $this->hasMany(ReqDocumentUser::class, 'req_document_id', 'document_id', 'user_id');
     }
 
     public function isEmpty()
@@ -101,6 +102,14 @@ class ReqDocument extends Model
         return $this->belongsTo(User::class, 'approved_by_division');
     }
     
+    public function carController()
+    {
+        return $this->belongsTo(User::class, 'car_controller');
+    }
+    public function companions()
+    {
+        return $this->belongsToMany(User::class, 'req_document_user', 'req_document_id', 'user_id'); // กำหนดชื่อของตารางเชื่อม
+    }
 
 
 }

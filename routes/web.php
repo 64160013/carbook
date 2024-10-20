@@ -114,12 +114,9 @@ Route::post('/update-status', [DocumentController::class, 'updateStatus'])->name
 
 Route::get('/report[id]', [ReportDocumentController::class, 'index'])->name('report.index');
 Route::post('/report', [ReportDocumentController::class, 'store'])->name('report.submit');
+Route::get('/reportdoc/show/{id}', [ReportDocumentController::class, 'show'])->name('reportdoc.show');
 
-
-
-  
-
-  
+ 
 
     
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('PDF.document');
