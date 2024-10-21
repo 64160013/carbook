@@ -12,6 +12,15 @@
         <form method="POST" action="{{ route('documents.update.edit', $document->document_id) }}">
             @csrf
             @method('PUT')
+            @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-primary text-white">
@@ -51,9 +60,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>{{ __('ผู้ร่วมเดินทาง') }}:</strong>
-                                    <input type="text" name="companion_name" class="form-control" value="{{ old('companion_name', $document->companion_name) }}">
-                                </td>
+                            <td><strong>{{ __('ผู้ร่วมเดินทาง') }}:</strong>
+                                @if (!empty($companions))
+                                    @foreach ($companions as $companion)
+                                    {{ $companion->name }} {{ $companion->lname }}
+                                        
+                                    @endforeach
+                                @endif
+                                <a href="">เพิ่มผู้รวมเดินทาง</a>
+                            </td>
                                 <td><strong>{{ __('ผู้ร่วมเดินทางทั้งหมด') }}:</strong> {{ count(explode(',', $document->companion_name)) }} คน</td>
                             </tr>
                             <tr>
@@ -80,7 +95,7 @@
                         </table>
                     </div>
 
-                    <!-- ข้อมูลสถานที่ -->
+
                     <h6 class="text-muted">{{ __('ข้อมูลสถานที่') }}</h6>
                     <div class="mb-3 border p-3">
                         <table class="table table-borderless">
@@ -88,22 +103,47 @@
                                 <td><strong>{{ __('สถานที่') }}:</strong>
                                     <input type="text" name="location" class="form-control" value="{{ old('location', $document->location) }}">
                                 </td>
-                                <td><strong>{{ __('รถประเภท') }}:</strong>
-                                    <input type="text" name="car_type" class="form-control" value="{{ old('car_type', $document->car_type) }}">
+                                <td><td><strong>{{ __('ส่วนงาน') }}:</strong>
+                                    {{ $document->car_type ?? 'N/A' }}</td>
                                 </td>
                             </tr>
                             <tr>
                                 <td><strong>{{ __('จังหวัด') }}:</strong>
-                                    <input type="text" name="province" class="form-control" value="{{ old('province', $document->province->name_th) }}">
+                                    <!-- {{ $document->province->name_th }}> -->
                                 </td>
                                 <td><strong>{{ __('อำเภอ') }}:</strong>
-                                    <input type="text" name="amphoe" class="form-control" value="{{ old('amphoe', $document->amphoe->name_th) }}">
+                                    
                                 </td>
                                 <td><strong>{{ __('ตำบล') }}:</strong>
-                                    <input type="text" name="district" class="form-control" value="{{ old('district', $document->district->name_th) }}">
+                                    
                                 </td>
                             </tr>
                         </table>
+                        
+
+                        <div class="col-md-4">
+    <div class="form-group">
+        <label for="provinces_id">{{ __('จังหวัด') }}</label>
+        <select id="provinces_id"
+            class="form-control text-center @error('provinces_id') is-invalid @enderror"
+            name="provinces_id" required>
+            <option value="">{{ __('เลือกจังหวัด') }}</option>
+            @foreach($provinces as $province)
+                <option value="{{ $province->provinces_id }}" 
+                    {{ old('provinces_id', $document->province->provinces_id ?? '') == $province->provinces_id ? 'selected' : '' }}>
+                    {{ $province->name_th }}
+                </option>
+            @endforeach
+        </select>
+        @error('provinces_id')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
+</div>
+
+
                     </div>
 
                     <!-- โครงการที่เกี่ยวข้อง -->
@@ -128,4 +168,8 @@
         </form>
     @endif
 </div>
+
+
+
+
 @endsection

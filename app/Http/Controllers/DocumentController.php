@@ -306,60 +306,67 @@ class DocumentController extends Controller
      */
     public function edit(Request $request)
 {
+    $provinces = Province::all();
+    $amphoe = Amphoe::all();
+    $district = District::all();
+
     $id = $request->query('id'); // รับค่า id จาก query string
     
     if (!$id) {
         return redirect()->route('documents.history')->with('error', 'ไม่พบข้อมูลเอกสาร');
     }
 
-    $document = ReqDocument::with(['reqDocumentUsers', 'workType', 'province', 'amphoe', 'district'])->findOrFail($id);
+    $document = ReqDocument::with(['reqDocumentUsers', 'workType', 'province', 'amphoe', 'district', 'users'])->findOrFail($id);
+    $companions = User::whereIn('id', explode(',', $document->companion_name))->get();
 
-    return view('editDocument', compact('document'));
+    return view('editDocument', compact('document', 'companions', 'provinces', 'amphoe', 'district'));
 }
 
     
 
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'objective' => 'required|string|max:255',
-            'companion_name' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'location' => 'required|string|max:255',
-            'car_type' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'amphoe' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-        ]);
+public function update(Request $request, $id)
+{
+    // Validation rule
+    $request->validate([
+        'objective' => 'required|string|max:255',
+        'companion_name' => 'nullable',
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after_or_equal:start_date', // แก้ให้ end_date ต้องไม่ก่อน start_date
+        'start_time' => 'required',
+        'end_time' => 'required',
+        'location' => 'required|string|max:255',
+        'car_type' => 'nullable|string|max:255',
+        'provinces_id' => 'nullable|integer', // เปลี่ยนจาก string เป็น integer เพื่อรับค่า ID
+        'amphoe_id' => 'nullable|integer',
+        'district_id' => 'nullable|integer',
+    ]);
 
-        $document = ReqDocument::find($id);
+    // ค้นหาเอกสาร
+    $document = ReqDocument::findOrFail($id);
 
-        if (!$document) {
-            return redirect()->route('documents.history')->with('error', 'ไม่พบเอกสาร');
-        }
+    // อัพเดตข้อมูลเอกสาร
+    $document->objective = $request->input('objective');
+    $document->companion_name = $request->input('companion_name');
+    $document->start_date = $request->input('start_date');
+    $document->end_date = $request->input('end_date');
+    $document->start_time = $request->input('start_time');
+    $document->end_time = $request->input('end_time');
+    $document->location = $request->input('location');
+    $document->car_type = $request->input('car_type');
 
-        // อัพเดตข้อมูลเอกสาร
-        $document->objective = $request->input('objective');
-        $document->companion_name = $request->input('companion_name');
-        $document->start_date = $request->input('start_date');
-        $document->end_date = $request->input('end_date');
-        $document->start_time = $request->input('start_time');
-        $document->end_time = $request->input('end_time');
-        $document->location = $request->input('location');
-        $document->car_type = $request->input('car_type');
-        // อัพเดตข้อมูลจังหวัด อำเภอ และตำบล
-        // $document->province_id = Province::where('name_th', $request->input('province'))->first()->id ?? null;
-        // $document->amphoe_id = Amphoe::where('name_th', $request->input('amphoe'))->first()->id ?? null;
-        // $document->district_id = District::where('name_th', $request->input('district'))->first()->id ?? null;
+    // อัพเดตข้อมูลจังหวัด อำเภอ และตำบล โดยใช้ ID จาก request
+    $document->provinces_id = $request->input('provinces_id'); // ใช้ 'provinces_id' แทน 'province'
 
-        $document->save();
+    $document->amphoe_id = $request->input('amphoe_id');
+    $document->district_id = $request->input('district_id');
 
-        return redirect()->route('documents.history')->with('success', 'บันทึกการแก้ไขสำเร็จ');
-    }
+    // บันทึกการอัพเดตข้อมูล
+    $document->save();
+
+    return redirect()->route('documents.history')->with('success', 'บันทึกการแก้ไขสำเร็จ');
+}
+
 
 
 
