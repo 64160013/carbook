@@ -46,7 +46,7 @@
                                         <th>วันที่เดินทางกลับ</th>
                                         <th>สถานะปัจจุบัน</th>
                                         <th>ดูสถานะทั้งหมด</th>
-                                        <th>PDF</th>
+                                        <th>PDF คำร้อง/คนขับ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,13 +64,13 @@
                                                 <td>
                                                     {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
                                                     {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }}
-                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}                                                    <br>
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}<br>
                                                     เวลา : {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.
                                                 </td>
                                                 <td>
                                                     {{ \Carbon\Carbon::parse($document->end_date)->format('d') }}
                                                     {{ \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') }}
-                                                    {{ \Carbon\Carbon::parse($document->end_date)->format('Y') + 543 }}                                                    <br>
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->format('Y') + 543 }}<br>
 
                                                     เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
                                                 </td>
@@ -98,6 +98,14 @@
                                                         class="btn btn-outline-primary">สถานะ</a>           
                                                 </td>
                                                 <td>
+                                                    @if ($document->allow_director != 'pending')
+                                                        <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}" 
+                                                            class="btn btn-outline-primary"> PDF
+                                                        </a>    
+                                                    @else
+                                                        <button type="button" class="btn btn-secondary" disabled>PDF</button>
+                                                    @endif
+
                                                     @if ($document->allow_director != 'pending')
                                                         <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}" 
                                                             class="btn btn-outline-primary"> PDF

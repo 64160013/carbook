@@ -17,6 +17,7 @@
                     <th class="text-center">วันที่สร้าง</th>
                     <th class="text-center">สถานะ</th>
                     <th class="text-center">คนขับรับทราบงาน</th>
+                    <th class="text-center">รายละเอียด</th>
                     <th class="text-center">รายงานจากคนขับ</th>
                 </tr>
             </thead>
@@ -42,6 +43,7 @@
                                 @endif 
                             @endif
                         </td>
+                        
                         <td class="text-center">
                             @if (in_array(auth()->user()->role_id, [12]))
                                 @if ($document->allow_carman == 'approved')
@@ -57,6 +59,7 @@
                             <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
                                 class="btn btn-primary">ดูรายละเอียด</a>
                         </td>
+                        
                     </tr>
                 @endforeach
             </tbody>

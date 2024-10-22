@@ -106,7 +106,7 @@ Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('adm
 //แสดงประวัติการขอ และ แสดงรายละเอียดคำขอ
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
 Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
-Route::get('/reviewstatus', [DocumentController::class, 'reviewStatus'])->name('documents.status');
+Route::get('/reviewstatus', [DocumentController::class, 'reviewStatus'])->name('documents.status')->middleware('auth');
 
 //รายการคำขอที่รอนุมัติ อนุมัติคำร้อง
 Route::get('/permission-form', [DocumentController::class, 'permission'])->name('documents.index');

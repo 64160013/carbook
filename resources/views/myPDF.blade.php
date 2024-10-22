@@ -92,7 +92,7 @@
             ขออนุญาตใช้รถยนต์ประเภท <span class="line" style="width: 271px; line-height: ;">{{ $documents->car_type }}</span>
         </p>
         <p>มีความประสงค์ขออนุญาตใช้รถยนต์เพื่อไป <span class="line" style="width: 380px;"> {{ $documents->objective }}</span></p>
-        <p><span class="line" style="width: 605px; line-height: 1; padding-left: 30px; margin-bottom: 2px;">2s</span></p>
+        <p><span class="line" style="width: 605px; line-height: 1; padding-left: 30px; margin-bottom: 2px;"></span></p>
 
         <p style="margin-top: 4px;">ที่ <span class="line" style="width: 592px;">{{ $documents->location }}</span></p>
         <p>
