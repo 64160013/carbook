@@ -26,7 +26,7 @@
                         <td class="text-center">{{ $document->document_id }}</td>
                         <td class="text-center">
                             @foreach($document->reqDocumentUsers as $reqDocumentUser)
-                                {{ $reqDocumentUser->user->name }} {{ $reqDocumentUser->user->lname }}<br>
+                                {{ $reqDocumentUser->name }} {{ $reqDocumentUser->lname }}<br>
                             @endforeach
                         </td>
                         <td class="text-center">{{ $document->objective }}</td>

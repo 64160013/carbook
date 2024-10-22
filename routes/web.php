@@ -27,6 +27,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name(name: 'welcome');
 
+Route::get('/events', [ReqDocumentController::class, 'getEvents'])->name('events');
+
 // เส้นทางสำหรับการยืนยันตัวตน
 Auth::routes();
 

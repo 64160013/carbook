@@ -62,11 +62,16 @@
                                                 <td>{{ $requester->name }} {{ $requester->lname }}</td>
                                                 <td>{{ $document->objective }}</td>
                                                 <td>
-                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('d F Y') }}<br>
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }}
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}                                                    <br>
                                                     เวลา : {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.
                                                 </td>
                                                 <td>
-                                                {{ \Carbon\Carbon::parse($document->end_date)->format('d F Y') }}<br>
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->format('d') }}
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') }}
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->format('Y') + 543 }}                                                    <br>
+
                                                     เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
                                                 </td>
                                                 <td>

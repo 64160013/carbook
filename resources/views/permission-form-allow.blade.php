@@ -154,6 +154,30 @@
             @endif
 
 
+            <script>
+                $(document).ready(function() {
+    $('#start_date, #end_date').on('change', function() {
+        let startDate = $('#start_date').val();
+        let endDate = $('#end_date').val();
+
+        if (startDate && endDate) {
+            $.ajax({
+                url: '/check-booking-availability', // API route
+                type: 'GET',
+                data: { start_date: startDate, end_date: endDate },
+                success: function(response) {
+                    if (response.exists) {
+                        alert('ช่วงเวลานี้ถูกจองแล้ว');
+                    }
+                }
+            });
+        }
+    });
+});
+
+            </script>
+
+
         @elseif (in_array(auth()->user()->role_id, [2]))
             @if ($document->allow_officer == 'pending')
                 <div class="card mb-4 shadow-sm border-1">
