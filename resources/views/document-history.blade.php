@@ -44,20 +44,54 @@
                                             // ตรวจสอบสถานะและกำหนด $borderColor
                                             $borderColor = '';
 
-                                            // ตรวจสอบว่ามี docUser ที่ division_id == 2 หรือไม่
-                                            $hasDivisionTwo = false;
-                                            foreach ($document->reqDocumentUsers as $docUser) {
-                                                if ($docUser->division_id == 2) {
-                                                    $hasDivisionTwo = true;
-                                                    break;
-                                                }
-                                            }
+                                            if ($document->cancel_allowed == 'rejected') {
+                                                $borderColor = 'border-secondary'; // สีเทาถ้าเอกสารถูกยกเลิก
+                                            } else {
 
-                                            // ถ้ามี division_id == 2 ให้ตรวจสอบ allow_department
-                                            if ($hasDivisionTwo) {
-                                                if ($document->allow_department == 'pending') {
-                                                    $borderColor = 'border-warning';
-                                                } elseif ($document->allow_department == 'approved') {
+                                                // ตรวจสอบ division_id == 2 หรือไม่
+                                                $hasDivisionTwo = false;
+                                                foreach ($document->reqDocumentUsers as $docUser) {
+                                                    if ($docUser->division_id == 2) {
+                                                        $hasDivisionTwo = true;
+                                                        break;
+                                                    }
+                                                }
+
+                                                // ถ้ามี division_id == 2 ให้ตรวจสอบ allow_department
+                                                if ($hasDivisionTwo) {
+                                                    if ($document->allow_department == 'pending') {
+                                                        $borderColor = 'border-warning';
+                                                    } elseif ($document->allow_department == 'approved') {
+                                                        if ($document->allow_division == 'pending') {
+                                                            $borderColor = 'border-warning';
+                                                        } elseif ($document->allow_division == 'approved') {
+                                                            if ($document->allow_opcar == 'pending') {
+                                                                $borderColor = 'border-warning'; // สีเหลืองถ้ารอคนสั่งรถพิจารณา
+                                                            } elseif ($document->allow_opcar == 'approved') {
+                                                                if ($document->allow_officer == 'pending') {
+                                                                    $borderColor = 'border-warning'; // สีเหลืองถ้ารอหัวหน้าสำนักงานพิจารณา
+                                                                } elseif ($document->allow_officer == 'approved') {
+                                                                    if ($document->allow_director == 'pending') {
+                                                                        $borderColor = 'border-warning'; // สีเหลืองถ้ารอผู้อำนวยการพิจารณา
+                                                                    } elseif ($document->allow_director == 'approved') {
+                                                                        $borderColor = 'border-success'; // สีเขียวถ้าอนุมัติคำร้อง
+                                                                    } else {
+                                                                        $borderColor = 'border-danger';
+                                                                    }
+                                                                } else {
+                                                                    $borderColor = 'border-danger';
+                                                                }
+                                                            } else {
+                                                                $borderColor = 'border-danger';
+                                                            }
+                                                        } else {
+                                                            $borderColor = 'border-danger';
+                                                        }
+                                                    } else {
+                                                        $borderColor = 'border-danger';
+                                                    }
+                                                } else {
+                                                    // ถ้าไม่มี division_id == 2 ให้เริ่มที่ allow_division
                                                     if ($document->allow_division == 'pending') {
                                                         $borderColor = 'border-warning';
                                                     } elseif ($document->allow_division == 'approved') {
@@ -83,35 +117,6 @@
                                                     } else {
                                                         $borderColor = 'border-danger';
                                                     }
-                                                } else {
-                                                    $borderColor = 'border-danger';
-                                                }
-                                            } else {
-                                                // ถ้าไม่มี division_id == 2 ให้เริ่มที่ allow_division
-                                                if ($document->allow_division == 'pending') {
-                                                    $borderColor = 'border-warning';
-                                                } elseif ($document->allow_division == 'approved') {
-                                                    if ($document->allow_opcar == 'pending') {
-                                                        $borderColor = 'border-warning'; // สีเหลืองถ้ารอคนสั่งรถพิจารณา
-                                                    } elseif ($document->allow_opcar == 'approved') {
-                                                        if ($document->allow_officer == 'pending') {
-                                                            $borderColor = 'border-warning'; // สีเหลืองถ้ารอหัวหน้าสำนักงานพิจารณา
-                                                        } elseif ($document->allow_officer == 'approved') {
-                                                            if ($document->allow_director == 'pending') {
-                                                                $borderColor = 'border-warning'; // สีเหลืองถ้ารอผู้อำนวยการพิจารณา
-                                                            } elseif ($document->allow_director == 'approved') {
-                                                                $borderColor = 'border-success'; // สีเขียวถ้าอนุมัติคำร้อง
-                                                            } else {
-                                                                $borderColor = 'border-danger';
-                                                            }
-                                                        } else {
-                                                            $borderColor = 'border-danger';
-                                                        }
-                                                    } else {
-                                                        $borderColor = 'border-danger';
-                                                    }
-                                                } else {
-                                                    $borderColor = 'border-danger';
                                                 }
                                             }
                                         @endphp
@@ -150,26 +155,41 @@
 
 
                                             <div>
-                                                @foreach($document->reqDocumentUsers as $docUser)
-                                                    @if ($docUser->division_id == 2)
-                                                        @if ($document->allow_department == 'pending')
-                                                            <span class="badge bg-warning">รอหัวหน้างานพิจารณา</span>
-                                                        @elseif ($document->allow_department == 'approved')
-                                                            @include('partials.allow_status', ['document' => $document])
-                                                        @else
-                                                            <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
-                                                            @if ($document->notallowed_reason)
-                                                                <br><span>เหตุผล: {{ $document->notallowed_reason }}</span>
+                                                @if ( $document->cancel_allowed == 'pending' )
+                                                    @foreach($document->reqDocumentUsers as $docUser)
+                                                        @if ($docUser->division_id == 2)
+                                                            @if ($document->allow_department == 'pending')
+                                                                <span class="badge bg-warning">รอหัวหน้างานพิจารณา</span>
+                                                            @elseif ($document->allow_department == 'approved')
+                                                                @include('partials.allow_status', ['document' => $document])
+                                                            @else
+                                                                <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
+                                                                @if ($document->notallowed_reason)
+                                                                    <br><span>เหตุผล: {{ $document->notallowed_reason }}</span>
+                                                                @endif
                                                             @endif
+                                                        @else
+                                                            @include('partials.allow_status', ['document' => $document])
                                                         @endif
-                                                    @else
-                                                        @include('partials.allow_status', ['document' => $document])
-                                                    @endif
-                                                @endforeach
-                                                <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
-                                                    class="btn btn-primary">ดูรายละเอียด</a>
-                                                <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
-                                                    class="btn btn-outline-primary">สถานะ</a>   
+                                                    @endforeach
+                                                @else
+                                                    <!-- ไม่แสดงอะไรหายไปเลย -->
+                                                @endif
+
+                                                @if ( $document->cancel_allowed == "rejected")
+                                                    <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
+                                                    class="btn btn-outline-danger disabled" >รายการคำขอถูกยกเลิกแล้ว</a>  
+                                                    <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
+                                                    class="btn btn-secondary">ดูรายละเอียด</a>
+                                                @else
+                                                    <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
+                                                        class="btn btn-primary">ดูรายละเอียด</a>
+                                                    <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
+                                                        class="btn btn-outline-primary">สถานะ</a> 
+                                                          
+                                                @endif
+                                                
+                                                
                                             </div>
                                         </div>
                                     </div>

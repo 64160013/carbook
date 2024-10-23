@@ -14,6 +14,15 @@
         </div>
     @else
     @foreach($documents as $document)
+        <!-- กรณีที่เอกสารถูกยกเลิก -->
+        @if ( $document->cancel_allowed != 'pending' )
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-center" 
+                    style="border: 1px solid #dc3545; color: #dc3545; padding: 10px 20px; border-radius: 5px; text-align: center;">
+                    รายการคำขอถูกยกเลิกแล้ว เนื่องจาก{{ $document->cancel_reason }}
+                </div>
+            </div>
+        @endif
     <!-- หัวหน้างาน division -->
     @if (in_array(auth()->user()->role_id, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 11, 13, 14, 15, 16]))
     <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
@@ -387,7 +396,13 @@
 
 
     <div class="card mb-4 shadow-sm border-1">
-        <div class="card-header bg-primary text-white">
+        <div 
+            @if ( $document->cancel_allowed != 'pending' )
+                class="card-header bg-secondary text-white"
+            @else
+                class="card-header bg-primary text-white"
+            @endif
+        >
             <h5 class="mb-0">{{ __('เอกสาร ที่ : ') . $document->document_id }}</h5>
             <p class="mb-0">
                 {{ __('วันที่ทำเรื่อง: ') . \Carbon\Carbon::parse($document->reservation_date)->format('d-m-Y') }}
@@ -473,15 +488,33 @@
                         </tr>
                         <tr>
                             <td><strong>{{ __('วันที่ไป') }}:</strong>
-                                {{ optional($document->start_date) ? \Carbon\Carbon::parse($document->start_date)->format('d-m-Y') : 'N/A' }}
+                                {{ optional($document->start_date) 
+                                    ? \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' .
+                                    \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' ' .
+                                    \Carbon\Carbon::parse($document->start_date)->format('Y')  + 543 
+                                    : 'N/A' }}
                             </td>
                             <td><strong>{{ __('วันที่กลับ') }}:</strong>
-                                {{ optional($document->end_date) ? \Carbon\Carbon::parse($document->end_date)->format('d-m-Y') : 'N/A' }}
+                                {{ optional($document->end_date) 
+                                    ? \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
+                                    \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' ' .
+                                    \Carbon\Carbon::parse($document->end_date)->format('Y')  + 543 
+                                    : 'N/A' }}
                             </td>
                         </tr>
                         <tr>
-                            <td><strong>{{ __('เวลาไป') }}:</strong> {{ $document->start_time ?? 'N/A' }}</td>
-                            <td><strong>{{ __('เวลากลับ') }}:</strong> {{ $document->end_time ?? 'N/A' }}</td>
+                            <td><strong>{{ __('เวลาไป') }}:</strong> 
+                                {{ $document->start_time 
+                                    ? \Carbon\Carbon::parse($document->start_time)->format('H:i') . ' น.' 
+                                    : 'N/A' 
+                                }}
+                            </td>
+                            <td><strong>{{ __('เวลากลับ') }}:</strong> 
+                                {{ $document->start_time 
+                                    ? \Carbon\Carbon::parse($document->end_time)->format('H:i') . ' น.' 
+                                    : 'N/A' 
+                                }}
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -521,18 +554,13 @@
                 <!-- ลงชื่อผู้ขอ -->
                 <div class="mt-4" style="text-align: right; margin-right: 50px;">
                     <strong>{{ __('ลงชื่อผู้ขอ:') }}</strong>
-                    <p>{{ optional($document->reqDocumentUsers->first())->signature_name ?? 'N/A' }}</p>
-                </div>
-
-                <div class="mt-4" style="text-align: right; margin-right: 50px;">
-                    <strong>{{ __('ลงชื่อผู้ขอ:') }}</strong>
-                    @if(optional($document->reqDocumentUsers->first())->signature_name)
-                        <img src="{{ Storage::url('signatures/' . optional($document->reqDocumentUsers->first())->signature_name) }}"
-                            alt="Signature" style="max-width: 200px;">
+                    @if($signature = optional($document->reqDocumentUsers->first())->signature_name)
+                        <img src="{{ Storage::url('signatures/' . $signature) }}" alt="Signature" style="max-width: 200px; height: auto;">
                     @else
-                        <p>{{ 'N/A' }}</p>
+                        <p>{{ __('N/A') }}</p>
                     @endif
                 </div>
+
 
 
             </div>
@@ -540,6 +568,7 @@
 
         </div>
     </div>
-    @endforeach
-    @endif
-    @endsection
+
+@endforeach
+@endif
+@endsection

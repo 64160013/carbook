@@ -28,7 +28,8 @@
                     <th class="text-center">#</th>
                     <th class="text-center">ผู้ส่ง</th>
                     <th class="text-center">วัตถุประสงค์</th>
-                    <th class="text-center">วันที่สร้าง</th>
+                    <th class="text-center">วันที่เดินทางไป</th>
+                    <th class="text-center">วันที่เดินทางกลับ</th>
                     <th class="text-center">สถานะ</th>
                     <th class="text-center">รายละเอียด</th>
                 </tr>
@@ -44,60 +45,75 @@
                         </td>
                         <td class="text-center">{{ $document->objective }}</td>
                         <td class="text-center">
-                            {{ \Carbon\Carbon::parse($document->created_at)->format('d') }}
-                            {{ \Carbon\Carbon::parse($document->created_at)->locale('th')->translatedFormat('F') }}
-                            {{ \Carbon\Carbon::parse($document->created_at)->format('Y') + 543 }}                                                    <br>
-                            เวลา : {{ \Carbon\Carbon::parse($document->created_at)->format('H:i') }} น.
+                            {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
+                            {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }}
+                            {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}                                                    <br>
+                            เวลา : {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.
                         </td>
                         <td class="text-center">
-                            @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
-                                @if ($document->allow_division == 'approved')
-                                    <span class="badge bg-success">อนุมัติ</span>
-                                @elseif ($document->allow_division == 'pending')
-                                    <span class="badge bg-warning">รอดำเนินการ</span>
-                                @else
-                                    <span class="badge bg-danger">ถูกปฏิเสธ</span>
-                                @endif
-                            @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
-                                @if ($document->allow_department == 'approved')
-                                    <span class="badge bg-success">อนุมัติ</span>
-                                @elseif ($document->allow_department	 == 'pending')
-                                    <span class="badge bg-warning">รอดำเนินการ</span>
-                                @else
-                                    <span class="badge bg-danger">ถูกปฏิเสธ</span>
-                                @endif 
+                            {{ \Carbon\Carbon::parse($document->end_date)->format('d') }}
+                            {{ \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') }}
+                            {{ \Carbon\Carbon::parse($document->end_date)->format('Y') + 543 }}                                                    <br>
+                            เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
+                        </td>
+                        <td class="text-center">
+                            @if ( $document->cancel_allowed == 'pending' )
+                                @if (in_array(auth()->user()->role_id, [4, 5, 6, 7, 8, 9, 10]))
+                                    @if ($document->allow_division == 'approved')
+                                        <span class="badge bg-success">อนุมัติ</span>
+                                    @elseif ($document->allow_division == 'pending')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                    @else
+                                        <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                                    @endif
+                                @elseif (in_array(auth()->user()->role_id, [13, 14, 15, 16]))
+                                    @if ($document->allow_department == 'approved')
+                                        <span class="badge bg-success">อนุมัติ</span>
+                                    @elseif ($document->allow_department	 == 'pending')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                    @else
+                                        <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                                    @endif 
 
-                            @elseif (in_array(auth()->user()->role_id, [12]))
-                                @if ($document->allow_opcar == 'approved')
-                                    <span class="badge bg-success">อนุมัติ</span>
-                                @elseif ($document->allow_opcar	 == 'pending')
-                                    <span class="badge bg-warning">รอดำเนินการ</span>
-                                @else
-                                    <span class="badge bg-danger">ถูกปฏิเสธ</span>
-                                @endif 
+                                @elseif (in_array(auth()->user()->role_id, [12]))
+                                    @if ($document->allow_opcar == 'approved')
+                                        <span class="badge bg-success">อนุมัติ</span>
+                                    @elseif ($document->allow_opcar	 == 'pending')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                    @else
+                                        <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                                    @endif 
 
-                            @elseif (in_array(auth()->user()->role_id, [2]))
-                                @if ($document->allow_officer == 'approved')
-                                    <span class="badge bg-success">อนุมัติ</span>
-                                @elseif ($document->allow_officer	 == 'pending')
-                                    <span class="badge bg-warning">รอดำเนินการ</span>
-                                @else
-                                    <span class="badge bg-danger">ถูกปฏิเสธ</span>
-                                @endif 
-                            
-                            @elseif (in_array(auth()->user()->role_id, [3]))
-                                @if ($document->allow_director == 'approved')
-                                    <span class="badge bg-success">อนุมัติ</span>
-                                @elseif ($document->allow_director	 == 'pending')
-                                    <span class="badge bg-warning">รอดำเนินการ</span>
-                                @else
-                                    <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                                @elseif (in_array(auth()->user()->role_id, [2]))
+                                    @if ($document->allow_officer == 'approved')
+                                        <span class="badge bg-success">อนุมัติ</span>
+                                    @elseif ($document->allow_officer	 == 'pending')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                    @else
+                                        <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                                    @endif 
+                                
+                                @elseif (in_array(auth()->user()->role_id, [3]))
+                                    @if ($document->allow_director == 'approved')
+                                        <span class="badge bg-success">อนุมัติ</span>
+                                    @elseif ($document->allow_director	 == 'pending')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                    @else
+                                        <span class="badge bg-danger">ถูกปฏิเสธ</span>
+                                    @endif
                                 @endif
+                            @else
+                                <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                             @endif
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
-                                class="btn btn-primary">ดูรายละเอียด</a>
+                            @if ( $document->cancel_allowed == 'pending' )
+                                <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
+                                    class="btn btn-primary">ดูรายละเอียด</a>
+                            @else
+                                <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
+                                class="btn btn-secondary">ดูรายละเอียด</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

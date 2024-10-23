@@ -39,7 +39,7 @@
                             @if (Route::has('login'))
                                 <li class="nav-item">
                                     <a class="nav-link btn btn-outline-primary me-2"
-                                        href="{{ route('login') }}">{{ __('Login') }}</a>
+                                        href="{{ route('login') }}">{{ __('เข้าสู่ระบบ') }}</a>
                                 </li>
                             @endif
                         @else

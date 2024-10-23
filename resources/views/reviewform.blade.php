@@ -101,7 +101,7 @@
 
                 <!-- โครงการที่เกี่ยวข้อง -->
                 <h6 class="text-muted">{{ __('โครงการที่เกี่ยวข้อง') }}</h6>
-                <div class="mt-4 border p-3">
+                <div class="mt-2 border p-3">
                     <p class="form-control-static">
                         @if($document->related_project)
                             <a href="{{ Storage::url($document->related_project) }}" target="_blank"

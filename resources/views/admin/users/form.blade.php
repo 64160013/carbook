@@ -35,10 +35,10 @@
                             {{ __('ไม่มีฟอร์มสำหรับการตรวจสอบ') }}
                         </div>
                     @else
-                        <div class="table-responsive mt-4 mb-4">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead class="thead-dark">
-                                    <tr class="text-center">
+                    <div class="table-responsive mt-4 mb-4">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+            <tr class="text-center">
                                         <th>#</th>
                                         <th>ชื่อ-นามสกุล</th>
                                         <th>วัตถุประสงค์</th>
@@ -60,7 +60,7 @@
                                                 @endphp
                                                 <td>{{ $requester->id }}</td>
                                                 <td>{{ $requester->name }} {{ $requester->lname }}</td>
-                                                <td>{{ $document->objective }}</td>
+                                                <td style="max-width: 160px; ">{{ $document->objective }}</td>
                                                 <td>
                                                     {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
                                                     {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }}
@@ -75,6 +75,7 @@
                                                     เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
                                                 </td>
                                                 <td>
+                                                @if ( $document->cancel_allowed == 'pending' )
                                                     @foreach($document->reqDocumentUsers as $docUser)
                                                         @if ($docUser->division_id == 2)
                                                             @if ($document->allow_department == 'pending')
@@ -91,6 +92,9 @@
                                                             @include('partials.allow_status', ['document' => $document])
                                                         @endif
                                                     @endforeach
+                                                @else
+                                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                                @endif
                                                 </td>
 
                                                 <td>

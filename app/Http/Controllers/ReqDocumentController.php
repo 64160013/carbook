@@ -141,7 +141,7 @@ class ReqDocumentController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['getEvents']);
     }
 
     public function getAmphoes($provinceId)
@@ -157,16 +157,6 @@ class ReqDocumentController extends Controller
     }
 
 
-
-//     public function getEvents()
-// {
-//     // ดึงข้อมูลจากฐานข้อมูล ReqDocument
-//     $documents = ReqDocument::select('id', 'objective', 'start_date', 'end_date', 'start_time', 'end_time')
-//         ->get();
-
-//     // ส่งข้อมูลในรูปแบบ JSON ให้กับ FullCalendar
-//     return response()->json($documents);
-// }
 
 public function getEvents()
 {
@@ -186,7 +176,7 @@ public function getEvents()
 
     // ส่งข้อมูลในรูปแบบ JSON ให้กับ FullCalendar
     return response()->json($documents);
-    return view('welcome');
+    // return view('welcome');
 }
 
 

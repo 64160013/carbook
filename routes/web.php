@@ -16,7 +16,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReqDocumentController;
 use App\Http\Controllers\DocumentController;
-// use App\Http\Controllers\DriverScheduleController;
 use App\Http\Controllers\ReportDocumentController;
 use App\Http\Controllers\PDFController;
 
@@ -118,18 +117,15 @@ Route::get('/report[id]', [ReportDocumentController::class, 'index'])->name('rep
 Route::post('/report', [ReportDocumentController::class, 'store'])->name('report.submit');
 Route::get('/reportdoc/show/{id}', [ReportDocumentController::class, 'show'])->name('reportdoc.show');
 
- 
-
-    
+ //PDF
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('PDF.document');
 Route::get('/report/showRepDoc/pdf', [PDFController::class, 'generateReportPDF'])->name('report.showRepDoc.pdf');
 
 
 
-    // หน้าแสดงรายการเอกสาร
+//แก้ไขเอกสาร
+Route::get('/documents/edit', [DocumentController::class, 'edit'])->name('documents.edit');
+Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('documents.update.edit');
 
-    // หน้าแก้ไขเอกสาร
-    Route::get('/documents/edit', [DocumentController::class, 'edit'])->name('documents.edit');
-
-    // การอัพเดตเอกสาร
-    Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('documents.update.edit');
+//ยกเลิกเอกสาร
+Route::post('/documents/cancel/{id}', [DocumentController::class, 'cancel'])->name('documents.cancel');
