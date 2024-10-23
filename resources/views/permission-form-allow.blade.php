@@ -467,7 +467,7 @@
                                 </ul>
                             </td>
                             <td>
-                                <strong>{{ __('ผู้ร่วมเดินทางทั้งหมด') }}:</strong> {{ $document->sum_companion }}
+                                <strong>{{ __('ผู้ร่วมเดินทางทั้งหมด') }}:</strong> {{ $document->sum_companion }}                                
                             </td>
 
                         </tr>
