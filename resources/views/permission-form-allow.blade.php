@@ -19,7 +19,12 @@
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-center" 
                     style="border: 1px solid #dc3545; color: #dc3545; padding: 10px 20px; border-radius: 5px; text-align: center;">
-                    รายการคำขอถูกยกเลิกแล้ว เนื่องจาก{{ $document->cancel_reason }}
+                    <div>
+                        รายการคำขอถูกยกเลิกแล้วเนื่องจาก 
+                        <span style="display: inline-block; border-bottom: 1px solid #dc3545; padding-bottom: 0;">
+                           " {{ $document->cancel_reason }} "
+                        </span>
+                    </div>
                 </div>
             </div>
         @endif
