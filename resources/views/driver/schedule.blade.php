@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="container">
-    <h1 class="text text-center">แผนงานในการปฏิบัติหน้าที่ของคนขับรถ</h1>
+    <h1 class="text text-center mb-4">แผนงานในการปฏิบัติหน้าที่ของคนขับรถ</h1>
 
     @if (session('error'))
         <div class="alert alert-danger">

@@ -131,15 +131,28 @@
             </div>
 
             <div class="text-center">
+                <!-- แก้ไขเอกสาร -->
                 @if ( $document->cancel_allowed == "pending")
-                    <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}" class="btn btn-warning">
-                        {{ __('แก้ไขเอกสาร') }}
-                    </a>
+                    @if ($document->allow_carman != "pending")
+                        <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}" class="btn btn-warning disabled">
+                            {{ __('แก้ไขเอกสาร') }}
+                        </a>
+                    @else
+                        <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}" class="btn btn-warning">
+                            {{ __('แก้ไขเอกสาร') }}
+                        </a>
+                    @endif
                 @endif
 
+                <!-- ยกเลิกคำขอ -->
                 @if ( $document->cancel_allowed == "pending")
-                    <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelRequestModal">
-                    ต้องการยกเลิกคำขอ</a>
+                    @if ($document->allow_carman != "pending")
+                        <a href="#" class="btn btn-danger disabled" data-bs-toggle="modal" data-bs-target="#cancelRequestModal">
+                        ต้องการยกเลิกคำขอ</a>
+                    @else
+                        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelRequestModal">
+                        ต้องการยกเลิกคำขอ</a>
+                    @endif
                 @endif
                 
 

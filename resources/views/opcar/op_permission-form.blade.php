@@ -54,21 +54,29 @@
                         </td>
                         
                         <td class="text-center">
-                            @if (in_array(auth()->user()->role_id, [12]))
-                                @if ($document->allow_carman == 'approved')
-                                    <span class="badge bg-success">รับทราบ </span>
-                                @elseif ($document->allow_carman	 == 'pending')
-                                    <span class="badge bg-warning">รอดำเนินการ</span>
-                                @else
-                                    <span class="badge bg-danger">ไม่สามารถรับงานได้</span>
-                                @endif 
+                            @if ( $document->cancel_allowed == 'pending' )
+                                @if (in_array(auth()->user()->role_id, [12]))
+                                    @if ($document->allow_carman == 'approved')
+                                        <span class="badge bg-success">รับทราบ </span>
+                                    @elseif ($document->allow_carman	 == 'pending')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                    @else
+                                        <span class="badge bg-danger">ไม่สามารถรับงานได้</span>
+                                    @endif 
+                                @endif
+                            @else
+                                <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                             @endif
                         </td>
                         <td class="text-center">
+                        @if ( $document->cancel_allowed == 'pending' )
                             <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
                                 class="btn btn-primary">ดูรายละเอียด</a>
+                        @else
+                            <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
+                                class="btn btn-secondary">ดูรายละเอียด</a>
+                        @endif
                         </td>
-                        
                     </tr>
                 @endforeach
             </tbody>

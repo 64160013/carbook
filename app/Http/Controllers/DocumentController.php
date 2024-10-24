@@ -400,24 +400,19 @@ public function cancel(Request $request, $id)
 {
     // ตรวจสอบข้อมูลที่ส่งมา
     $request->validate([
-        'cancel_reason' => 'required|string|max:255', // ตรวจสอบว่ามีการกรอกเหตุผล
+        'cancel_reason' => 'required|string|max:255', 
     ]);
 
-    // ค้นหาเอกสารโดยใช้ document_id
     $document = ReqDocument::findOrFail($id);
 
-    // ตรวจสอบสถานะการยกเลิก
     if ($document->cancel_allowed == 'pending') {
-        // อัปเดตสถานะการยกเลิกเป็น 'rejected' และบันทึกเหตุผล
         $document->cancel_allowed = 'rejected';
         $document->cancel_reason = $request->cancel_reason; // บันทึกเหตุผลการยกเลิก
         $document->save();
 
-        // เปลี่ยนเส้นทางไปยังหน้าประวัติพร้อมข้อความยืนยัน
         return redirect()->route('documents.history')->with('success', 'ยกเลิกคำขอสำเร็จ');
     }
 
-    // หากไม่สามารถยกเลิกได้
     return redirect()->route('documents.history')->with('error', 'ไม่สามารถยกเลิกคำขอนี้ได้');
 }
 

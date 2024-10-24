@@ -16,7 +16,7 @@
     @foreach($documents as $document)
         <!-- กรณีที่เอกสารถูกยกเลิก -->
         @if ( $document->cancel_allowed != 'pending' )
-            <div class="card-body">
+            <div class="card-body mb-4">
                 <div class="d-flex align-items-center justify-content-center" 
                     style="border: 1px solid #dc3545; color: #dc3545; padding: 10px 20px; border-radius: 5px; text-align: center;">
                     <div>
@@ -28,6 +28,9 @@
                 </div>
             </div>
         @endif
+@if ( $document->cancel_allowed != 'pending' )
+        <!-- ไม่ต้องแสดงการอนุณาติเพราะยกเลิกก่อนการaction -->
+@else
     <!-- หัวหน้างาน division -->
     @if (in_array(auth()->user()->role_id, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 11, 13, 14, 15, 16]))
     <form action="{{ route('documents.updateStatus') }}" method="POST" class="mb-4">
@@ -292,6 +295,7 @@
             @endif
     </form>
     @endif
+@endif
 
 
 
