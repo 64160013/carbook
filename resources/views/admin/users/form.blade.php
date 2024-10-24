@@ -12,26 +12,25 @@
 
                     <!-- ช่องค้นหาข้อมูล -->
                     <div class="container-fluid mt-2">
-                    <form class="d-flex" method="GET" action="{{ route('admin.users.searchform') }}">
-    <input type="search" id="searchName" name="q" class="form-control me-2" 
-           placeholder="ค้นหาข้อมูล" aria-label="Search" value="{{ request()->get('q') }}">
-
-    <!-- เพิ่มฟิลด์การค้นหาอื่น ๆ เช่น สถานะ -->
-    <select name="status" class="form-select me-2">
-        <option value="">--เลือกสถานะ--</option>
-        <option value="pending">รอการพิจารณา</option>
-        <option value="approved">อนุมัติ</option>
-        <option value="rejected">ไม่อนุมัติ</option>
-    </select>
-
-    <button type="submit" class="btn btn-primary">ค้นหา</button>
-</form>
-
+                        <form class="d-flex" method="GET" action="{{ route('admin.users.searchform') }}">
+                            <input type="search" id="searchName" name="q" class="form-control me-2" placeholder="ค้นหาข้อมูล"
+                                aria-label="Search" value="{{ request()->get('q') }}">
+                            <button type="submit" class="btn btn-primary ">ค้นหา</button>
+                            {{-- Dropdown สำหรับกรองสถานะ --}}
+                            <select name="filter" id="filter" class="form-select me-2" style="max-width: 200px;"
+                                onchange="this.form.submit()">
+                                <option value="">ทั้งหมด</option>
+                                <option value="completed" {{ request('filter') == 'completed' ? 'selected' : '' }}>สำเร็จแล้ว</option>
+                                <option value="pending" {{ request('filter') == 'pending' ? 'selected' : '' }}>พิจารณา</option>
+                                <option value="cancelled" {{ request('filter') == 'cancelled' ? 'selected' : '' }}>ไม่อนุมัติ/ยกเลิก
+                                </option>
+                            </select>
+                        </form>
                     </div>
 
                     <!-- ตารางแสดงข้อมูลเอกสาร -->
                     @if($documents->isEmpty())
-                        <div class="alert alert-info">
+                        <div class="alert alert-info mt-4">
                             {{ __('ไม่มีฟอร์มสำหรับการตรวจสอบ') }}
                         </div>
                     @else
