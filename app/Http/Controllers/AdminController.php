@@ -13,8 +13,7 @@ use App\Models\Position;
 use App\Models\Role;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\ReqDocument;
-use App\Models\Document;
-use App\Models\ReqDocumentUser;
+use App\Models\ReportFormance;
 
 class AdminController extends Controller
 {
@@ -303,6 +302,60 @@ class AdminController extends Controller
         // ส่งข้อมูลไปยัง view
         return view('admin.users.form', compact('documents'));
     }
+
+
+    public function dashBoard()
+{
+    // ดึงข้อมูลเอกสารทั้งหมด
+    $documents = ReqDocument::with(['reqDocumentUsers', 'users', 'province', 'vehicle'])->get();
+    $reports = ReportFormance::all();
+
+    // นับจำนวนการขอเอกสารในแต่ละเดือนสำหรับผู้ใช้แต่ละคน โดยใช้ start_date
+    $requestCounts = ReqDocument::with('reqDocumentUsers')
+        ->get()
+        ->flatMap(function ($document) {
+            // ตรวจสอบว่ามี start_date ก่อน
+            if (!$document->start_date) {
+                return []; // ถ้าไม่มี start_date ให้ข้ามไป
+            }
+
+            $startDate = \Carbon\Carbon::parse($document->start_date);
+            return $document->reqDocumentUsers->map(function ($user) use ($startDate) {
+                return [
+                    'user_id' => $user->id,
+                    'month' => $startDate->format('m'),
+                ];
+            });
+        })
+        ->groupBy(['user_id', 'month'])
+        ->map(function ($group) {
+            return $group->count(); // นับจำนวนเอกสารในเดือนที่ไม่ซ้ำกัน
+        })
+        ->sortDesc();
+
+    // เตรียมข้อมูลสำหรับสร้างกราฟ
+    $chartData = [];
+    foreach ($requestCounts as $userId => $months) {
+        // ตรวจสอบว่ามีเดือนก่อนที่จะทำการวนลูป
+        if (is_array($months) || is_object($months)) {
+            foreach ($months as $month => $totalRequests) {
+                $chartData[] = [
+                    'user_id' => $userId,
+                    'month' => $month,
+                    'total_requests' => $totalRequests,
+                ];
+            }
+        }
+    }
+
+    return view('adminHome', compact('reports', 'documents', 'chartData'));
+}
+
+    
+    
+
+
+
 
 
 }

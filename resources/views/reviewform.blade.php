@@ -69,15 +69,24 @@
                             <td><strong>{{ __('ผู้ควบคุมรถ') }}:</strong>
                                 {{ $document->carController->name ?? 'N/A' }} {{ $document->carController->lname ?? 'N/A' }}
                             </td>
+
+                        </tr>
+                        <tr>
                             <td><strong>{{ __('วันที่ไป') }}:</strong>
-                                {{ \Carbon\Carbon::parse($document->start_date)->format('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
+                                {{ 
+                                            \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' .
+            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' ' .
+            \Carbon\Carbon::parse($document->start_date)->addYears(543)->format('Y') 
+                                        }}</td>
                             <td><strong>{{ __('วันที่กลับ') }}:</strong>
-                                {{ \Carbon\Carbon::parse($document->end_date)->format('d-m-Y') }}</td>
-                            <td><strong>{{ __('เวลาไป') }}:</strong> {{ $document->start_time }}</td>
+                                {{ 
+                                            \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
+            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' ' .
+            \Carbon\Carbon::parse($document->end_date)->addYears(543)->format('Y') 
+                                        }}
                         </tr>
                         <tr>
+                            <td><strong>{{ __('เวลาไป') }}:</strong> {{ $document->start_time }}</td>
                             <td><strong>{{ __('เวลากลับ') }}:</strong> {{ $document->end_time }}</td>
                         </tr>
                     </table>

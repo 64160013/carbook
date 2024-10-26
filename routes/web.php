@@ -38,7 +38,7 @@ Route::get('/home', [HomeController::class, 'index'])
 
 
 // เส้นทางสำหรับหน้าแรกของผู้ดูแลระบบ
-Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home')
+Route::get('/admin/home', [AdminController::class, 'dashBoard'])->name('admin.home')
     ->middleware(IsAdmin::class);
 
 // แก้ไขโปรไฟล์
