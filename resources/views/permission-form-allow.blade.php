@@ -201,18 +201,22 @@
                     </div>
 
                     <!-- เปรียบเป็นใบแจ้งงานคนขับรถ -->
-                    @if ( auth()->user()->role_id == 2 || 3)
-                        <div class="card mt-3 mb-4 shadow-sm border-1" style="">
-                            <div class="card-header">
-                                <h6 class="mb-0">{{ __('รถยนต์ปฏิบัติงาน') }}</h6>
+                    @if ( in_array(auth()->user()->role_id, [2,3,11,12]))
+                        @if ( $document->allow_opcar == 'approved')
+                    
+                    
+                            <div class="card mt-3 mb-4 shadow-sm border-1" style="">
+                                <div class="card-header">
+                                    <h6 class="mb-0">{{ __('รถยนต์ปฏิบัติงาน') }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <label>{{ __('คนขับรถ :') }}</label>
+                                        {{ $document->carmanUser->name ?? 'N/A' }} {{ $document->carmanUser->lname ?? 'N/A' }}<br>
+                                    <label>{{ __('หมายเลขทะเบียนรถ :') }}</label>
+                                        {{ $document->vehicle->car_category ?? 'N/A'}} {{ $document->vehicle->car_regnumber ?? 'N/A'}} {{ $document->vehicle->car_province ?? 'N/A'}}                    
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <label>{{ __('คนขับรถ :') }}</label>
-                                    {{ $document->carmanUser->name ?? 'N/A' }} {{ $document->carmanUser->lname ?? 'N/A' }}<br>
-                                <label>{{ __('หมายเลขทะเบียนรถ :') }}</label>
-                                    {{ $document->vehicle->car_category }} {{ $document->vehicle->car_regnumber }} {{ $document->vehicle->car_province }}                    
-                            </div>
-                        </div>
+                        @endif
                     @endif
 
                 </div>
