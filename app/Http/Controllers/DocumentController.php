@@ -59,7 +59,7 @@ class DocumentController extends Controller
         return view('reviewstatus', compact('document'));
     }
 
-
+    
 
     /**
      *
@@ -380,43 +380,45 @@ class DocumentController extends Controller
      *
      * 
      */
-    // public function cancel($id)
-    // {
-    //     $document = ReqDocument::findOrFail($id);
+    public function cancel(Request $request, $id)
+    {
+        $request->validate([
+            'cancel_reason' => 'nullable|string|max:255',
+        ]);
 
-    //     if ($document->cancel_allowed == 'pending') {
-    //         $document->cancel_allowed = 'rejected';
-    //         $document->save();
+        $document = ReqDocument::findOrFail($id);
 
-    //         return redirect()->route('documents.history')->with('success', 'ยกเลิกคำขอสำเร็จ');
-    //     }
+        if ($document->cancel_allowed == 'pending') {
+            $document->cancel_allowed = 'rejected';
+            $document->cancel_reason = $request->cancel_reason ?? ''; // บันทึกเหตุผลถ้ามี
+            $document->save();
 
-    //     return redirect()->route('documents.history')->with('error', 'ไม่สามารถยกเลิกคำขอนี้ได้');
-    // }
+            return redirect()->route('documents.history')->with('success', 'ยกเลิกคำขอสำเร็จ');
+        }
 
-    // ใน DocumentController.php
-// ใน DocumentController.php
-public function cancel(Request $request, $id)
-{
-    // ตรวจสอบข้อมูลที่ส่งมา
-    $request->validate([
-        'cancel_reason' => 'required|string|max:255', 
-    ]);
-
-    $document = ReqDocument::findOrFail($id);
-
-    if ($document->cancel_allowed == 'pending') {
-        $document->cancel_allowed = 'rejected';
-        $document->cancel_reason = $request->cancel_reason; // บันทึกเหตุผลการยกเลิก
-        $document->save();
-
-        return redirect()->route('documents.history')->with('success', 'ยกเลิกคำขอสำเร็จ');
+        return redirect()->route('documents.history')->with('error', 'ไม่สามารถยกเลิกคำขอนี้ได้');
     }
 
-    return redirect()->route('documents.history')->with('error', 'ไม่สามารถยกเลิกคำขอนี้ได้');
-}
+    public function confirmCancel(Request $request, $id)
+    {
+        $document = ReqDocument::findOrFail($id);
+        
+        $document->cancel_admin = 'Y';
+        $document->save();
 
+        return redirect()->route('documents.status')->with('success', 'คำขอถูกยกเลิกเรียบร้อยแล้ว');
+    }
 
+    public function confirmDirectorCancel(Request $request, $id)
+    {
+    
+        $document = ReqDocument::findOrFail($id);
+        $document->cancel_director = 'Y';
+        $document->save();
+    
+        return redirect()->route('documents.index')->with('success', 'คำขอถูกยกเลิกเรียบร้อยแล้วโดยผู้อำนวยการ');
+    }
+    
     public function getAmphoes($province_id)
     {
         // ตรวจสอบว่ามี province_id ที่ต้องการหรือไม่
