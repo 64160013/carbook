@@ -2,26 +2,28 @@
 
 @section('content')
 <div class="container">
-    <h2 class="text-center mb-4">ประวัติการยื่นขอ</h2>
 
-    {{-- ปุ่มสำหรับเลือกการกรอง --}}
-    <div class="mb-4 d-flex justify-content-end">
-        <div class="d-flex align-items-center">
-            <div class="btn-group" role="group">
-                <a href="{{ route('documents.history', ['filter' => 'reservation']) }}"
-                    class="btn {{ request('filter') == 'reservation' || !request('filter') ? 'btn-primary' : 'btn-outline-primary' }}">
-                    เดือนที่ทำเรื่อง
-                </a>
-                <a href="{{ route('documents.history', ['filter' => 'travel']) }}"
-                    class="btn {{ request('filter') == 'travel' ? 'btn-primary' : 'btn-outline-primary' }}">
-                    เดือนที่ไป
-                </a>
+<h2 class="text-center mb-4">ประวัติการยื่นขอ</h2>
+    <div class="container-fluid mt-2">
+        <form method="GET" action="{{ route('documents.search') }}">
+            <div class="d-flex align-items-center">
+                <input type="search" id="searchName" name="q" class="form-control me-2" placeholder="ค้นหาข้อมูล"
+                    aria-label="Search" value="{{ request()->get('q') }}">
+                <button type="submit" class="btn btn-primary">ค้นหา</button>
+                {{-- Dropdown สำหรับกรองสถานะ --}}
+                <select name="filter" id="filter" class="form-select me-2 ms-2" style="max-width: 200px;"
+                    onchange="this.form.submit()">
+                    <option value="">ทั้งหมด</option>
+                    <option value="completed" {{ request('filter') == 'completed' ? 'selected' : '' }}>สำเร็จแล้ว</option>
+                    <option value="pending" {{ request('filter') == 'pending' ? 'selected' : '' }}>พิจารณา</option>
+                    <option value="cancelled" {{ request('filter') == 'cancelled' ? 'selected' : '' }}>ไม่อนุมัติ/ยกเลิก
+                    </option>
+                </select>
             </div>
-        </div>
     </div>
 
     @if($documents->isEmpty())
-        <div class="alert alert-info">
+        <div class="alert alert-info mt-2">
             {{ __('ไม่มีฟอร์มสำหรับการตรวจสอบ') }}
         </div>
     @else
@@ -33,7 +35,7 @@
             @foreach($documents->groupBy(function ($date) use ($groupedBy) {
                         return \Carbon\Carbon::parse($date->$groupedBy)->format('F Y', 'th');
                     }) as $month => $groupedDocuments)
-                    <div class="card mb-4">
+                    <div class="card mb-4 mt-2">
                         {{-- Header ของการ์ดจะแสดงเดือน --}}
                         <div class="card-header text-white bg-primary">{{ $month }}</div>
                         <div class="card-body">

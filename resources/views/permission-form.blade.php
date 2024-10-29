@@ -146,9 +146,8 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                 <form id="confirmDirectorCancellationForm" action="{{ route('documents.confirmDirectorCancel', ['id' => $document->document_id]) }}" method="POST">
                     @csrf
-                    <input type="hidden" name="cancel_director" value="Y"> <!-- กำหนดค่าเป็น Y -->
-                    <!-- <input type="hidden" name="document_id" value="{{ $document->document_id }}">  -->
-                    <!-- เพิ่มการส่ง document_id -->
+                    <input type="hidden" name="cancel_director" value="Y">
+                    
                     <button type="submit" class="btn btn-danger">ยืนยันการยกเลิก</button>
                 </form>
             </div>

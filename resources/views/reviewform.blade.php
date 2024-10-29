@@ -13,7 +13,11 @@
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">{{ __('เอกสารที่: ') . $document->document_id }}</h5>
                 <p class="mb-0">
-                    {{ __('วันที่ทำเรื่อง: ') . \Carbon\Carbon::parse($document->reservation_date)->format('d-m-Y') }}
+                    {{ __('วันที่ทำเรื่อง: ') .
+            \Carbon\Carbon::parse($document->reservation_date)->format('d') . ' ' .
+            \Carbon\Carbon::parse($document->reservation_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
+            \Carbon\Carbon::parse($document->reservation_date)->format('Y') 
+                                                }}
                 </p>
             </div>
 
@@ -51,15 +55,26 @@
                                         // ดึง ID ของผู้ร่วมเดินทาง
                                         $companionIds = explode(',', $document->companion_name);
                                         // ดึงข้อมูลผู้ใช้จากฐานข้อมูลตาม ID ที่ได้
-                                        $companions = \App\Models\User::whereIn('id', $companionIds)->get(); 
+                                        $companions = \App\Models\User::whereIn('id', $companionIds)->get();
+                                        $visibleCount = 5; // จำนวนชื่อที่ต้องการแสดงเริ่มต้น
                                     @endphp
 
                                     @if($companions->isEmpty())
                                         <li>{{ __('ไม่มีผู้ร่วมเดินทาง') }}</li>
                                     @else
-                                        @foreach($companions as $companion)
-                                            <li>{{ $companion->name }} {{ $companion->lname }}</li>
+                                        @foreach($companions as $index => $companion)
+                                            <li class="{{ $index >= $visibleCount ? 'd-none extra-companions' : '' }}">
+                                                {{ $companion->name }} {{ $companion->lname }}
+                                            </li>
                                         @endforeach
+
+                                        @if($companions->count() > $visibleCount)
+                                            <li>
+                                                <a href="javascript:void(0);" id="toggle-button" onclick="toggleCompanions()">
+                                                    {{ __('ดูเพิ่มเติม') }}
+                                                </a>
+                                            </li>
+                                        @endif
                                     @endif
                                 </ul>
                             </td>
@@ -74,16 +89,16 @@
                         <tr>
                             <td><strong>{{ __('วันที่ไป') }}:</strong>
                                 {{ 
-                                            \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' .
-            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' ' .
+                                                    \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' .
+            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
             \Carbon\Carbon::parse($document->start_date)->addYears(543)->format('Y') 
-                                        }}</td>
+                                                }}</td>
                             <td><strong>{{ __('วันที่กลับ') }}:</strong>
                                 {{ 
-                                            \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
-            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' ' .
+                                                    \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
+            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . '  พ.ศ.  ' .
             \Carbon\Carbon::parse($document->end_date)->addYears(543)->format('Y') 
-                                        }}
+                                                }}
                         </tr>
                         <tr>
                             <td><strong>{{ __('เวลาไป') }}:</strong> {{ $document->start_time }}</td>
@@ -98,6 +113,7 @@
                     <table class="table table-borderless">
                         <tr>
                             <td><strong>{{ __('สถานที่') }}:</strong> {{ $document->location }}</td>
+                            <td><strong>{{ __('ให้รถไปรับที่ ') }}:</strong> {{ $document->car_pickup }}</td>
                             <td><strong>{{ __('รถประเภท') }}:</strong> {{ $document->car_type }}</td>
                         </tr>
                         <tr>

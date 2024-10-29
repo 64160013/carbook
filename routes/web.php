@@ -18,6 +18,7 @@ use App\Http\Controllers\ReqDocumentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ReportDocumentController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -36,6 +37,10 @@ Route::get('/home', [HomeController::class, 'index'])
     ->name('home')
     ->middleware(IsUsers::class);
 
+// เส้นทางสำหรับหน้าแรกของผู้ดูแลระบบ
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+->name('admin.dashboard')
+->middleware(IsAdmin::class);
 
 // เส้นทางสำหรับหน้าแรกของผู้ดูแลระบบ
 Route::get('/admin/home', [AdminController::class, 'dashBoard'])->name('admin.home')
@@ -62,28 +67,28 @@ Route::get('/get-districts/{amphoeId}', [ReqDocumentController::class, 'getDistr
 
 
 
-// use Illuminate\Support\Facades\Storage;
-// use Illuminate\Support\Facades\Response;
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
 
-// Route::get('/signatures/{filename}', function ($filename) {
-//     $path = 'signatures/' . $filename;
+Route::get('/signatures/{filename}', function ($filename) {
+    $path = 'signatures/' . $filename;
 
-//     // ตรวจสอบว่ามีไฟล์อยู่ในระบบหรือไม่
-//     if (!Storage::exists($path)) {
-//         abort(404);
-//     }
+    // ตรวจสอบว่ามีไฟล์อยู่ในระบบหรือไม่
+    if (!Storage::exists($path)) {
+        abort(404);
+    }
 
-//     $userId = Auth::id();    // ดึง ID ของผู้ใช้ที่เข้าสู่ระบบ
+    $userId = Auth::id();    // ดึง ID ของผู้ใช้ที่เข้าสู่ระบบ
 
-//     // ตรวจสอบว่า ID ของผู้ใช้ตรงกับ ID ที่อยู่ในชื่อไฟล์หรือไม่
-//     if (strpos($filename, $userId . '_signature') !== 0) {
-//         abort(403); // ห้ามเข้าถึงหาก ID ไม่ตรงกัน
-//     }
+    // ตรวจสอบว่า ID ของผู้ใช้ตรงกับ ID ที่อยู่ในชื่อไฟล์หรือไม่
+    if (strpos($filename, $userId . '_signature') !== 0) {
+        abort(403); // ห้ามเข้าถึงหาก ID ไม่ตรงกัน
+    }
 
-//     // ส่งไฟล์กลับไปยังผู้ใช้
-//     return Response::file(storage_path('app/' . $path));
-// })->middleware('auth');
+    // ส่งไฟล์กลับไปยังผู้ใช้
+    return Response::file(storage_path('app/' . $path));
+})->middleware('auth');
 
 
 
@@ -104,6 +109,8 @@ Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('adm
 
 //แสดงประวัติการขอ และ แสดงรายละเอียดคำขอ
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
+Route::get('/documents/search', [DocumentController::class, 'search'])->name('documents.search');
+
 Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
 Route::get('/reviewstatus', [DocumentController::class, 'reviewStatus'])->name('documents.status')->middleware('auth');
 

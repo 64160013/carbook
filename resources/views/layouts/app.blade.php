@@ -85,7 +85,7 @@
                     @auth
                         <!-- navdar admin -->
                         @if (auth()->user()->is_admin == 1)
-                            <li class="sidebar-item"><a href="{{ route('admin.home') }}" class="sidebar-link"><i
+                            <li class="sidebar-item"><a href="{{ route('admin.dashboard') }}" class="sidebar-link"><i
                                         class="lni lni-home"></i><span>{{ __('หน้าหลัก') }}</span></a></li>
                             <li class="sidebar-item"><a href="{{ route('admin.users') }}" class="sidebar-link"><i
                                         class="lni lni-users"></i><span>{{ __('จัดการข้อมูลผู้ใช้') }}</span></a></li>
