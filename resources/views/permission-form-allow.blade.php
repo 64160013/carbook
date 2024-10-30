@@ -38,7 +38,7 @@
             <p class="mb-0">
                 {{ __('วันที่ทำเรื่อง: ')
             . \Carbon\Carbon::parse($document->reservation_date)->format('d') . ' ' .
-            \Carbon\Carbon::parse($document->reservation_date)->locale('th')->translatedFormat('F') . ' ' .
+            \Carbon\Carbon::parse($document->reservation_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
             \Carbon\Carbon::parse($document->reservation_date)->format('Y')
             ?? 'N/A' }}
             </p>
@@ -119,14 +119,14 @@
                             <td><strong>{{ __('วันที่ไป') }}:</strong>
                                 {{ optional($document->start_date)
             ? \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' .
-            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' ' . 
+            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' . 
             \Carbon\Carbon::parse($document->start_date)->format('Y') + 543
             : 'N/A' }}
                             </td>
                             <td><strong>{{ __('วันที่กลับ') }}:</strong>
                                 {{ optional($document->end_date)
             ? \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
-            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' ' .
+            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
             \Carbon\Carbon::parse($document->end_date)->format('Y') + 543
             : 'N/A' }}
                             </td>
@@ -184,11 +184,9 @@
                 <!-- ลงชื่อผู้ขอ -->
                 <div class="mt-4" style="text-align: right; margin-right: 50px;">
                     <strong>{{ __('ลงชื่อผู้ขอ:') }}</strong>
-                    @if($signature = optional($document->reqDocumentUsers->first())->signature_name)
-                        <img src="{{ Storage::url('signatures/' . $signature) }}" alt="Signature"
-                            style="max-width: 200px; height: auto;">
-                    @else
-                        <p>{{ __('N/A') }}</p>
+                    @if ($document->reqDocumentUsers->first()->signature_name)
+                        <img src="{{ url('/signatures/' . basename($document->reqDocumentUsers->first()->signature_name)) }}" 
+                            alt="Signature Image" class="img-fluid mt-2" width="350" height="auto">
                     @endif
                 </div>
             </div>

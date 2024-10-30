@@ -38,7 +38,7 @@
                             <!-- วันที่ -->
                             <td class="align-middle">
                                 {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
-                                {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }}
+                                {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }} พ.ศ. 
                                 {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}                                                    <br>
                             </td>
                             

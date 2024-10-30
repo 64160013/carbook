@@ -111,7 +111,7 @@ Route::get('/admin/users/form', [AdminController::class, 'showform'])->name('adm
 Route::get('/document-history', [DocumentController::class, 'index'])->name('documents.history');
 Route::get('/documents/search', [DocumentController::class, 'search'])->name('documents.search');
 
-Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review');
+Route::get('/reviewform', [DocumentController::class, 'reviewForm'])->name('documents.review')->middleware('auth');
 Route::get('/reviewstatus', [DocumentController::class, 'reviewStatus'])->name('documents.status')->middleware('auth');
 
 //รายการคำขอที่รอนุมัติ อนุมัติคำร้อง
@@ -131,7 +131,7 @@ Route::get('/report/showRepDoc/pdf', [PDFController::class, 'generateReportPDF']
 
 
 //แก้ไขเอกสาร
-Route::get('/documents/edit', [DocumentController::class, 'edit'])->name('documents.edit');
+Route::get('/documents/edit', [DocumentController::class, 'edit'])->name('documents.edit')->middleware('auth');
 Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('documents.update.edit');
 
 //ยกเลิกเอกสาร

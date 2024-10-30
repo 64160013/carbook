@@ -172,9 +172,14 @@
         <!-- <p><span class="line" style="width: 605px; line-height: 0.9; padding-left: 30px;">2s</span></p> -->
 
             @foreach($documents->reqDocumentUsers as $docUser)
-                <!-- {{$docUser->signature_name}} -->
                 <img src="{{ Storage::url('signatures/' . $docUser->signature_name) }}"  width="150" class="img-fluid mt-2">
-            @endforeach 
+            @endforeach
+
+            
+
+
+
+
 
     </div>
 </body>

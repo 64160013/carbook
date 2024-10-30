@@ -7,7 +7,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <strong>วันที่ไป:
-                        {{ \Carbon\Carbon::parse($document->start_date)->translatedFormat('d F Y') }}</strong>
+                        {{ 
+                            \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' . 
+                            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' . 
+                            \Carbon\Carbon::parse($document->start_date)->addYears(543)->format('Y') 
+                        }}</strong>
                 </div>
                 <div class="col-md-6 text-right">
                     <strong>วัตถุประสงค์: {{ $document->objective }}</strong>

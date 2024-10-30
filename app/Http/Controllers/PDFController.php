@@ -28,7 +28,7 @@ class PDFController extends Controller
     
         $data = [
             'title' => 'Document Report',
-            'documents' => $documents  // ส่งข้อมูล $documents ไปที่ view
+            'documents' => $documents,  // ส่งข้อมูล $documents ไปที่ view
         ];
     
         // สร้าง PDF จาก view 'myPDF' โดยส่ง $data

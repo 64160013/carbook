@@ -127,10 +127,12 @@
                 <!-- โครงการที่เกี่ยวข้อง -->
                 <h6 class="text-muted">{{ __('โครงการที่เกี่ยวข้อง') }}</h6>
                 <div class="mt-2 border p-3">
-                    <p class="form-control-static">
+                    <p class="form-control-static mt-0 mb-0">
                         @if($document->related_project)
-                            <a href="{{ Storage::url($document->related_project) }}" target="_blank"
-                                class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a>
+                            <!-- <a href="{{ Storage::url($document->related_project) }}" target="_blank"
+                                class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a> -->
+                                <a href="{{ asset('storage/' . $document->related_project) }}" target="_blank" class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a>
+
                         @else
                             {{ __('ไม่มีไฟล์') }}
                         @endif
@@ -140,8 +142,12 @@
                 <!-- ลงชื่อผู้ขอ -->
                 <div class="mt-4" style="text-align: right; margin-right: 50px;">
                     <strong>{{ __('ลงชื่อผู้ขอ:') }}</strong>
-                    <p>{{ $document->reqDocumentUsers->first()->signature_name ?? 'N/A' }}</p>
+                    @if ($document->reqDocumentUsers->first()->signature_name)
+                        <img src="{{ url('/signatures/' . basename($document->reqDocumentUsers->first()->signature_name)) }}" 
+                            alt="Signature Image" class="img-fluid mt-2" width="350" height="auto">
+                    @endif
                 </div>
+
 
             </div>
         </div>

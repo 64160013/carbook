@@ -133,7 +133,7 @@
                                                     <span>
                                                         {{ 
                                                             \Carbon\Carbon::parse($document->start_date)->format('d') . ' ' . 
-                                                            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' . 
                                                             \Carbon\Carbon::parse($document->start_date)->addYears(543)->format('Y') 
                                                         }}
                                                     </span><br>
@@ -141,12 +141,17 @@
                                                 </div>
 
                                                 <div style="flex: 2; white-space: nowrap; overflow: visible;">
-                                                    <br>วันที่ทำเรื่อง: {{ \Carbon\Carbon::parse($document->reservation_date)->translatedFormat('d F Y') }}<br>
+                                                    <br>วันที่ทำเรื่อง: 
+                                                        {{ 
+                                                            \Carbon\Carbon::parse($document->reservation_date)->format('d') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->reservation_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' . 
+                                                            \Carbon\Carbon::parse($document->reservation_date)->format('Y') 
+                                                        }}<br>
                                                     วันที่กลับ:
                                                     <span>
                                                         {{ 
                                                             \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' . 
-                                                            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' ' . 
+                                                            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' . 
                                                             \Carbon\Carbon::parse($document->end_date)->addYears(543)->format('Y') 
                                                         }}
                                                     </span><br>        
