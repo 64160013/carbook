@@ -107,6 +107,7 @@
             </div>
 
             <div class="text-center mb-4">
+                <!-- ไม่มีการขอยกเลิก -->
                 @if ($document->cancel_allowed == "pending")
                     <h4>สถานะปัจจุบัน:
                         <span>
@@ -127,6 +128,27 @@
                                 @endif
                             @endforeach
                         </span>
+                    </h4>
+                <!-- ยกเลิกก่อนถึงผอ. -->
+                @elseif ( $document->allow_director == 'pending' && $document->cancel_reason != null )
+                    <h4>สถานะปัจจุบัน:
+                        @if ( $document->cancel_admin == 'Y' )
+                            <span class="badge bg-danger">รายการคำขอถูกยกเลิกแล้ว</span>  
+                        @else
+                            <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>  
+                        @endif
+                    </h4>
+                <!-- ผอ.อนุมัติไปแล้ว -->
+                @elseif ( $document->allow_director != 'pending' && $document->cancel_reason != null )
+                    <h4>สถานะปัจจุบัน:
+                        @if ( $document->cancel_admin != 'Y' )
+                            <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>  
+                        @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
+                            <span class="badge bg-info">รอผู้อำนวยการอนุมัติคำขอยกเลิก</span>  
+                        @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+                            <span class="badge bg-danger">รายการคำขอถูกยกเลิกแล้ว</span>
+                        @endif
+                        
                     </h4>
                 @else
                     <h4>สถานะปัจจุบัน:
@@ -151,50 +173,52 @@
                 @endif
 
                 <!-- ยกเลิกคำขอ -->
-                @if ($document->cancel_allowed == "pending") <!-- ยังไม่มีคำขอยกเลิก -->
+                @if (auth()->user()->is_admin != 1) 
+                    @if ($document->cancel_allowed == "pending") <!-- ยังไม่มีคำขอยกเลิก -->
 
-                    @foreach($document->reqDocumentUsers as $docUser)  
-                        <!--ฝายวิจัย-->
-                        @if ($docUser->division_id == 2)
-                            <!-- ไม่ผ่านการอนุมัติจากใคร -->
-                            @if ($document->allow_department == "pending")
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#confirmCancelModal">
-                                    ยกเลิกคำขอ
-                                </button>
+                        @foreach($document->reqDocumentUsers as $docUser)  
+                            <!--ฝายวิจัย-->
+                            @if ($docUser->division_id == 2)
+                                <!-- ไม่ผ่านการอนุมัติจากใคร -->
+                                @if ($document->allow_department == "pending")
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#confirmCancelModal">
+                                        ยกเลิกคำขอ
+                                    </button>
 
-                                <!-- ผ่านการอนุมัติ -->
+                                    <!-- ผ่านการอนุมัติ -->
+                                @else
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonCancelModal">
+                                        ยื่นเรื่องยกเลิกคำขอ
+                                    </button>
+                                @endif
+
+                            <!--ฝายอื่น-->
                             @else
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonCancelModal">
-                                    ยื่นเรื่องยกเลิกคำขอ
-                                </button>
+                                <!-- ไม่ผ่านการอนุมัติจากใคร -->
+                                @if ($document->allow_division == "pending")
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#confirmCancelModal">
+                                        ยกเลิกคำขอ
+                                    </button>
+
+                                    <!-- ผ่านการอนุมัติ -->
+                                @else
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonCancelModal">
+                                        ยื่นเรื่องยกเลิกคำขอ
+                                    </button>
+                                @endif
+
                             @endif
+                        @endforeach
 
-                        <!--ฝายอื่น-->
-                        @else
-                            <!-- ไม่ผ่านการอนุมัติจากใคร -->
-                            @if ($document->allow_division == "pending")
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#confirmCancelModal">
-                                    ยกเลิกคำขอ
-                                </button>
-
-                                <!-- ผ่านการอนุมัติ -->
-                            @else
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonCancelModal">
-                                    ยื่นเรื่องยกเลิกคำขอ
-                                </button>
-                            @endif
-
-                        @endif
-                    @endforeach
-
-                <!-- มีคำขอยกเลิก -->
-                @else
-                    <button type="button" class="btn btn-danger disabled" data-bs-toggle="modal"
-                        data-bs-target="#confirmCancelModal">
-                        ยกเลิกคำขอ
-                    </button>
+                    <!-- มีคำขอยกเลิก -->
+                    @else
+                        <button type="button" class="btn btn-danger disabled" data-bs-toggle="modal"
+                            data-bs-target="#confirmCancelModal">
+                            ยกเลิกคำขอ
+                        </button>
+                    @endif
                 @endif
 
 
@@ -243,28 +267,29 @@
         @endif
     @endif
 
-    <!-- Cancel Admin -->
+    <!-- Modal: Cancel Admin -->
     <div class="modal fade" id="confirmCancellationModal" tabindex="-1" aria-labelledby="confirmCancellationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="confirmCancellationModalLabel">ยืนยันความคิดเห็น</h5>
+                    <h5 class="modal-title" id="confirmCancellationModalLabel">ยืนยันการยกเลิกคำขอ</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    คุณแน่ใจหรือไม่ว่าต้องการอนุมัติคำขอนี้?
+                    คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำขอนี้?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                     <form id="confirmCancellationForm" action="{{ route('documents.confirmCancel', ['id' => $document->document_id]) }}" method="POST">
                         @csrf
                         <input type="hidden" name="cancel_admin" value="Y"> <!-- กำหนดค่าเป็น Y -->
-                        <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                        <button type="submit" class="btn btn-danger">ยืนยันการยกเลิก</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Modal 1: Confirm Cancel Modal -->
     <div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel"

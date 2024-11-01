@@ -51,7 +51,7 @@
         <div class="col-md-5 mb-3">
             <div class="card shadow-sm text-center border-0">
                 <div class="card-body bg-light">
-                    <h6 class="text-muted">จำนวนประเภทรถ</h6>
+                    <h6 class="text-muted">จำนวนรถทั้งหมด/คัน</h6>
                     <p class="h1 font-weight-bold text-primary">{{ $vehicleCount ?? 'Loading...' }}</p>
                     <i class="fas fa-car fa-3x text-primary"></i>
                 </div>
@@ -60,7 +60,7 @@
         <div class="col-md-5 mb-3">
             <div class="card shadow-sm text-center border-0">
                 <div class="card-body bg-light">
-                    <h6 class="text-muted">จำนวนบุคลากรทั้งหมด</h6>
+                    <h6 class="text-muted">จำนวนบุคลากรทั้งหมด/คน</h6>
                     <p class="h1 font-weight-bold text-primary">{{ $userCount ?? 'Loading...' }}</p>
                     <i class="fas fa-users fa-3x text-primary"></i>
                 </div>

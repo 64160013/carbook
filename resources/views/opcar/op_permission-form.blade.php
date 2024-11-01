@@ -48,6 +48,22 @@
                                         <span class="badge bg-danger">ถูกปฏิเสธ</span>
                                     @endif 
                                 @endif
+                            <!-- ยกเลิกก่อนถึงผอ. -->
+                            @elseif ( $document->allow_director == 'pending' && $document->cancel_reason != null )
+                                @if ( $document->cancel_admin == 'Y' )
+                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>  
+                                @else
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @endif
+                            <!-- ผอ.อนุมัติไปแล้ว -->
+                            @elseif ( $document->allow_director != 'pending' && $document->cancel_reason != null )
+                                @if ( $document->cancel_admin != 'Y' )
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                @endif
                             @else
                                 <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                             @endif
@@ -64,6 +80,22 @@
                                         <span class="badge bg-danger">ไม่สามารถรับงานได้</span>
                                     @endif 
                                 @endif
+                            <!-- ยกเลิกก่อนถึงผอ. -->
+                            @elseif ( $document->allow_director == 'pending' && $document->cancel_reason != null )
+                                @if ( $document->cancel_admin == 'Y' )
+                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>  
+                                @else
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @endif
+                            <!-- ผอ.อนุมัติไปแล้ว -->
+                            @elseif ( $document->allow_director != 'pending' && $document->cancel_reason != null )
+                                @if ( $document->cancel_admin != 'Y' )
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                @endif
                             @else
                                 <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                             @endif
@@ -76,6 +108,17 @@
                             <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
                                 class="btn btn-secondary">ดูรายละเอียด</a>
                         @endif
+                        </td>
+                        <td class="text-center">
+                            <!-- แสดงปุ่มดู PDF หากมี ReportFormance -->
+                            @if($document->reportFormance)
+                                <a href="{{ route('report.showRepDoc.pdf', ['id' => $document->reportFormance->report_id]) }}"
+                                    class="btn btn-info" target="_blank">
+                                    ดู PDF
+                                </a>
+                            @else
+                                <span>ไม่มีรายงาน</span>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

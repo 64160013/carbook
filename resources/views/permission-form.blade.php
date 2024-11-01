@@ -102,9 +102,25 @@
                                         <span class="badge bg-danger">ถูกปฏิเสธ</span>
                                     @endif
                                 @endif
+                            <!-- ยกเลิกก่อนถึงผอ. -->
+                            @elseif ( $document->allow_director == 'pending' && $document->cancel_reason != null )
+                                @if ( $document->cancel_admin == 'Y' )
+                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>  
+                                @else
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @endif
+                            <!-- ผอ.อนุมัติไปแล้ว -->
+                            @elseif ( $document->allow_director != 'pending' && $document->cancel_reason != null )
+                                @if ( $document->cancel_admin != 'Y' )
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
+                                    <span class="badge bg-info">อยู่ระหว่างการยกเลิกคำขอ</span>  
+                                @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+                                    <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                @endif
                             @else
                                 <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
-                            @endif
+                            @endif 
                         </td>
                         <td class="text-center">
                             @if ( $document->cancel_allowed == 'pending' )
@@ -116,12 +132,16 @@
                             @endif
 
                             @if ( in_array(auth()->user()->role_id, [3]))
-                                @if ( $document->cancel_admin == 'Y')
-                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDirectorCancellationModal">
+                                @if ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y' )
+                                    <button class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#confirmDirectorCancellationModal"
+                                        data-document-id="{{ $document->document_id }}"
+                                        data-cancel-reason="{{ $document->cancel_reason }}">
                                         !
                                     </button>
+                                @else
                                 @endif
-                            @endif
+                            @endif 
                         </td>
                     </tr>
                 @endforeach
@@ -131,29 +151,48 @@
     @endif
 </div>
 
-<div class="modal fade" id="confirmDirectorCancellationModal" tabindex="-1" aria-labelledby="confirmDirectorCancellationModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDirectorCancellationModal" tabindex="-1"
+    aria-labelledby="confirmDirectorCancellationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmDirectorCancellationModalLabel">ยืนยันการยกเลิกคำขอจากผู้อำนวยการ</h5>
+                <h5 class="modal-title" id="confirmDirectorCancellationModalLabel">ยืนยันคำขอยกเลิก
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำขอนี้ในฐานะผู้อำนวยการ? : {{ $document->cancel_reason ?? 'n/a' }}
+                <strong>เหตุผลการยกเลิก: </strong><span id="cancelReasonText"></span><br>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <form id="confirmDirectorCancellationForm" action="{{ route('documents.confirmDirectorCancel', ['id' => $document->document_id]) }}" method="POST">
+                <form id="confirmDirectorCancellationForm"
+                    action="{{ route('documents.confirmDirectorCancel', ['id' => $document->document_id]) }}"
+                    method="POST">
                     @csrf
                     <input type="hidden" name="cancel_director" value="Y">
-                    
+                    <input type="hidden" name="document_id" id="documentIdInput">
+
                     <button type="submit" class="btn btn-danger">ยืนยันการยกเลิก</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // เมื่อ modal เปิด
+    var myModal = document.getElementById('confirmDirectorCancellationModal');
+    myModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // ปุ่มที่เปิด modal
+        var cancelReason = button.getAttribute('data-cancel-reason'); // ดึงข้อมูลเหตุผลการยกเลิก
+        var cancelReasonText = myModal.querySelector('#cancelReasonText'); // ค้นหาส่วนที่จะแสดงเหตุผล
+        var documentIdInput = myModal.querySelector('#documentIdInput'); // ค้นหา input ที่ซ่อน
+        // ตั้งค่าข้อความเหตุผลการยกเลิก
+        cancelReasonText.textContent = cancelReason ? cancelReason : 'ไม่มีข้อมูลเหตุผล';
+        var documentId = button.getAttribute('data-document-id'); // ดึง document_id
+        documentIdInput.value = documentId; // ตั้งค่า document_id
+    });
+</script>
 
 
 

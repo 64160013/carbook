@@ -142,3 +142,4 @@ Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('docu
 Route::post('/documents/cancel/{id}', [DocumentController::class, 'cancel'])->name('documents.cancel');
 Route::post('/documents/{id}/confirm-cancel', [DocumentController::class, 'confirmCancel'])->name('documents.confirmCancel');
 Route::post('/documents/{id}/confirm-director-cancel', [DocumentController::class, 'confirmDirectorCancel'])->name('documents.confirmDirectorCancel');
+

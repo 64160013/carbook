@@ -207,10 +207,9 @@ class AdminController extends Controller
     //------------------------- แสดงรายการคำขอ -------------------------
     public function showform()
     {
-        $user = auth()->user(); // ดึงข้อมูลผู้ใช้ปัจจุบัน
-        $documents = ReqDocument::orderBy('document_id', 'desc')->get();
+        $user = auth()->user();
+        $documents = ReqDocument::with('reportFormance')->orderBy('document_id', 'desc')->get();
 
-        // ส่งข้อมูลไปยัง view admin.user.form
         return view('admin.users.form', compact('documents'));
     }
 

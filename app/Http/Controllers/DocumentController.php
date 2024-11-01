@@ -25,9 +25,13 @@ class DocumentController extends Controller
         if (auth()->check()) {
             $user = auth()->user();
 
-            $documents = ReqDocument::whereHas('reqDocumentUsers', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->orderBy('created_at', 'desc')->paginate(5); // แบ่งหน้าละ 5 รายการ
+            // โหลดเอกสารที่มีผู้ใช้ที่เข้าสู่ระบบ
+            $documents = ReqDocument::with('reqDocumentUsers', 'reportFormance') // โหลดความสัมพันธ์ที่จำเป็น
+                ->whereHas('reqDocumentUsers', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(5); // แบ่งหน้า
 
             return view('document-history', compact('documents'));
         } else {
@@ -383,6 +387,7 @@ class DocumentController extends Controller
      *
      * 
      */
+    // ส่วนของผู้ใช้
     public function cancel(Request $request, $id)
     {
         $request->validate([
@@ -406,21 +411,20 @@ class DocumentController extends Controller
     public function confirmCancel(Request $request, $id)
     {
         $document = ReqDocument::findOrFail($id);
-        
         $document->cancel_admin = 'Y';
         $document->save();
 
-        return redirect()->route('documents.status')->with('success', 'คำขอถูกยกเลิกเรียบร้อยแล้ว');
+        return redirect()->route('documents.status', ['id' => $id])->with('success', 'คำขอถูกยกเลิกเรียบร้อยแล้ว');
     }
 
     // ส่วนของผู้อำนวยการ
-    public function confirmDirectorCancel(Request $request, $id)
+    public function confirmDirectorCancel(Request $request)
     {
-    
-        $document = ReqDocument::findOrFail($id);
+        $documentId = $request->input('document_id');
+        $document = ReqDocument::findOrFail($documentId); // ใช้ document_id ที่ถูกต้อง
         $document->cancel_director = 'Y';
         $document->save();
-    
+
         return redirect()->route('documents.index')->with('success', 'คำขอถูกยกเลิกเรียบร้อยแล้วโดยผู้อำนวยการ');
     }
     
@@ -438,6 +442,11 @@ class DocumentController extends Controller
         return response()->json(['districts' => $districts]);
     }
 
+            /**
+     * search Document
+     *
+     * 
+     */
     public function search(Request $request)
     {
         // ตรวจสอบว่ามีค่าการค้นหาหรือไม่
@@ -491,7 +500,7 @@ class DocumentController extends Controller
             }
         }
         // สั่งเรียงตามวันที่สร้างล่าสุด
-        $documents = $documents->orderBy('created_at', 'desc')->paginate(10); // แบ่งหน้าละ 10 รายการ
+        $documents = $documents->orderBy('created_at', 'desc')->paginate(5); // แบ่งหน้าละ 10 รายการ
         return view('document-history', compact('documents'));
     }
 
