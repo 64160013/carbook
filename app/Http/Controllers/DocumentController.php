@@ -27,7 +27,7 @@ class DocumentController extends Controller
 
             $documents = ReqDocument::whereHas('reqDocumentUsers', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
-            })->orderBy('created_at', 'desc')->get();
+            })->orderBy('created_at', 'desc')->paginate(5); // แบ่งหน้าละ 5 รายการ
 
             return view('document-history', compact('documents'));
         } else {
@@ -491,8 +491,50 @@ class DocumentController extends Controller
             }
         }
         // สั่งเรียงตามวันที่สร้างล่าสุด
-        $documents = $documents->orderBy('created_at', 'desc')->get();
+        $documents = $documents->orderBy('created_at', 'desc')->paginate(10); // แบ่งหน้าละ 10 รายการ
         return view('document-history', compact('documents'));
     }
 
+    public function scheduleSearch(Request $request)
+    {
+        $query = $request->input('search');
+        $month = $request->input('month');
+        $year = $request->input('year');
+        // ดึงข้อมูลทั้งหมดจากฐานข้อมูล
+        $documents = ReqDocument::orderBy('created_at', 'desc')->get();
+        // จัดเก็บข้อมูลใน Session
+        session(['documents' => $documents]);
+        // กรองข้อมูลที่อยู่ใน Session
+        $filteredDocuments = collect(session('documents'))->filter(function ($document) use ($month, $year, $query) {
+            // เพิ่มเงื่อนไขสำหรับ allow_director
+            if ($document->allow_director !== 'approved') {
+                return false; // ข้ามเอกสารที่ไม่ได้รับการอนุมัติ
+            }
+            // กรองตามเดือน
+            if ($month && \Carbon\Carbon::parse($document->start_date)->month !== (int) $month) {
+                return false;
+            }
+            // กรองตามปี
+            if ($year && \Carbon\Carbon::parse($document->start_date)->year !== (int) $year) {
+                return false;
+            }
+            // กรองตามวัตถุประสงค์
+            if ($query && strpos($document->objective, $query) === false) {
+                return false;
+            }
+            return true;
+        });
+        // ใช้เอกสารทั้งหมดถ้าไม่มีการกรอง
+        if ($month || $year || $query) {
+            $documents = $filteredDocuments; // ใช้เอกสารที่กรองแล้ว
+        } else {
+            // แสดงเอกสารทั้งหมดใน session โดยมีเงื่อนไข allow_director
+            $documents = collect(session('documents'))->filter(function ($document) {
+                return $document->allow_director === 'approved'; // แสดงเฉพาะเอกสารที่ได้รับการอนุมัติ
+            });
+        }
+        return view('driver.schedule', compact('documents'));
+    }
+
+    
 }

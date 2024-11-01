@@ -243,7 +243,7 @@
         @endif
     @endif
 
-    <!-- Modal 1: Cancel Admin -->
+    <!-- Cancel Admin -->
     <div class="modal fade" id="confirmCancellationModal" tabindex="-1" aria-labelledby="confirmCancellationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -252,7 +252,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    คุณแน่ใจหรือไม่ว่าต้องยืนยันคำขอนี้?
+                    คุณแน่ใจหรือไม่ว่าต้องการอนุมัติคำขอนี้?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>

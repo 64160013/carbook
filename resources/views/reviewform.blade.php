@@ -128,11 +128,9 @@
                 <h6 class="text-muted">{{ __('โครงการที่เกี่ยวข้อง') }}</h6>
                 <div class="mt-2 border p-3">
                     <p class="form-control-static mt-0 mb-0">
-                        @if($document->related_project)
-                            <!-- <a href="{{ Storage::url($document->related_project) }}" target="_blank"
-                                class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a> -->
-                                <a href="{{ asset('storage/' . $document->related_project) }}" target="_blank" class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a>
-
+                    @if($document->related_project)
+                            <a href="{{ asset('storage/' . $document->related_project) }}" target="_blank"
+                                class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a>
                         @else
                             {{ __('ไม่มีไฟล์') }}
                         @endif

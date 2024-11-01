@@ -109,7 +109,7 @@ class ReqDocumentController extends Controller
         // จัดการการอัปโหลดไฟล์
         $filePath = null;
         if ($request->hasFile('related_project')) {
-            $filePath = $request->file('related_project')->store('projects');
+            $filePath = $request->file('related_project')->store('projects', 'public');
         }
     
         // ตรวจสอบ role_id ว่าเป็น 12 หรือไม่ เพื่อบันทึกค่า car_id
@@ -182,26 +182,26 @@ class ReqDocumentController extends Controller
 
 
 
-public function getEvents()
-{
-    // ดึงข้อมูลจากฐานข้อมูล ReqDocument
-    $documents = ReqDocument::select('document_id', 'objective', 'start_date', 'end_date', 'start_time', 'end_time')
-        ->get()
-        ->map(function ($document) {
-            return [
-                'id' => $document->document_id,
-                'title' => $document->objective,
-                'start' => $document->start_date . 'T' . $document->start_time, // รวมวันที่และเวลาเริ่ม
-                'end' => $document->end_date . 'T' . $document->end_time,       // รวมวันที่และเวลาสิ้นสุด
-                'backgroundColor' => '#3498db', // คุณสามารถปรับสีได้ตามต้องการ
-                // 'borderColor' => '#000'
-            ];
-        });
-
-    // ส่งข้อมูลในรูปแบบ JSON ให้กับ FullCalendar
-    return response()->json($documents);
-    // return view('welcome');
-}
+    public function getEvents()
+    {
+        // ดึงข้อมูลจากฐานข้อมูล ReqDocument
+        $documents = ReqDocument::select('document_id', 'objective', 'start_date', 'end_date', 'start_time', 'end_time')
+            ->get()
+            ->map(function ($document) {
+                return [
+                    'id' => $document->document_id,
+                    'title' => $document->objective,
+                    'start' => $document->start_date . 'T' . $document->start_time, // รวมวันที่และเวลาเริ่ม
+                    'end' => $document->end_date . 'T' . $document->end_time,       // รวมวันที่และเวลาสิ้นสุด
+                    'backgroundColor' => '#3498db', // คุณสามารถปรับสีได้ตามต้องการ
+                    // 'borderColor' => '#000'
+                ];
+            });
+            
+        // ส่งข้อมูลในรูปแบบ JSON ให้กับ FullCalendar
+        return response()->json($documents);
+        // return view('welcome');
+    }
 
 
 
