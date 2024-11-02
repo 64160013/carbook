@@ -58,7 +58,7 @@ Route::get('/vehicles', [AdminController::class, 'showVehicles'])->name('show.ve
 Route::post('/vehicles', [AdminController::class, 'storeVehicle'])->name('store.vehicle');
 Route::post('/vehicles/update-status/{id}', [AdminController::class, 'updateStatus'])->name('vehicles.updateStatus');
 Route::delete('/vehicles/{id}', [AdminController::class, 'destroy'])->name('vehicles.destroy');
-
+Route::put('/vehicles/{id}', [AdminController::class, 'update'])->name('vehicles.update');
 
 Route::get('/reqdocument', [ReqDocumentController::class, 'create'])->name('reqdocument.create');
 Route::post('/reqdocument', [ReqDocumentController::class, 'store'])->name('reqdocument.store');

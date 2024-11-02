@@ -158,13 +158,16 @@
                                             class="btn btn-outline-primary">สถานะ</a>
                                     </td>
                                     <td>
-                                        @if ($document->allow_director != 'pending')
+                                    <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}"
+                                                class="btn btn-outline-primary"   target="_blank"> PDF
+                                            </a>
+                                        <!-- @if ($document->allow_director != 'pending')
                                             <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}"
                                                 class="btn btn-outline-primary"   target="_blank"> PDF
                                             </a>
                                         @else
                                             <button type="button" class="btn btn-secondary" disabled>PDF</button>
-                                        @endif
+                                        @endif -->
 
                                         @if ($document->allow_carman != 'pending')
                                             @if ($document->reportFormance)

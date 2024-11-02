@@ -94,6 +94,21 @@ class AdminController extends Controller
         return redirect()->route('show.vehicles');
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'car_category' => 'required|string|max:3',                  //varchar(3)
+            'car_regnumber' => 'required|integer|digits_between:1,4',   //int(4)
+            'car_province' => 'required|string|max:255',
+        ]);
+
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update($request->all());
+
+        return redirect()->route('show.vehicles')->with('success', 'อัปเดตข้อมูลสำเร็จ');
+    }
+
+
 
     /**
      *
