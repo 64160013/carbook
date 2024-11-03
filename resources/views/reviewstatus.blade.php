@@ -158,26 +158,57 @@
             </div>
 
             <div class="text-center">
-                <!-- แก้ไขเอกสาร -->
+            <!-- แก้ไขเอกสาร -->
+                <!-- ถ้าไม่ยกเลิกแก้ไขได้ -->
                 @if ($document->cancel_allowed == "pending")
-                    @if ($document->allow_carman != "pending")
-                        <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}"
-                            class="btn btn-warning disabled">
-                            {{ __('แก้ไขเอกสาร') }}
-                        </a>
-                    @else
-                        <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}" class="btn btn-warning">
-                            {{ __('แก้ไขเอกสาร') }}
-                        </a>
-                    @endif
+                    @foreach($document->reqDocumentUsers as $docUser)  
+                        <!-- ฝ่ายวิจัย -->
+                        @if ($docUser->division_id == 2)
+                            <!-- ไม่ผ่านการอนุมัติจากใคร -->
+                            @if ($document->allow_department == "pending")
+                                <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}"
+                                    class="btn btn-warning ">
+                                    {{ __('แก้ไขเอกสาร') }}
+                                </a>
+                            <!-- ผ่านการอนุมัติ -->
+                            @else
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAllowedModal">
+                                    ยื่นเรื่องแก้ไขสถานะ
+                                </button>
+                            @endif
+
+                        <!--ฝายอื่น-->
+                        @else
+                            <!-- ไม่ผ่านการอนุมัติจากใคร -->
+                            @if ($document->allow_division == "pending")
+                                <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}"
+                                    class="btn btn-warning ">
+                                    {{ __('แก้ไขเอกสาร') }}
+                                </a>
+                            <!-- ผ่านการอนุมัติ -->
+                            @else
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAllowedModal">
+                                    ยื่นเรื่องแก้ไขสถานะ
+                                </button>
+                            @endif
+                        @endif
+                    @endforeach
+                @else
+
+                
+                <!-- ถ้ายกเลิกแก้ไขไม่ได้ -->
+                    <a href="{{ route('documents.edit', ['id' => $document->document_id]) }}"
+                        class="btn btn-warning disabled">
+                        {{ __('แก้ไขเอกสาร') }}
+                    </a>
                 @endif
 
-                <!-- ยกเลิกคำขอ -->
+            <!-- ยกเลิกคำขอ -->
                 @if (auth()->user()->is_admin != 1) 
                     @if ($document->cancel_allowed == "pending") <!-- ยังไม่มีคำขอยกเลิก -->
 
                         @foreach($document->reqDocumentUsers as $docUser)  
-                            <!--ฝายวิจัย-->
+                            <!--ฝ่ายวิจัย-->
                             @if ($docUser->division_id == 2)
                                 <!-- ไม่ผ่านการอนุมัติจากใคร -->
                                 @if ($document->allow_department == "pending")
@@ -267,6 +298,32 @@
         @endif
     @endif
 
+
+    <!-- Modal edit_allowed -->
+    <div class="modal fade" id="editAllowedModal" tabindex="-1" aria-labelledby="editAllowedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAllowedModalLabel">แก้ไขสถานะ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editAllowedForm" action="{{ route('documents.updateEditAllowed', ['id' => $document->document_id]) }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="edit_allowed">กรอกสถานะใหม่:</label>
+                            <input type="text" name="edit_allowed" id="edit_allowed" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <button type="submit" class="btn btn-primary" form="editAllowedForm">บันทึกการเปลี่ยนแปลง</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: Cancel Admin -->
     <div class="modal fade" id="confirmCancellationModal" tabindex="-1" aria-labelledby="confirmCancellationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -289,7 +346,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Modal 1: Confirm Cancel Modal -->
     <div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel"

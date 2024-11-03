@@ -428,6 +428,21 @@ class DocumentController extends Controller
         return redirect()->route('documents.index')->with('success', 'คำขอถูกยกเลิกเรียบร้อยแล้วโดยผู้อำนวยการ');
     }
     
+
+    public function updateEditAllowed(Request $request, $id)
+    {
+        $request->validate([
+            'edit_allowed' => 'required|string|max:255',
+        ]);
+
+        $document = ReqDocument::findOrFail($id);
+        $document->edit_allowed = $request->edit_allowed;
+        $document->save();
+
+        return redirect()->route('documents.history')->with('success', 'สถานะถูกแก้ไขเรียบร้อยแล้ว');
+    }
+
+
     public function getAmphoes($province_id)
     {
         // ตรวจสอบว่ามี province_id ที่ต้องการหรือไม่

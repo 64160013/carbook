@@ -227,6 +227,8 @@
                                                     
                                                     <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
                                                     class="btn btn-secondary">ดูรายละเอียด</a>
+                                                    <a href="{{ route('documents.status') }}?id={{ $document->document_id }}" 
+                                                        class="btn btn-outline-primary">สถานะ</a> 
                                                 <!-- ไม่ยกเลิก -->
                                                 @else
                                                     <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
