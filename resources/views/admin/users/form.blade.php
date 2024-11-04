@@ -92,102 +92,103 @@
                     @foreach($documents->groupBy(function ($date) {
                             return \Carbon\Carbon::parse($date->created_at)->format('F Y');
                         }) as $month => $groupedDocuments)
-                            @foreach($groupedDocuments as $document)
-                                <tr class="text-center">
-                                    @php
-                                        $requester = $document->reqDocumentUsers->first();
-                                    @endphp
-                                    <td>{{ $requester->id }}</td>
-                                    <td>{{ $requester->name }} {{ $requester->lname }}</td>
-                                    <td style="max-width: 160px; ">{{ $document->objective }}</td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
-                                        {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }} พ.ศ. 
-                                        {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}<br>
-                                        เวลา : {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($document->end_date)->format('d') }}
-                                        {{ \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') }} พ.ศ. 
-                                        {{ \Carbon\Carbon::parse($document->end_date)->format('Y') + 543 }}<br>
+                                    @foreach($groupedDocuments as $document)
+                                            <tr class="text-center">
+                                                @php
+                                                    $requester = $document->reqDocumentUsers->first();
+                                                @endphp
+                                                <td>{{ $requester->id }}</td>
+                                                <td>{{ $requester->name }} {{ $requester->lname }}</td>
+                                                <td style="max-width: 160px; ">{{ $document->objective }}</td>
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('d') }}
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->locale('th')->translatedFormat('F') }} พ.ศ.
+                                                    {{ \Carbon\Carbon::parse($document->start_date)->format('Y') + 543 }}<br>
+                                                    เวลา : {{ \Carbon\Carbon::parse($document->start_time)->format('H:i') }} น.
+                                                </td>
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->format('d') }}
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') }} พ.ศ.
+                                                    {{ \Carbon\Carbon::parse($document->end_date)->format('Y') + 543 }}<br>
 
-                                        เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
-                                    </td>
-                                    <td>
-                                        <!-- ไม่มีการขอยกเลิก -->
-                                        @if ($document->cancel_allowed == 'pending')
-                                            @foreach($document->reqDocumentUsers as $docUser)
-                                                @if ($docUser->division_id == 2)
-                                                    @if ($document->allow_department == 'pending')
-                                                        <span class="badge bg-warning">รอหัวหน้างานพิจารณา</span>
-                                                    @elseif ($document->allow_department == 'approved')
-                                                        @include('partials.allow_status', ['document' => $document])
-                                                    @else
-                                                        <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
-                                                        @if ($document->notallowed_reason)
-                                                            <br><span>เหตุผล: {{ $document->notallowed_reason }}</span>
+                                                    เวลา : {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
+                                                </td>
+                                                <td>
+                                                    <!-- ไม่มีการขอยกเลิก -->
+                                                    @if ($document->cancel_allowed == 'pending')
+                                                        @foreach($document->reqDocumentUsers as $docUser)
+                                                            @if ($docUser->division_id == 2)
+                                                                @if ($document->allow_department == 'pending')
+                                                                    <span class="badge bg-warning">รอหัวหน้างานพิจารณา</span>
+                                                                @elseif ($document->allow_department == 'approved')
+                                                                    @include('partials.allow_status', ['document' => $document])
+                                                                @else
+                                                                    <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
+                                                                    @if ($document->notallowed_reason)
+                                                                        <br><span>เหตุผล: {{ $document->notallowed_reason }}</span>
+                                                                    @endif
+                                                                @endif
+                                                            @else
+                                                                @include('partials.allow_status', ['document' => $document])
+                                                            @endif
+                                                        @endforeach
+                                                        <!-- ยกเลิกก่อนถึงผอ. -->
+                                                    @elseif ($document->allow_director == 'pending' && $document->cancel_reason != null)
+                                                        @if ($document->cancel_admin == 'Y')
+                                                            <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                                        @else
+                                                            <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>
                                                         @endif
+                                                        <!-- ผอ.อนุมัติไปแล้ว -->
+                                                    @elseif ($document->allow_director != 'pending' && $document->cancel_reason != null)
+                                                        @if ($document->cancel_admin != 'Y')
+                                                            <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>
+                                                        @elseif ($document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
+                                                            <span class="badge bg-info">รอผู้อำนวยการอนุมัติคำขอยกเลิก</span>
+                                                        @elseif ($document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+                                                            <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                                                     @endif
-                                                @else
-                                                    @include('partials.allow_status', ['document' => $document])
-                                                @endif
-                                            @endforeach
-                                        <!-- ยกเลิกก่อนถึงผอ. -->
-                                        @elseif ( $document->allow_director == 'pending' && $document->cancel_reason != null )
-                                            @if ( $document->cancel_admin == 'Y' )
-                                                <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>  
-                                            @else
-                                                <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>  
-                                            @endif
-                                        <!-- ผอ.อนุมัติไปแล้ว -->
-                                        @elseif ( $document->allow_director != 'pending' && $document->cancel_reason != null )
-                                            @if ( $document->cancel_admin != 'Y' )
-                                                <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>  
-                                            @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
-                                                <span class="badge bg-info">รอผู้อำนวยการอนุมัติคำขอยกเลิก</span>  
-                                            @elseif ( $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
-                                                <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
-                                            @endif
-                                        @else
-                                            <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
-                                        @endif 
-                                    </td>
+                                                </td>
 
-                                    <td>
-                                        <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
-                                            class="btn btn-outline-primary">สถานะ</a>
-                                    </td>
-                                    <td>
-                                    <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}"
-                                                class="btn btn-outline-primary"   target="_blank"> PDF
-                                            </a>
-                                        <!-- @if ($document->allow_director != 'pending')
-                                            <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}"
-                                                class="btn btn-outline-primary"   target="_blank"> PDF
-                                            </a>
-                                        @else
-                                            <button type="button" class="btn btn-secondary" disabled>PDF</button>
-                                        @endif -->
+                                                <td>
+                                                    <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
+                                                        class="btn btn-outline-primary">สถานะ</a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}"
+                                                        class="btn btn-outline-primary" target="_blank"> PDF
+                                                    </a>
+                                                    <!-- @if ($document->allow_director != 'pending')
+                                                                        <a href="{{ route('PDF.document') }}?id={{ $document->document_id }}"
+                                                                            class="btn btn-outline-primary"   target="_blank"> PDF
+                                                                        </a>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-secondary" disabled>PDF</button>
+                                                                    @endif -->
 
-                                        @if ($document->allow_carman != 'pending')
-                                            @if ($document->reportFormance)
-                                                <a href="{{ route('report.showRepDoc.pdf') }}?id={{ $document->reportFormance->report_id }}"
-                                                    class="btn btn-outline-primary"   target="_blank"> PDF
-                                                </a>
-                                            @else
-                                                <button type="button" class="btn btn-secondary" disabled>PDF</button>
-                                            @endif
-                                        @else
-                                            <button type="button" class="btn btn-secondary" disabled>PDF</button>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
+                                                    @if ($document->allow_carman != 'pending')
+                                                        @if ($document->reportFormance)
+                                                            <a href="{{ route('report.showRepDoc.pdf') }}?id={{ $document->reportFormance->report_id }}"
+                                                                class="btn btn-outline-primary" target="_blank"> PDF
+                                                            </a>
+                                                        @else
+                                                            <button type="button" class="btn btn-secondary" disabled>PDF</button>
+                                                        @endif
+                                                    @else
+                                                        <button type="button" class="btn btn-secondary" disabled>PDF</button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                    @endforeach
                     @endforeach
                 </tbody>
             </table>
         </div>
     @endif
+    {{ $documents->appends(request()->query())->links() }}
 </div>
 
 

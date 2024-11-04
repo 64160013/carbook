@@ -135,7 +135,7 @@
                     @enderror
                 </div>
 
-                
+
 
                 <!-- วัตถุประสงค์ -->
                 <div class="form-group mb-4">
@@ -162,6 +162,46 @@
                         @endforeach
                     </select>
                     @error('work_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <!-- ประเภทรถยนต์ -->
+                <div class="form-group mb-4">
+                    <label for="car_type">{{ __('ประเภทของรถยนต์') }}</label>
+                    <select id="car_type" class="form-control @error('car_type') is-invalid @enderror" name="car_type"
+                        required>
+                        <option value="" disabled selected>{{ __('เลือกประเภทของรถยนต์') }}</option>
+
+                        @php
+                            $hasDisplayedPickupTruck = false;
+                            $hasDisplayedVan = false;
+                        @endphp
+
+                        @foreach($vehicles as $vehicle)
+                                            @if(in_array($vehicle->icon_id, [1, 2, 3]) && !$hasDisplayedPickupTruck)
+                                                                <option value="รถกระบะ" {{ old('car_type') == 'รถกระบะ' ? 'selected' : '' }}>
+                                                                    {{ __('รถกระบะ') }}
+                                                                </option>
+                                                                @php
+                                                                    $hasDisplayedPickupTruck = true; // แสดง "รถกระบะ" เพียงครั้งเดียว
+                                                                @endphp
+                                            @elseif(in_array($vehicle->icon_id, [4, 5, 6]) && !$hasDisplayedVan)
+                                                                <option value="รถตู้" {{ old('car_type') == 'รถตู้' ? 'selected' : '' }}>
+                                                                    {{ __('รถตู้') }}
+                                                                </option>
+                                                                @php
+                                                                    $hasDisplayedVan = true; // แสดง "รถตู้" เพียงครั้งเดียว
+                                                                @endphp
+                                            @elseif(in_array($vehicle->icon_id, [7, 8, 9]))
+                                                <option value="เรือ" {{ old('car_type') == 'เรือ' ? 'selected' : '' }}>
+                                                    {{ __('เรือ') }}
+                                                </option>
+                                            @endif
+                        @endforeach
+                    </select>
+                    @error('car_type')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -326,49 +366,6 @@
                     </div>
                 </div>
 
-                <!-- ประเภทรถยนต์ -->
-                <div class="form-group mb-4">
-                    <label for="car_type">{{ __('ประเภทของรถยนต์') }}</label>
-                    <select id="car_type" class="form-control @error('car_type') is-invalid @enderror" name="car_type"
-                        required>
-                        <option value="" disabled selected>{{ __('เลือกประเภทของรถยนต์') }}</option>
-
-                        @php
-                            $hasDisplayedPickupTruck = false;
-                            $hasDisplayedVan = false;
-                        @endphp
-
-                        @foreach($vehicles as $vehicle)
-                            @if(in_array($vehicle->icon_id, [1, 2, 3]) && !$hasDisplayedPickupTruck)
-                                <option value="รถกระบะ" {{ old('car_type') == 'รถกระบะ' ? 'selected' : '' }}>
-                                    {{ __('รถกระบะ') }}
-                                </option>
-                                @php
-                                    $hasDisplayedPickupTruck = true; // แสดง "รถกระบะ" เพียงครั้งเดียว
-                                @endphp
-                            @elseif(in_array($vehicle->icon_id, [4, 5, 6]) && !$hasDisplayedVan)
-                                <option value="รถตู้" {{ old('car_type') == 'รถตู้' ? 'selected' : '' }}>
-                                    {{ __('รถตู้') }}
-                                </option>
-                                @php
-                                    $hasDisplayedVan = true; // แสดง "รถตู้" เพียงครั้งเดียว
-                                @endphp
-                            @elseif(in_array($vehicle->icon_id, [7, 8, 9]))
-                                <option value="เรือ" {{ old('car_type') == 'เรือ' ? 'selected' : '' }}>
-                                    {{ __('เรือ') }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
-                    @error('car_type')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-
-
-
                 <!-- เอกสารที่แนบ -->
                 <div class="form-group mb-4">
                     <label for="related_project">{{ __('เอกสารที่แนบ (PDF เท่านั้น)') }}</label>
@@ -404,8 +401,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
+<!-- เพิ่ม CSS และ JS ของ select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 
 <script type="text/javascript">
@@ -496,6 +494,12 @@
     });
 
     $(document).ready(function () {
+        // เรียกใช้ Select2 ใน dropdown
+        $('#employee_select').select2({
+            placeholder: "{{ __('เลือกผู้ร่วมเดินทาง') }}", // แสดงข้อความเมื่อไม่มีการเลือก
+            allowClear: true // ให้สามารถลบการเลือกได้
+        });
+
         // เก็บค่าชื่อผู้ใช้ที่ล็อกอินอยู่
         var loggedInUserId = "{{ Auth::user()->id }}"; // รับ ID ของผู้ใช้ที่ล็อกอินอยู่
         var loggedInUserName = "{{ Auth::user()->name }} {{ Auth::user()->lname }} (ผู้ขอ)"; // ชื่อผู้ใช้ที่ล็อกอินอยู่
@@ -522,12 +526,9 @@
 
         // ฟังก์ชันเพื่อเพิ่มชื่อกลับไปใน dropdown
         function addNameBackToDropdown(name, id) {
-            var dropdown = document.getElementById('employee_select');
-            var option = document.createElement('option');
-            option.value = id; // ใช้ id เป็น value
-            option.text = name;
-            option.setAttribute('data-id', id);
-            dropdown.add(option);
+            var dropdown = $('#employee_select');
+            var option = new Option(name, id, false, false);
+            dropdown.append(option).trigger('change'); // ใช้ trigger เพื่ออัปเดต Select2
         }
 
         // ฟังก์ชันอัปเดตรายชื่อผู้ควบคุมรถแบบเรียลไทม์
@@ -542,7 +543,7 @@
         }
 
         // เพิ่มชื่อพนักงานที่เลือกจาก dropdown ไปยังฟิลด์ผู้ร่วมเดินทาง
-        document.getElementById('employee_select').addEventListener('change', function () {
+        $('#employee_select').on('change', function () {
             var selectedId = this.value; // ใช้ ID ของพนักงาน
             var selectedName = this.options[this.selectedIndex].text; // ใช้ชื่อเต็ม
             var companionName = document.getElementById('companion_name');
@@ -569,7 +570,7 @@
                 // ฟังก์ชันเมื่อคลิกไอคอนลบ
                 removeIcon.addEventListener('click', function () {
                     addNameBackToDropdown(selectedName, selectedId);
-                    companionName.removeChild(newCompanion);
+                    newCompanion.remove(); // ลบองค์ประกอบของผู้ร่วมเดินทาง
                     delete companions[selectedId]; // ลบชื่อออกจาก object
                     updateCompanionCount();
                     updateCarControllerDropdown();
@@ -591,6 +592,5 @@
     });
 
 </script>
-
 
 @endsection
