@@ -100,13 +100,14 @@
  
                         </td>
                         <td class="text-center">
-                            @if ( $document->cancel_allowed == 'pending' )
-                                <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
-                                    class="btn btn-primary">ดูรายละเอียด</a>
-                            @else
-                                <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
-                                class="btn btn-secondary">ดูรายละเอียด</a>
-                            @endif
+                            <a href="{{ route('documents.show') }}?id={{ $document->document_id }}" class="btn 
+                                @if (($document->allow_director != 'approved' && $document->cancel_admin == 'Y') || 
+                                        ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y'))
+                                    btn-secondary
+                                @else
+                                    btn-primary
+                                @endif"> ดูรายละเอียด
+                            </a>
 
                             @if ( in_array(auth()->user()->role_id, [3]))
                                 @if ( $document->cancel_admin == 'Y' && $document->cancel_director != 'Y' )
@@ -116,7 +117,14 @@
                                         data-cancel-reason="{{ $document->cancel_reason }}">
                                         !
                                     </button>
-                                
+                                @endif
+
+                                @if ( $document->edit_by == 1 )
+                                    <button class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#viewEditAllowedModal"
+                                        data-edit-allowed="{{ $document->edit_allowed }}">
+                                        !
+                                    </button>
                                 @endif
                             @endif 
                         </td>
@@ -128,6 +136,28 @@
     @endif
 </div>
 
+
+
+<!-- Modal แสดงข้อมูล edit_allowed -->
+<div class="modal fade" id="viewEditAllowedModal" tabindex="-1"
+    aria-labelledby="viewEditAllowedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewEditAllowedModalLabel">มีการแก้ไขข้อมูลคำขอ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <strong>ต้องการแก้ไขเนื่องจาก : </strong><span id="editAllowedText"></span><br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model edit dirceter -->
 <div class="modal fade" id="confirmDirectorCancellationModal" tabindex="-1"
     aria-labelledby="confirmDirectorCancellationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -157,7 +187,7 @@
 </div>
 
 <script>
-    // เมื่อ modal เปิด
+    //ยื่นยันคำขอยกเลิก
     var myModal = document.getElementById('confirmDirectorCancellationModal');
     myModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget; // ปุ่มที่เปิด modal
@@ -169,8 +199,17 @@
         var documentId = button.getAttribute('data-document-id'); // ดึง document_id
         documentIdInput.value = documentId; // ตั้งค่า document_id
     });
-</script>
 
+    // แสดงข้อมูลที่แก้ไข
+    var editAllowedModal = document.getElementById('viewEditAllowedModal');
+    editAllowedModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // ปุ่มที่เปิด modal
+        var editAllowed = button.getAttribute('data-edit-allowed'); // ดึงข้อมูล edit_allowed
+        var editAllowedText = editAllowedModal.querySelector('#editAllowedText'); // ค้นหาส่วนที่จะแสดงข้อมูล
+        // ตั้งค่าข้อความข้อมูล edit_allowed
+        editAllowedText.textContent = editAllowed ? editAllowed : 'ไม่มีข้อมูล';
+    });
+</script>
 
 
 @endsection

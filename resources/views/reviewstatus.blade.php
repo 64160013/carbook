@@ -168,7 +168,7 @@
             @if (auth()->user()->is_admin != 1)
 
                 <!-- ถ้าไม่ยกเลิกแก้ไขได้ -->
-                @if ($document->cancel_allowed == "pending")
+                @if ($document->cancel_allowed == "pending" && $document->edit_by != 1)
                     @foreach($document->reqDocumentUsers as $docUser)  
                         <!-- ฝ่ายวิจัย -->
                         @if ($docUser->division_id == 2)
@@ -181,7 +181,7 @@
                             <!-- ผ่านการอนุมัติ -->
                             @else
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editAllowedModal">
-                                    ยื่นเรื่องแก้ไขสถานะ
+                                    ยื่นเรื่องแก้ไขคำขอ
                                 </button>
                             @endif
 
@@ -196,7 +196,7 @@
                             <!-- ผ่านการอนุมัติ -->
                             @else
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editAllowedModal">
-                                    ยื่นเรื่องแก้ไขสถานะ
+                                    ยื่นเรื่องแก้ไขคำขอ
                                 </button>
                             @endif
                         @endif
@@ -279,12 +279,23 @@
                     <a href="{{ route('documents.history') }}" class="btn btn-secondary">ย้อนกลับ</a>
                 @endif
             </div>
+            
             <div class="text-center mt-4 mb-0">
-                <p style="color: red"> *** หากมีการอนุมัติคำขอใดแล้ว
-                    ต้องรอการอนุมัติคำขออนุญาตยกเลิกจากผู้ที่เกี่ยวข้องก่อน</p>
+                @if (auth()->user()->is_admin != 1 && $document->edit_by != 1)
+                    @if ($document->edit_allowed != null )
+                        <div class="alert alert-info" role="alert">
+                            <strong>ต้องการแก้ไขเนื่องจาก :</strong> {{ $document->edit_allowed }}
+                        </div>
+                    @endif
+                @endif
             </div>
         </div>
     </div>
+    @if (auth()->user()->is_admin != 1)
+        <p class="mt-2" > - หากมีการอนุมัติคำขอใดแล้วต้องรอการอนุมัติคำขออนุญาตยกเลิกจากผู้ที่เกี่ยวข้องก่อน <br>
+         - สามารถยื่นเรื่อง<span style="color: red">แก้ไขเอกสาร</span>ได้เพียง<span style="color: red"> 1 ครั้ง</span>
+        </p>
+    @endif
 
     <!-- ส่วนของแอดมิน แก้ไข/ยกเลิก -->
     @if (auth()->user()->is_admin == 1)
@@ -319,19 +330,19 @@
             </div>
         @endif
         
-        <!-- แก้ไข -->
-        @if ( $document->edit_allowed !=null && $document->edit_by != 1 )
+    <!-- แก้ไข -->
+        @if ( $document->edit_allowed !=null && $document->edit_by != 1)
             <div class="card mt-4">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-6 pt-2">
-                            <h5>คำขอแก้ไขเกอสาร</h5>
+                            <h5>คำขอแก้ไขเอกสาร</h5>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div style="display: flex;">
-                        <h5 class="mb-4 mt-3" style="margin: 0;">ต้องการแก้ไขเอกสารในส่วนของ : <u style="color: red;">{{ $document->edit_allowed }}</u></h5> 
+                        <h5 class="mb-4 mt-3" style="margin: 0;">ต้องการแก้ไขเนื่องจาก : <u style="color: red;">{{ $document->edit_allowed }}</u></h5> 
                     </div>      
                 </div>
             </div>
@@ -345,14 +356,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editAllowedModalLabel">แก้ไขสถานะ</h5>
+                    <h5 class="modal-title" id="editAllowedModalLabel">แก้ไขคำขอ</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="editAllowedForm" action="{{ route('documents.updateEditAllowed', ['id' => $document->document_id]) }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label for="edit_allowed">กรอกสถานะใหม่:</label>
+                            <label for="edit_allowed">กรอกข้อมูลใหม่:</label>
                             <input type="text" name="edit_allowed" id="edit_allowed" class="form-control" required>
                         </div>
                     </form>

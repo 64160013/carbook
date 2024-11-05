@@ -15,7 +15,8 @@
     @else
     @foreach($documents as $document)
     <!-- กรณีที่เอกสารถูกยกเลิก -->
-    @if ($document->cancel_allowed != 'pending')
+    @if (($document->allow_director != 'approved' && $document->cancel_admin == 'Y') || 
+     ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y'))
         <div class="card-body mb-4">
             <div class="d-flex align-items-center justify-content-center"
                 style="border: 1px solid #dc3545; color: #dc3545; padding: 10px 20px; border-radius: 5px; text-align: center;">
@@ -30,10 +31,15 @@
     @endif
 
 
+
     <!-- ส่วนแสดงรายละเอียดเอกสาร -->
     <div class="card mb-4 shadow-sm border-1">
-        <div @if ($document->cancel_allowed != 'pending') class="card-header bg-secondary text-white" @else
-        class="card-header bg-primary text-white" @endif>
+        <!-- ( $document->cancel_admin == 'Y' || ( $document->allow_director == 'approved' && $document->cancel_director == 'Y') -->
+        <div class="card-header text-white 
+            {{ ($document->allow_director != 'approved' && $document->cancel_admin == 'Y') || 
+            ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y') 
+            ? 'bg-secondary' : 'bg-primary' }}">
+
             <h5 class="mb-0">{{ __('เอกสาร ที่ : ') . $document->document_id }}</h5>
             <p class="mb-0">
                 {{ __('วันที่ทำเรื่อง: ')
@@ -521,49 +527,49 @@
                         <h6 class="mb-0">{{ __('คนขับรถรับทราบงาน:') }}</h6>
                     </div>
                     <div class="card-body">
-    <div class="d-flex justify-content-between">
-        <!-- ซ้าย: ฟอร์มเลือกสถานะของผู้รับงาน -->
-        <div>
-            <div class="d-flex mb-3 mt-3">
-                <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="statuscarman" value="approved"
-                        id="approve_carman" onchange="toggleCarmanReasonField(false)">
-                    <label class="form-check-label" for="approve_carman">{{ __('รับทราบ') }}</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="statuscarman" value="rejected"
-                        id="reject_carman" onchange="toggleCarmanReasonField(true)">
-                    <label class="form-check-label" for="reject_carman">{{ __('ไม่สามารถรับงานได้') }}</label>
-                </div>
-            </div>
+                        <div class="d-flex justify-content-between">
+                            <!-- ซ้าย: ฟอร์มเลือกสถานะของผู้รับงาน -->
+                            <div>
+                                <div class="d-flex mb-3 mt-3">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="statuscarman" value="approved"
+                                            id="approve_carman" onchange="toggleCarmanReasonField(false)">
+                                        <label class="form-check-label" for="approve_carman">{{ __('รับทราบ') }}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="statuscarman" value="rejected"
+                                            id="reject_carman" onchange="toggleCarmanReasonField(true)">
+                                        <label class="form-check-label" for="reject_carman">{{ __('ไม่สามารถรับงานได้') }}</label>
+                                    </div>
+                                </div>
 
-            <div id="reason_field_carman" style="display: none;">
-                <label for="carman_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                <input type="text" id="carman_reason" name="carman_reason"
-                    placeholder="{{ __('กรุณาระบุเหตุผล') }}"
-                    value="{{ old('carman_reason', $document->carman_reason) }}">
-            </div>
-        </div>
+                                <div id="reason_field_carman" style="display: none;">
+                                    <label for="carman_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                    <input type="text" id="carman_reason" name="carman_reason"
+                                        placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                        value="{{ old('carman_reason', $document->carman_reason) }}">
+                                </div>
+                            </div>
 
-        <!-- ขวา: ลายเซ็นของผู้ใช้ -->
-        <div style="text-align: right; margin-right: 50px;">
-            <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
-            @if (Auth::user()->signature_name)
-                <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
-                    alt="Signature Image" class="img-fluid" width="250" height="auto">
-            @else
-                <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
-            @endif
-        </div>
-    </div>
-</div>
-<div class="card-footer text-right">
-    <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-</div>
-
+                            <!-- ขวา: ลายเซ็นของผู้ใช้ -->
+                            <div style="text-align: right; margin-right: 50px;">
+                                <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
+                                @if (Auth::user()->signature_name)
+                                    <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
+                                        alt="Signature Image" class="img-fluid" width="250" height="auto">
+                                @else
+                                    <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                    </div>
                 </div>
             @endif
         @endif
+            <p style="color: red"> *** หากเอกสารมีการสะกดคำผิดกรุณาติดต่อเจ้าของเอกสารโดยตรงเพื่อแก้ไข</p>
     </form>
     @endif
     @endif

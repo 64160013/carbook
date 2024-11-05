@@ -112,13 +112,14 @@
                             @endif
                         </td>
                         <td class="text-center">
-                        @if ( $document->cancel_allowed == 'pending' )
-                            <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
-                                class="btn btn-primary">ดูรายละเอียด</a>
-                        @else
-                            <a href="{{ route('documents.show') }}?id={{ $document->document_id }}"
-                                class="btn btn-secondary">ดูรายละเอียด</a>
-                        @endif
+                            <a href="{{ route('documents.show') }}?id={{ $document->document_id }}" class="btn 
+                                @if (($document->allow_director != 'approved' && $document->cancel_admin == 'Y') || 
+                                        ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y'))
+                                    btn-secondary
+                                @else
+                                    btn-primary
+                                @endif"> ดูรายละเอียด
+                            </a>
                         </td>
                         <td class="text-center">
                             <!-- แสดงปุ่มดู PDF หากมี ReportFormance -->

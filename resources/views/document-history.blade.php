@@ -145,23 +145,21 @@
                                         <div style="flex: 2; white-space: nowrap; overflow: visible;">
                                             <br>วันที่ทำเรื่อง:
                                             {{ 
-                                                                                                \Carbon\Carbon::parse($document->reservation_date)->format('d') . ' ' .
-                            \Carbon\Carbon::parse($document->reservation_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
-                            \Carbon\Carbon::parse($document->reservation_date)->format('Y') 
-                                                                                            }}<br>
+                                                \Carbon\Carbon::parse($document->reservation_date)->format('d') . ' ' .
+                                                \Carbon\Carbon::parse($document->reservation_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
+                                                \Carbon\Carbon::parse($document->reservation_date)->format('Y') 
+                                            }}<br>
                                             วันที่กลับ:
                                             <span>
                                                 {{ 
-                                                                                                \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
-                            \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
-                            \Carbon\Carbon::parse($document->end_date)->addYears(543)->format('Y') 
-                                                                                            }}
+                                                    \Carbon\Carbon::parse($document->end_date)->format('d') . ' ' .
+                                                    \Carbon\Carbon::parse($document->end_date)->locale('th')->translatedFormat('F') . ' พ.ศ. ' .
+                                                    \Carbon\Carbon::parse($document->end_date)->addYears(543)->format('Y') 
+                                                }}
                                             </span><br>
                                             เวลากลับ: {{ \Carbon\Carbon::parse($document->end_time)->format('H:i') }} น.
                                         </div>
                                     </div>
-
-
 
                                     <div>
                                         @if ($document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
@@ -206,23 +204,16 @@
                                         @endif
 
 
-
-                                        @if ($document->cancel_allowed == "rejected")
-
+                                        @if ($document->cancel_allowed != "pending")
                                             <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
                                                 class="btn btn-secondary">ดูรายละเอียด</a>
-                                            <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
-                                                class="btn btn-outline-primary">สถานะ</a>
-                                            <!-- ไม่ยกเลิก -->
+                                        <!-- ไม่ยกเลิก -->
                                         @else
                                             <a href="{{ route('documents.review') }}?id={{ $document->document_id }}"
                                                 class="btn btn-primary">ดูรายละเอียด</a>
-                                            <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
-                                                class="btn btn-outline-primary">สถานะ</a>
-
                                         @endif
-
-
+                                        <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
+                                        class="btn btn-outline-primary">สถานะ</a>
                                     </div>
                                 </div>
                             </div>
