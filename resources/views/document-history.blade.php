@@ -164,27 +164,11 @@
 
 
                                     <div>
-                                        <!-- @if ( $document->cancel_allowed == 'pending' )
-                                                                                        @foreach($document->reqDocumentUsers as $docUser)
-                                                                                            @if ($docUser->division_id == 2)
-                                                                                                @if ($document->allow_department == 'pending')
-                                                                                                    <span class="badge bg-warning">รอหัวหน้างานพิจารณา</span>
-                                                                                                @elseif ($document->allow_department == 'approved')
-                                                                                                    @include('partials.allow_status', ['document' => $document])
-                                                                                                @else
-                                                                                                    <span class="badge bg-danger">หัวหน้างานไม่อนุมัติ</span>
-                                                                                                    @if ($document->notallowed_reason)
-                                                                                                        <br><span>เหตุผล: {{ $document->notallowed_reason }}</span>
-                                                                                                    @endif
-                                                                                                @endif
-                                                                                            @else
-                                                                                                @include('partials.allow_status', ['document' => $document])
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @else
-                                                                                        <!-- ไม่แสดงอะไรหายไปเลย -->
-                                        <!-- @endif -->
-                                        @if ($document->cancel_allowed == 'pending')
+                                        @if ($document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+                                            <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
+                                        @elseif ($document->edit_allowed != null && $document->edit_by != 1)
+                                            <span class="badge bg-info">รอการแก้ไขเอกสารโดยแอดมิน</span>
+                                        @elseif ($document->cancel_allowed == 'pending')
                                             @foreach($document->reqDocumentUsers as $docUser)
                                                 @if ($docUser->division_id == 2)
                                                     @if ($document->allow_department == 'pending')
@@ -201,28 +185,26 @@
                                                     @include('partials.allow_status', ['document' => $document])
                                                 @endif
                                             @endforeach
-                                            <!-- ยกเลิกก่อนถึงผอ. -->
+                                        <!-- ยกเลิกก่อนถึงผอ. -->
                                         @elseif ($document->allow_director == 'pending' && $document->cancel_reason != null)
                                             @if ($document->cancel_admin == 'Y')
-                                                <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
-                                                    class="btn btn-outline-danger disabled">รายการคำขอถูกยกเลิกแล้ว</a>
+                                                <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                                             @else
                                                 <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>
                                             @endif
-                                            <!-- ผอ.อนุมัติไปแล้ว -->
+                                        <!-- ผอ.อนุมัติไปแล้ว -->
                                         @elseif ($document->allow_director != 'pending' && $document->cancel_reason != null)
                                             @if ($document->cancel_admin != 'Y')
                                                 <span class="badge bg-info">รอแอดมินอนุมัติคำขอยกเลิก</span>
                                             @elseif ($document->cancel_admin == 'Y' && $document->cancel_director != 'Y')
                                                 <span class="badge bg-info">รอผู้อำนวยการอนุมัติคำขอยกเลิก</span>
                                             @elseif ($document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
-                                                <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
-                                                    class="btn btn-outline-danger disabled">รายการคำขอถูกยกเลิกแล้ว</a>
+                                                <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                                             @endif
                                         @else
-                                            <a href="{{ route('documents.status') }}?id={{ $document->document_id }}"
-                                                class="btn btn-outline-danger disabled">รายการคำขอถูกยกเลิกแล้ว</a>
+                                            <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                                         @endif
+
 
 
                                         @if ($document->cancel_allowed == "rejected")

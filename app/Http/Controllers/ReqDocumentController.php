@@ -151,6 +151,58 @@ class ReqDocumentController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        // ตรวจสอบ role_id ว่าเป็น 12 หรือไม่ เพื่อบันทึกค่า car_id
+// $carId = auth()->user()->role_id == 12 ? $request->input('car_id') : null;
+// $carMan = auth()->user()->role_id == 12 ? $request->input('carman') : null;
+
+// // ตรวจสอบข้อมูลรถจากโมเดล Vehicle
+// $vehicle = $carId ? \App\Models\Vehicle::find($carId) : null;
+// $carRegNumber = $vehicle ? $vehicle->car_regnumber : null;
+// $carProvince = $vehicle ? $vehicle->car_province : null;
+// $carCategory = $vehicle ? $vehicle->car_category : null;
+
+// // ตรวจสอบค่าที่ดึงมา
+// dd($carRegNumber, $carProvince, $carCategory);
+
+
+// // บันทึกข้อมูลลงในตาราง req_document
+// $document = ReqDocument::create([
+//     'companion_name' => $request->companion_name,
+//     'objective' => $request->objective,
+//     'related_project' => $filePath ?? null,
+//     'location' => $request->location,
+//     'car_pickup' => $request->car_pickup,
+//     'reservation_date' => $request->reservation_date,
+//     'start_date' => $request->start_date,
+//     'end_date' => $request->end_date,
+//     'start_time' => $request->start_time,
+//     'end_time' => $request->end_time,
+//     'sum_companion' => $request->sum_companion,
+//     'car_type' => $request->car_type,
+//     'provinces_id' => $request->provinces_id,
+//     'amphoe_id' => $request->amphoe_id,
+//     'district_id' => $request->district_id,
+//     'work_id' => $request->work_id,
+//     'car_id' => $carId, // บันทึก car_id เฉพาะ role_id == 12 เท่านั้น
+//     'carman' => $carMan,
+//     'car_controller' => $request->input('car_controller'),
+// ]);
+
+// // บันทึกความสัมพันธ์ระหว่างผู้ใช้และเอกสารในตาราง req_document_user
+// $document->users()->attach(Auth::user()->id, [
+//     'name' => Auth::user()->name,
+//     'lname' => Auth::user()->lname,
+//     'signature_name' => Auth::user()->signature_name,
+//     'division_id' => Auth::user()->division_id,
+//     'department_id' => Auth::user()->department_id,
+//     'car_regnumber' => $carRegNumber, // ใช้ค่า car_regnumber จากโมเดล Vehicle
+//     'car_province' => $carProvince,   // ใช้ค่า car_province จากโมเดล Vehicle
+//     'car_category' => $carCategory,   // ใช้ค่า car_category จากโมเดล Vehicle
+//     'created_at' => now(),
+//     'updated_at' => now(),
+// ]);
+
         
         foreach ($companions as $companionId) {
             // ตรวจสอบว่า $companionId เป็นตัวเลขหรือไม่ (ป้องกันข้อผิดพลาดจากข้อมูลที่ไม่ถูกต้อง)
