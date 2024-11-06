@@ -20,6 +20,7 @@ class PDFController extends Controller
     public function generatePDF(Request $request)
     {
         $imagePathPublic = public_path('images/buu-logo.png');
+        $imageCancel = public_path('images/cancel.png');
         $id = $request->input('id');
         $documents = ReqDocument::with(['reqDocumentUsers', 'users', 'province', 'vehicle', 'carmanUser', 'DivisionAllowBy'])
                                  ->findOrFail($id);
@@ -28,6 +29,7 @@ class PDFController extends Controller
             'title' => 'Document Report',
             'documents' => $documents,
             'imagePathPublic' => $imagePathPublic, // ส่งเส้นทางของภาพใน public
+            'imageCancel' => $imageCancel,
         ];
     
         $pdf = PDF::loadView('myPDF', $data);
