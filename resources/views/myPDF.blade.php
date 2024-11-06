@@ -52,14 +52,44 @@
             display: inline-block;
             height: 20px;
             padding-left: 0px;"
+        }
 
+        .signature .content {
+            margin-left: 20%;
+        }
+
+        .overlay-image {
+            position: absolute;
+            top: 0.1in; /* ปรับตำแหน่งแนวตั้ง */
+            left: 0.5in; /* ปรับตำแหน่งแนวนอน */
+            /* transform: translateX(-50%);  */
+            width: 75px;
+            height: auto;
+            z-index: 10; /* ทำให้รูปภาพอยู่ด้านหน้า */
+        }
+
+        .overlay-signatureUser {
+            position: absolute;
+            top: 6.1in; /* ปรับตำแหน่งแนวตั้ง */
+            left: 0in; /* ปรับตำแหน่งแนวนอน */
+            transform: translateX(4in); 
+            z-index: 10; /* ทำให้รูปภาพอยู่ด้านหน้า */
+        }
+        
+        .overlay-signatureDivsion {
+            position: absolute;
+            top: 6.75in; /* ปรับตำแหน่งแนวตั้ง */
+            left: 0in; /* ปรับตำแหน่งแนวนอน */
+            transform: translateX(4in); 
+            z-index: 10; /* ทำให้รูปภาพอยู่ด้านหน้า */
         }
         
 
     </style>
 </head>
 <body>
-    <h1 class="text-center">บันทึกข้อความ</h1>
+    <img src="{{ $imagePathPublic  }}" alt="BIMS Logo" class="overlay-image">
+    <h1>บันทึกข้อความ</h1>
     <div class="content">
         <p>
             <b>ส่วนงาน </b><span class="line">
@@ -136,8 +166,18 @@
         </p>
         <p style="margin-left: 35; line-height: 1.7;">จึงเรียนมาเพื่อโปรดพิจารณาอนุญาต จะเป็นพระคุณยิ่ง</p>
         
+        <!-- ลายเซ็นคนขอ -->
+        <div class="overlay-signatureUser">
+            @foreach($documents->reqDocumentUsers as $docUser)          
+                @php
+                    $signaturePath = storage_path('app/signatures/' . $docUser->signature_name);
+                @endphp
+                <img src="{{ $signaturePath }}" width="200" class="img-fluid mt-2 borde" style="border: 2px solid black;">
+            @endforeach
+        </div>
+    
         <div class="signature">
-            <p style="line-height: 1.7;">ลงชื่อ <span class="line"  ></span> ผู้ขออนุญาต</p> 
+            <p style="line-height: 1.7;">ลงชื่อ <span class="line"  ></span> ผู้ขออนุญาต</p>
             <p style="margin-left: 25px;">
                 ( <span class="line" style="display: inline-block; text-align: center;">
                     @foreach($documents->reqDocumentUsers as $docUser)
@@ -146,19 +186,21 @@
                 </span> 
                 )
             </p>
-            <p style="line-height: 1; margin-left: 25"><span class="line" style="text-align: center;">
-                
-                {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->name : '' }}
-                {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->lname : '' }}
+            <p style="line-height: 1; margin-left: 25; padding-top: 8;"><span class="line" style="text-align: center;">
+                @if ( $documents->allow_division == 'approved')
+                    <!-- {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->name : '' }} -->
+                    <!-- {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->lname : '' }} -->
+                    <a class="overlay-signatureDivsion">
+                        @foreach($documents->reqDocumentUsers as $docUser)          
+                            @php
+                                $signaturePath = storage_path('app/signatures/' . $docUser->signature_name);
+                            @endphp
+                            <img src="{{ $signaturePath }}" width="200" class="img-fluid mt-2 borde" style="border: 2px solid black;">
+                        @endforeach
+                    </a>
+                @endif
                 </span> หัวหน้าฝ่าย
             </p>
-            <!-- <p style="line-height: 1; margin-left: 25; text-align: center;">
-                <span class="line" style="text-overflow: ellipsis; white-space: nowrap;">
-                    {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->name : 'ยังไม่มีการอนุญาต' }} 
-                    {{ $documents->DivisionAllowBy ? $documents->DivisionAllowBy->lname : '' }}
-                </span>
-                หัวหน้าฝ่าย
-            </p> -->
 
         </div>
         <p>
@@ -173,21 +215,35 @@
         <p>เป็นพนักงานขับรถยนต์ และ <span class="line" style="width: 373px;">
          {{ $documents->carController->name }} {{ $documents->carController->lname }}
         </span> ควบคุมรถยนต์</p>
-        <p style="line-height: 1.7;">คำสั่งของผู้อำนวยการ <span class="line" style="width: 487px;"></span</p>
-        <!-- <p><span class="line" style="width: 605px; line-height: 0.9; padding-left: 30px;">2s</span></p> -->
 
-            @foreach($documents->reqDocumentUsers as $docUser)
-                <img src="{{ Storage::url('signatures/' . $docUser->signature_name) }}"  width="150" class="img-fluid mt-2">
-            @endforeach
+        <!-- ลายเซ็นคนสั่งรถ/หัวหน้าสำนักงาน -->
+        <div class="signature">
+            <div class="content">
+                @if ( $documents->allow_opcar == 'approved'&& $documents->allow_officer != 'approved')
+                    ลายเซ็นคนสั่งรถ
+                @elseif ( $documents->allow_opcar == 'approved' && $documents->allow_officer == 'approved')
+                    ลายเซ็นคนสั่งรถ
+                    <br>ลายเซ็นหัวหน้าสำนักงาน
+                @endif
+            </div>
+        </div>
 
-            <a href="{{ asset('images/BIMS_TH.png') }}" target="_blank">
-                <img src="{{ asset('images/BIMS_TH.png') }}" alt="BIMS_TH Image" class="img-fluid" style="max-width: 100%; height: auto;">
-            </a>
+        <p style="line-height: 1; ">คำสั่งของผู้อำนวยการ <span class="line" style="width: 487px;">
+            @if ( $documents->allow_director == 'approved' ) 
+                อนุญาต
+            @elseif ( $documents->allow_director == 'rejected' )
+                ไม่อนุญาต เนื่องจาก {{ $documents->notallowed_reason }}
+            @endif
+        </span></p>
+        <p>        
+            <span class="line" style="width: 605px; line-height: 0.9; ">
+                <a class="signature">ลายเซ็นผู้อำนวยการ</a>
+                
+            </span>
+        </p>
 
-
-            @foreach($documents->reqDocumentUsers as $docUser)
-                <img src="{{ asset('public/images/BIMS_TH.png') }}" width="150" class="img-fluid mt-2">
-            @endforeach
+            
+            
 
 
     </div>

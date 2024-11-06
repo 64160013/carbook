@@ -569,7 +569,6 @@
                 </div>
             @endif
         @endif
-            <p style="color: red"> *** หากเอกสารมีการสะกดคำผิดกรุณาติดต่อเจ้าของเอกสารโดยตรงเพื่อแก้ไข</p>
     </form>
     @endif
     @endif
@@ -672,11 +671,10 @@
                 driverInput.value = ''; // ล้างค่าคนขับที่เลือก
             }
         }
-
-
     </script>
 
     @endforeach
     @endif
 </div>
+    <p style="color: red"> *** หากเอกสารมีการสะกดคำผิดกรุณาติดต่อเจ้าของเอกสารโดยตรงเพื่อแก้ไข</p>
 @endsection
