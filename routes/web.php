@@ -144,3 +144,6 @@ Route::post('/documents/{id}/confirm-cancel', [DocumentController::class, 'confi
 Route::post('/documents/{id}/confirm-director-cancel', [DocumentController::class, 'confirmDirectorCancel'])->name('documents.confirmDirectorCancel');
 Route::post('/documents/{id}/update-edit-allowed', [DocumentController::class, 'updateEditAllowed'])->name('documents.updateEditAllowed');
 
+// ค้นหา
+Route::get('/op-car/search', [DocumentController::class, 'OPsearch'])->name('documents.OPsearch');
+

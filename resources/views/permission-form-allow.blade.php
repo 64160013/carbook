@@ -552,7 +552,7 @@
                                 </div>
 
                                 <div id="reason_field_carman" style="display: none;">
-                                    <label for="carman_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                    <label for="carman_reason">{{ __('ไม่สามารถรับงานได้เนื่องจาก:') }}</label>
                                     <input type="text" id="carman_reason" name="carman_reason"
                                         placeholder="{{ __('กรุณาระบุเหตุผล') }}"
                                         value="{{ old('carman_reason', $document->carman_reason) }}">

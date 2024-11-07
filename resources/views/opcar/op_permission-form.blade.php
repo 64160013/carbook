@@ -2,7 +2,33 @@
 
 @section('content')
 <div class="container mb-3">
-        <h1 class="mb-4">รายการคำขออนุญาต </h1>   
+    <h1 class="mb-4">รายการคำขออนุญาต </h1>
+    <!-- ฟิลด์ค้นหา -->
+    <form method="GET" action="{{ route('documents.OPsearch') }}" class="mb-4 d-flex align-items-center"
+        id="searchForm">
+        <input type="text" name="search" class="form-control" placeholder="ค้นหาผู้ขอ หรือ วัตถุประสงค์"
+            value="{{ request()->get('search') }}">
+        <button class="btn btn-primary ms-2" type="submit">ค้นหา</button>
+        <div class="ms-2 d-flex">
+            <select name="month" class="form-select w-auto" onchange="document.getElementById('searchForm').submit()">
+                <option value="">เลือกเดือน</option>
+                @foreach (range(1, 12) as $month)
+                    <option value="{{ $month }}" {{ request()->get('month') == $month ? 'selected' : '' }}>
+                        {{ \Carbon\Carbon::create()->month($month)->translatedFormat('F') }}
+                    </option>
+                @endforeach
+            </select>
+            <select name="year" class="form-select w-auto ms-2"
+                onchange="document.getElementById('searchForm').submit()">
+                <option value="">เลือกปี</option>
+                @for ($year = date('Y') + 543; $year >= 2543; $year--)
+                    <option value="{{ $year - 543 }}" {{ request()->get('year') == ($year - 543) ? 'selected' : '' }}>
+                        {{ $year }}
+                    </option>
+                @endfor
+            </select>
+        </div>
+    </form>  
     @if($documents->isEmpty())
         <div class="alert alert-info">
             {{ __('ไม่มีฟอร์มสำหรับการตรวจสอบ') }}
@@ -81,6 +107,9 @@
                         </td>
                         
                         <td class="text-center">
+                        @if ( $document->car_type == 'รถเช่า')
+                            รถเช่า
+                        @else
                             @if ( $document->cancel_allowed == 'pending' )
                                 @if (in_array(auth()->user()->role_id, [12]))
                                     @if ($document->allow_carman == 'approved')
@@ -110,6 +139,8 @@
                             @else
                                 <span class="badge bg-secondary">รายการคำขอถูกยกเลิกแล้ว</span>
                             @endif
+                        @endif
+                            
                         </td>
                         <td class="text-center">
                             <a href="{{ route('documents.show') }}?id={{ $document->document_id }}" class="btn 
@@ -138,5 +169,6 @@
         </table>
 
     @endif
+    {{ $documents->appends(request()->query())->links() }}
 </div>
 @endsection
