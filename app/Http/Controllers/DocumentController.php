@@ -139,7 +139,7 @@ class DocumentController extends Controller
                 $documents = $approvedDirector
                     ->where('carman', $user->id) // กรองเอกสารที่มี carman เท่ากับ user id
                     ->orderBy('document_id', 'desc')
-                    ->get();
+                    ->paginate(5);
                 return view('driver.schedule', compact('documents'));
 
             } elseif ($user->role_id == 5) {        //หัวหน้าฝ่ายวิจัยวิทยาศาสตร์ทางทะเล
@@ -549,39 +549,34 @@ class DocumentController extends Controller
         $query = $request->input('search');
         $month = $request->input('month');
         $year = $request->input('year');
-        // ดึงข้อมูลทั้งหมดจากฐานข้อมูล
-        $documents = ReqDocument::orderBy('created_at', 'desc')->get();
-        // จัดเก็บข้อมูลใน Session
-        session(['documents' => $documents]);
-        // กรองข้อมูลที่อยู่ใน Session
-        $filteredDocuments = collect(session('documents'))->filter(function ($document) use ($month, $year, $query) {
-            // เพิ่มเงื่อนไขสำหรับ allow_director
-            if ($document->allow_director !== 'approved') {
-                return false; // ข้ามเอกสารที่ไม่ได้รับการอนุมัติ
-            }
-            // กรองตามเดือน
-            if ($month && \Carbon\Carbon::parse($document->start_date)->month !== (int) $month) {
-                return false;
-            }
-            // กรองตามปี
-            if ($year && \Carbon\Carbon::parse($document->start_date)->year !== (int) $year) {
-                return false;
-            }
-            // กรองตามวัตถุประสงค์
-            if ($query && strpos($document->objective, $query) === false) {
-                return false;
-            }
-            return true;
-        });
-        // ใช้เอกสารทั้งหมดถ้าไม่มีการกรอง
-        if ($month || $year || $query) {
-            $documents = $filteredDocuments; // ใช้เอกสารที่กรองแล้ว
-        } else {
-            // แสดงเอกสารทั้งหมดใน session โดยมีเงื่อนไข allow_director
-            $documents = collect(session('documents'))->filter(function ($document) {
-                return $document->allow_director === 'approved'; // แสดงเฉพาะเอกสารที่ได้รับการอนุมัติ
-            });
+
+        // สร้าง Query Builder โดยกรองข้อมูลเบื้องต้นด้วย allow_director และ car_type
+        $documentsQuery = ReqDocument::where('allow_director', 'approved')
+            ->where('car_type', '!=', 'รถเช่า') // กรอง car_type ไม่ให้เป็น "รถเช่า"
+            ->where(function ($q) {
+                $q->where('cancel_admin', '!=', 'Y')->orWhereNull('cancel_admin')
+                    ->where('cancel_director', '!=', 'Y')->orWhereNull('cancel_director'); // กรองรายการที่ไม่มี cancel
+            })
+            ->orderBy('created_at', 'desc');
+
+        // กรองตามเดือน
+        if ($month) {
+            $documentsQuery->whereMonth('start_date', $month);
         }
+
+        // กรองตามปี
+        if ($year) {
+            $documentsQuery->whereYear('start_date', $year);
+        }
+
+        // กรองตามวัตถุประสงค์
+        if ($query) {
+            $documentsQuery->where('objective', 'like', '%' . $query . '%');
+        }
+
+        // ใช้ paginate() แทนการใช้ Collection เพื่อรองรับการแบ่งหน้า
+        $documents = $documentsQuery->paginate(10);
+
         return view('driver.schedule', compact('documents'));
     }
 

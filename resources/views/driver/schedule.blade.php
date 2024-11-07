@@ -128,6 +128,6 @@
             </tbody>
         </table>
     @endif
-    {{ $documents->appends(request()->query())->links() }}
+    {{ $documents->links() }}
 </div>
 @endsection
