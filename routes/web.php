@@ -71,19 +71,32 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 
+// Route::get('/signatures/{filename}', function ($filename) {
+//     $path = 'signatures/' . $filename;
+
+//     // ตรวจสอบว่ามีไฟล์อยู่ในระบบหรือไม่
+//     if (!Storage::exists($path)) {
+//         abort(404);
+//     }
+
+//     $userId = Auth::id();    // ดึง ID ของผู้ใช้ที่เข้าสู่ระบบ
+
+//     // ตรวจสอบว่า ID ของผู้ใช้ตรงกับ ID ที่อยู่ในชื่อไฟล์หรือไม่
+//     if (strpos($filename, $userId . '_signature') !== 0) {
+//         abort(403); // ห้ามเข้าถึงหาก ID ไม่ตรงกัน
+//     }
+
+//     // ส่งไฟล์กลับไปยังผู้ใช้
+//     return Response::file(storage_path('app/' . $path));
+// })->middleware('auth');
+
+// เข้าถึงได้ทุกคนแต่ต้องเป็น auth
 Route::get('/signatures/{filename}', function ($filename) {
     $path = 'signatures/' . $filename;
 
     // ตรวจสอบว่ามีไฟล์อยู่ในระบบหรือไม่
     if (!Storage::exists($path)) {
         abort(404);
-    }
-
-    $userId = Auth::id();    // ดึง ID ของผู้ใช้ที่เข้าสู่ระบบ
-
-    // ตรวจสอบว่า ID ของผู้ใช้ตรงกับ ID ที่อยู่ในชื่อไฟล์หรือไม่
-    if (strpos($filename, $userId . '_signature') !== 0) {
-        abort(403); // ห้ามเข้าถึงหาก ID ไม่ตรงกัน
     }
 
     // ส่งไฟล์กลับไปยังผู้ใช้

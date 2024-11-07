@@ -177,7 +177,7 @@
         </p>ตามสถานที่ดังต่อไปนี้
 
         <p><span class="section-title">1. </span><span class="line" style="width: 452px;">
-            {{ $documents->location }} {{ $documents->district->name_th }} {{ $documents->amphoe->name_th }} {{ $documents->province->name_th }}
+            {{ $documents->location }} ตำบล{{ $documents->district->name_th }} อำเภอ{{ $documents->amphoe->name_th }} จังหวัด{{ $documents->province->name_th }}
             </span><span>จำนวน</span>
             <span class="line" style="width: 50px;">{{ $documents->sum_companion }}</span>คน</p>
         <p><span class="section-title" style="margin-left:25px;">รับที่</span><span class="line">{{ $documents->car_pickup }}</span><span>
