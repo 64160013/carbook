@@ -15,8 +15,10 @@
     @else
     @foreach($documents as $document)
     <!-- กรณีที่เอกสารถูกยกเลิก -->
-    @if (($document->allow_director != 'approved' && $document->cancel_admin == 'Y') || 
-     ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y'))
+    @if (
+                ($document->allow_director != 'approved' && $document->cancel_admin == 'Y') ||
+                ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
+            )
         <div class="card-body mb-4">
             <div class="d-flex align-items-center justify-content-center"
                 style="border: 1px solid #dc3545; color: #dc3545; padding: 10px 20px; border-radius: 5px; text-align: center;">
@@ -36,8 +38,8 @@
     <div class="card mb-4 shadow-sm border-1">
         <!-- ( $document->cancel_admin == 'Y' || ( $document->allow_director == 'approved' && $document->cancel_director == 'Y') -->
         <div class="card-header text-white 
-            {{ ($document->allow_director != 'approved' && $document->cancel_admin == 'Y') || 
-            ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y') 
+            {{ ($document->allow_director != 'approved' && $document->cancel_admin == 'Y') ||
+            ($document->allow_director == 'approved' && $document->cancel_admin == 'Y' && $document->cancel_director == 'Y')
             ? 'bg-secondary' : 'bg-primary' }}">
 
             <h5 class="mb-0">{{ __('เอกสาร ที่ : ') . $document->document_id }}</h5>
@@ -173,13 +175,13 @@
                         </tr>
                     </table>
                 </div>
-
                 <!-- โครงการที่เกี่ยวข้อง -->
                 <div class="mt-4 border p-3">
                     <h6 class="text-muted">{{ __('โครงการที่เกี่ยวข้อง') }}</h6>
                     <p class="form-control-static">
                         @if($document->related_project)
-                            <a href="{{ asset('storage/' . $document->related_project) }}" target="_blank"                                class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a>
+                            <a href="{{ asset('storage/' . $document->related_project) }}" target="_blank"
+                                class="btn btn-outline-primary">{{ __('ดูไฟล์') }}</a>
                         @else
                             {{ __('ไม่มีไฟล์') }}
                         @endif
@@ -199,18 +201,21 @@
             <!-- เปรียบเป็นใบแจ้งงานคนขับรถ -->
             @if (in_array(auth()->user()->role_id, [2, 3, 11, 12]))
                 @if ($document->allow_opcar == 'approved')
-
-
-                    <div class="card mt-3 mb-4 shadow-sm border-1" style="">
+                    <div class="card mt-3 mb-4 shadow-sm border-1">
                         <div class="card-header">
                             <h6 class="mb-0">{{ __('รถยนต์ปฏิบัติงาน') }}</h6>
                         </div>
                         <div class="card-body">
-                            <label>{{ __('คนขับรถ :') }}</label>
-                            {{ $document->carmanUser->name ?? 'N/A' }} {{ $document->carmanUser->lname ?? 'N/A' }}<br>
-                            <label>{{ __('หมายเลขทะเบียนรถ :') }}</label>
-                            {{ $document->vehicle->car_category ?? 'N/A'}} {{ $document->vehicle->car_regnumber ?? 'N/A'}}
-                            {{ $document->vehicle->car_province ?? 'N/A'}}
+                            @if ($document->car_type === 'รถเช่า')
+                                <label>{{ __('ประเภทของรถ:') }}</label>
+                                <span>{{ __('รถเช่า') }}</span>
+                            @else
+                                <label>{{ __('คนขับรถ :') }}</label>
+                                {{ $document->carmanUser->name ?? 'N/A' }} {{ $document->carmanUser->lname ?? 'N/A' }}<br>
+                                <label>{{ __('หมายเลขทะเบียนรถ :') }}</label>
+                                {{ $document->vehicle->car_category ?? 'N/A'}} {{ $document->vehicle->car_regnumber ?? 'N/A'}}
+                                {{ $document->vehicle->car_province ?? 'N/A'}}
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -324,203 +329,205 @@
             @endif
 
         @elseif (in_array(auth()->user()->role_id, [12]))
-            @if ($document->allow_opcar == 'pending')
-                <div class="card mb-4 shadow-sm border-1">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">{{ __('ความคิดเห็นคนสั่งรถ:') }}</h6>
-                    </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="d-flex mb-3 mt-3">
-                                <div class="form-check me-3">
-                                    <input class="form-check-input" type="radio" name="statusopcar" value="approved"
-                                        id="approve_opcar" onchange="toggleReasonField(false); toggleVehicleAndDriver(true)">
-                                    <label class="form-check-label" for="approve_opcar">{{ __('อนุญาต') }}</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="statusopcar" value="rejected"
-                                        id="reject_opcar" onchange="toggleReasonField(true); toggleVehicleAndDriver(false)">
-                                    <label class="form-check-label" for="reject_opcar">{{ __('ไม่อนุญาต') }}</label>
-                                </div>
+        @if ($document->allow_opcar == 'pending')
+        <div class="card mb-4 shadow-sm border-1">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">{{ __('ความคิดเห็นคนสั่งรถ:') }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="d-flex mb-3 mt-3">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="statusopcar" value="approved"
+                                    id="approve_opcar"
+                                    onchange="toggleReasonField(false); toggleVehicleAndDriver(true)">
+                                <label class="form-check-label" for="approve_opcar">{{ __('อนุญาต') }}</label>
                             </div>
-
-                            <div id="reason_field_opcar" style="display: none;">
-                                <label for="notallowed_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                <input type="text" id="notallowed_reason" name="notallowed_reason"
-                                    placeholder="{{ __('กรุณาระบุเหตุผล') }}"
-                                    value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="statusopcar" value="rejected"
+                                    id="reject_opcar" onchange="toggleReasonField(true); toggleVehicleAndDriver(false)">
+                                <label class="form-check-label" for="reject_opcar">{{ __('ไม่อนุญาต') }}</label>
                             </div>
+                        </div>
 
-                            <div id="vehicle_driver_section" style="display: none;">
-                                <select id="vehicle" class="form-control @error('car_id') is-invalid @enderror mt-3" name="car_id"
-                                    required>
-                                    <option value="" disabled selected>{{ __('เลือกยานพาหนะ') }}</option>
-                                    @foreach($vehicles as $vehicle)
-                                        @if ($vehicle->car_status == 'Y')
-                                            <option value="{{ $vehicle->car_id }}" {{ old('car_id') == $vehicle->car_id ? 'selected' : '' }}>
-                                                {{ $vehicle->car_category }} {{ $vehicle->car_regnumber }} {{ $vehicle->car_province }}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('car_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div id="reason_field_opcar" style="display: none;">
+                            <label for="notallowed_reason">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                            <input type="text" id="notallowed_reason" name="notallowed_reason"
+                                placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                value="{{ old('notallowed_reason', $document->notallowed_reason) }}">
+                        </div>
 
-                                <select id="users" class="form-control @error('carman') is-invalid @enderror mt-2" name="carman" required>
-                                    <option value="" disabled selected>{{ __('เลือกคนขับรถ') }}</option>
-                                        @foreach($users as $user)
-                                            @if ($user->role_id == 11)
-                                                <option value="{{ $user->id }}" {{ old('carman') == $user->id ? 'selected' : '' }}>
-                                                    {{ $user->name }} {{ $user->lname }}
-                                                </option>
+                        <div id="vehicle_driver_section" style="display: none;">
+                            <select id="vehicle" class="form-control @error('car_id') is-invalid @enderror mt-3"
+                                name="car_id" required>
+                                <option value="" disabled selected>{{ __('เลือกยานพาหนะ') }}</option>
+                                @foreach($vehicles as $vehicle)
+                                    @if ($vehicle->car_status == 'Y')
+                                        <option value="{{ $vehicle->car_id }}" {{ old('car_id') == $vehicle->car_id ? 'selected' : '' }}>{{ $vehicle->car_category }} {{ $vehicle->car_regnumber }}
+                                            {{ $vehicle->car_province }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('car_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+
+                            <select id="users" class="form-control @error('carman') is-invalid @enderror mt-2"
+                                                    name="carman" required>
+                                                    <option value="" disabled selected>{{ __('เลือกคนขับรถ') }}</option>
+                                                    @foreach($users as $user)
+                                                        @if ($user->role_id == 11)
+                                                            <option value="{{ $user->id }}" {{ old('carman') == $user->id ? 'selected' : '' }}>
+                                                                {{ $user->name }} {{ $user->lname }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                @error('carman')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+
+                                        </div>
+                                        <div style="text-align: right; margin-right: 50px;">
+                                            <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
+                                            @if (Auth::user()->signature_name)
+                                                <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
+                                                    alt="Signature Image" class="img-fluid" width="250" height="auto">
+                                            @else
+                                                <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
                                             @endif
-                                        @endforeach
-                                </select>
-                                @error('carman')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            
-                        </div>
-                        <div style="text-align: right; margin-right: 50px;">
-                            <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
-                            @if (Auth::user()->signature_name)
-                                <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
-                                    alt="Signature Image" class="img-fluid" width="250" height="auto">
-                            @else
-                                <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-primary mt-2">{{ __('บันทึก') }}</button>
-                </div>
-            @endif
-            <script>
-                $(document).ready(function () {
-                    $('#start_date, #end_date').on('change', function () {
-                        let startDate = $('#start_date').val();
-                        let endDate = $('#end_date').val();
-
-                        if (startDate && endDate) {
-                            $.ajax({
-                                url: '/check-booking-availability', // API route
-                                type: 'GET',
-                                data: { start_date: startDate, end_date: endDate },
-                                success: function (response) {
-                                    if (response.exists) {
-                                        alert('ช่วงเวลานี้ถูกจองแล้ว');
-                                    }
-                                }
-                            });
-                        }
-                    });
-                });
-            </script>
-
-        @elseif (in_array(auth()->user()->role_id, [2]))
-            @if ($document->allow_officer == 'pending')
-                <div class="card mb-4 shadow-sm border-1">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">{{ __('ความคิดเห็นหัวหน้าสำนักงาน:') }}</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <!-- ซ้าย: ฟอร์มเลือกสถานะ -->
-                            <div>
-                                <div class="d-flex mb-3 mt-3">
-                                    <div class="form-check me-3">
-                                        <input class="form-check-input" type="radio" name="statusofficer" value="approved"
-                                            id="approve_officer" onchange="toggleOfficerReasonField(false)">
-                                        <label class="form-check-label" for="approve_officer">{{ __('อนุญาต') }}</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="statusofficer" value="rejected"
-                                            id="reject_officer" onchange="toggleOfficerReasonField(true)">
-                                        <label class="form-check-label" for="reject_officer">{{ __('ไม่อนุญาต') }}</label>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div id="reason_field_officer" style="display: none;">
-                                    <label for="notallowed_reason_officer">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                    <input type="text" id="notallowed_reason_officer" name="notallowed_reason_officer"
-                                        placeholder="{{ __('กรุณาระบุเหตุผล') }}"
-                                        value="{{ old('notallowed_reason_officer', $document->notallowed_reason) }}">
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-primary mt-2">{{ __('บันทึก') }}</button>
                                 </div>
-                            </div>
-                            <!-- ขวา: ลายเซ็นของผู้ใช้ -->
-                            <div style="text-align: right; margin-right: 50px;">
-                                <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
-                                @if (Auth::user()->signature_name)
-                                    <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
-                                        alt="Signature Image" class="img-fluid " width="250" height="auto">
-                                @else
-                                    <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
                                 @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-right">
-                        <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-                    </div>
-                </div>
-            @endif
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#start_date, #end_date').on('change', function () {
+                                            let startDate = $('#start_date').val();
+                                            let endDate = $('#end_date').val();
 
-        @elseif (in_array(auth()->user()->role_id, [3]))
-            @if ($document->allow_director == 'pending')
-                <div class="card mb-4 shadow-sm border-1">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">{{ __('ความคิดเห็นผู้อำนวยการ:') }}</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <!-- ซ้าย: ฟอร์มเลือกสถานะของผู้กำกับ -->
-                            <div>
-                                <div class="d-flex mb-3 mt-3">
-                                    <div class="form-check me-3">
-                                        <input class="form-check-input" type="radio" name="statusdirector" value="approved"
-                                            id="approve_director" onchange="toggleDirectorReasonField(false)">
-                                        <label class="form-check-label" for="approve_director">{{ __('อนุญาต') }}</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="statusdirector" value="rejected"
-                                            id="reject_director" onchange="toggleDirectorReasonField(true)">
-                                        <label class="form-check-label" for="reject_director">{{ __('ไม่อนุญาต') }}</label>
-                                    </div>
-                                </div>
+                                            if (startDate && endDate) {
+                                                $.ajax({
+                                                    url: '/check-booking-availability', // API route
+                                                    type: 'GET',
+                                                    data: { start_date: startDate, end_date: endDate },
+                                                    success: function (response) {
+                                                        if (response.exists) {
+                                                            alert('ช่วงเวลานี้ถูกจองแล้ว');
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    });
+                                </script>
 
-                                <div id="reason_field_director" style="display: none;">
-                                    <label for="notallowed_reason_director">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
-                                    <input type="text" id="notallowed_reason_director" name="notallowed_reason_director"
-                                        placeholder="{{ __('กรุณาระบุเหตุผล') }}"
-                                        value="{{ old('notallowed_reason_director', $document->notallowed_reason) }}">
-                                </div>
-                            </div>
-                            <!-- ขวา: ลายเซ็นของผู้ใช้ -->
-                            <div style="text-align: right; margin-right: 50px;">
-                                <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
-                                @if (Auth::user()->signature_name)
-                                    <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
-                                        alt="Signature Image" class="img-fluid" width="250" height="auto">
-                                @else
-                                    <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
+                            @elseif (in_array(auth()->user()->role_id, [2]))
+                                @if ($document->allow_officer == 'pending')
+                                    <div class="card mb-4 shadow-sm border-1">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0">{{ __('ความคิดเห็นหัวหน้าสำนักงาน:') }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <!-- ซ้าย: ฟอร์มเลือกสถานะ -->
+                                                <div>
+                                                    <div class="d-flex mb-3 mt-3">
+                                                        <div class="form-check me-3">
+                                                            <input class="form-check-input" type="radio" name="statusofficer" value="approved"
+                                                                id="approve_officer" onchange="toggleOfficerReasonField(false)">
+                                                            <label class="form-check-label" for="approve_officer">{{ __('อนุญาต') }}</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="statusofficer" value="rejected"
+                                                                id="reject_officer" onchange="toggleOfficerReasonField(true)">
+                                                            <label class="form-check-label" for="reject_officer">{{ __('ไม่อนุญาต') }}</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="reason_field_officer" style="display: none;">
+                                                        <label for="notallowed_reason_officer">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                                        <input type="text" id="notallowed_reason_officer" name="notallowed_reason_officer"
+                                                            placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                                            value="{{ old('notallowed_reason_officer', $document->notallowed_reason) }}">
+                                                    </div>
+                                                </div>
+                                                <!-- ขวา: ลายเซ็นของผู้ใช้ -->
+                                                <div style="text-align: right; margin-right: 50px;">
+                                                    <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
+                                                    @if (Auth::user()->signature_name)
+                                                        <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
+                                                            alt="Signature Image" class="img-fluid " width="250" height="auto">
+                                                    @else
+                                                        <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                                        </div>
+                                    </div>
                                 @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-right">
-                        <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
-                    </div>
-                </div>
-            @endif
-        @elseif (in_array(auth()->user()->role_id, [11]))
+
+                            @elseif (in_array(auth()->user()->role_id, [3]))
+                                @if ($document->allow_director == 'pending')
+                                    <div class="card mb-4 shadow-sm border-1">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0">{{ __('ความคิดเห็นผู้อำนวยการ:') }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <!-- ซ้าย: ฟอร์มเลือกสถานะของผู้กำกับ -->
+                                                <div>
+                                                    <div class="d-flex mb-3 mt-3">
+                                                        <div class="form-check me-3">
+                                                            <input class="form-check-input" type="radio" name="statusdirector" value="approved"
+                                                                id="approve_director" onchange="toggleDirectorReasonField(false)">
+                                                            <label class="form-check-label" for="approve_director">{{ __('อนุญาต') }}</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="statusdirector" value="rejected"
+                                                                id="reject_director" onchange="toggleDirectorReasonField(true)">
+                                                            <label class="form-check-label" for="reject_director">{{ __('ไม่อนุญาต') }}</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="reason_field_director" style="display: none;">
+                                                        <label for="notallowed_reason_director">{{ __('เหตุผลที่ไม่อนุญาต:') }}</label>
+                                                        <input type="text" id="notallowed_reason_director" name="notallowed_reason_director"
+                                                            placeholder="{{ __('กรุณาระบุเหตุผล') }}"
+                                                            value="{{ old('notallowed_reason_director', $document->notallowed_reason) }}">
+                                                    </div>
+                                                </div>
+                                                <!-- ขวา: ลายเซ็นของผู้ใช้ -->
+                                                <div style="text-align: right; margin-right: 50px;">
+                                                    <strong>{{ __('ลงชื่อผู้ใช้:') }}</strong>
+                                                    @if (Auth::user()->signature_name)
+                                                        <img src="{{ url('/signatures/' . basename(Auth::user()->signature_name)) }}"
+                                                            alt="Signature Image" class="img-fluid" width="250" height="auto">
+                                                    @else
+                                                        <p class="text-danger">{{ __('กรุณาเพิ่มลายเซ็นที่หน้าแก้ไขโปรไฟล์') }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-primary">{{ __('บันทึก') }}</button>
+                                        </div>
+                                    </div>
+                                @endif
+                            @elseif (in_array(auth()->user()->role_id, [11]))
             @if ($document->allow_carman == 'pending')
                 <div class="card mb-4 shadow-sm border-1">
                     <div class="card-header bg-light">
@@ -539,7 +546,8 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="statuscarman" value="rejected"
                                             id="reject_carman" onchange="toggleCarmanReasonField(true)">
-                                        <label class="form-check-label" for="reject_carman">{{ __('ไม่สามารถรับงานได้') }}</label>
+                                        <label class="form-check-label"
+                                            for="reject_carman">{{ __('ไม่สามารถรับงานได้') }}</label>
                                     </div>
                                 </div>
 
@@ -568,7 +576,7 @@
                     </div>
                 </div>
             @endif
-        @endif
+            @endif
     </form>
     @endif
     @endif
@@ -640,29 +648,24 @@
             }
         }
 
-        function toggleReasonField(isRejected) {
-            const reasonField = document.getElementById('reason_field_opcar');
-            const notallowedReasonInput = document.getElementById('notallowed_reason');
-
-            if (isRejected) {
-                reasonField.style.display = 'block';
-                notallowedReasonInput.setAttribute('required', 'required');
-            } else {
-                reasonField.style.display = 'none';
-                notallowedReasonInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน
-                notallowedReasonInput.value = ''; // ล้างค่าในฟิลด์เหตุผล
-            }
-        }
-
         function toggleVehicleAndDriver(isApproved) {
             const vehicleDriverSection = document.getElementById('vehicle_driver_section');
             const vehicleInput = document.getElementById('vehicle');
             const driverInput = document.getElementById('users');
 
+            // เพิ่มตัวแปรสำหรับรถประเภท
+            const carType = '{{ $document->car_type ?? '' }}'; // ใช้ตัวแปรนี้เพื่อเช็คประเภทของรถ
+
             if (isApproved) {
-                vehicleDriverSection.style.display = 'block';
-                vehicleInput.setAttribute('required', 'required');
-                driverInput.setAttribute('required', 'required');
+                if (carType === 'รถเช่า') {
+                    vehicleDriverSection.style.display = 'none'; // ซ่อนเมื่อรถประเภทเป็นรถเช่า
+                    vehicleInput.removeAttribute('required'); // ไม่จำเป็นต้องเลือก
+                    driverInput.removeAttribute('required'); // ไม่จำเป็นต้องเลือก
+                } else {
+                    vehicleDriverSection.style.display = 'block'; // แสดงเมื่อไม่ใช่รถเช่า
+                    vehicleInput.setAttribute('required', 'required'); // จำเป็นต้องเลือก
+                    driverInput.setAttribute('required', 'required'); // จำเป็นต้องเลือก
+                }
             } else {
                 vehicleDriverSection.style.display = 'none';
                 vehicleInput.removeAttribute('required'); // ลบ required เมื่อฟิลด์ถูกซ่อน

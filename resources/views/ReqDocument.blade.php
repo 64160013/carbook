@@ -156,8 +156,7 @@
                         required>
                         <option value="" disabled selected>{{ __('เลือกประเภทของงาน') }}</option>
                         @foreach($work_type as $work_tp)
-                            <option value="{{ $work_tp->work_id }}" {{ old('work_id') == $work_tp->work_id ? 'selected' : '' }}>
-                                {{ $work_tp->work_name }}
+                            <option value="{{ $work_tp->work_id }}" {{ old('work_id') == $work_tp->work_id ? 'selected' : '' }}>{{ $work_tp->work_name }}
                             </option>
                         @endforeach
                     </select>
@@ -169,44 +168,69 @@
                 </div>
                 <!-- ประเภทรถยนต์ -->
                 <div class="form-group mb-4">
-                    <label for="car_type">{{ __('ประเภทของรถยนต์') }}</label>
-                    <select id="car_type" class="form-control @error('car_type') is-invalid @enderror" name="car_type"
-                        required>
-                        <option value="" disabled selected>{{ __('เลือกประเภทของรถยนต์') }}</option>
-
-                        @php
-                            $hasDisplayedPickupTruck = false;
-                            $hasDisplayedVan = false;
-                        @endphp
-
-                        @foreach($vehicles as $vehicle)
-                                            @if(in_array($vehicle->icon_id, [1, 2, 3]) && !$hasDisplayedPickupTruck)
-                                                                <option value="รถกระบะ" {{ old('car_type') == 'รถกระบะ' ? 'selected' : '' }}>
-                                                                    {{ __('รถกระบะ') }}
+                    <div class="col-md-6">
+                        <label for="car_type">{{ __('ประเภทของรถยนต์') }}</label>
+                        <div class="input-group">
+                            <select id="car_type" class="form-control @error('car_type') is-invalid @enderror"
+                                name="car_type" {{ old('car_rent') ? 'disabled' : 'required' }}>
+                                <option value="" disabled selected>{{ __('เลือกประเภทของรถยนต์') }}</option>
+                                @php
+                                    $hasDisplayedPickupTruck = false;
+                                    $hasDisplayedVan = false;
+                                @endphp
+                                @foreach($vehicles as $vehicle)
+                                                            @if(in_array($vehicle->icon_id, [1, 2, 3]) && !$hasDisplayedPickupTruck)
+                                                                                        <option value="รถกระบะ" {{ old('car_type') == 'รถกระบะ' ? 'selected' : '' }}>
+                                                                                            {{ __('รถกระบะ') }}
+                                                                                        </option>
+                                                                                        @php
+                                                                                            $hasDisplayedPickupTruck = true; // แสดง "รถกระบะ" เพียงครั้งเดียว
+                                                                                        @endphp
+                                                            @elseif(in_array($vehicle->icon_id, [4, 5, 6]) && !$hasDisplayedVan)
+                                                                                        <option value="รถตู้" {{ old('car_type') == 'รถตู้' ? 'selected' : '' }}>
+                                                                                            {{ __('รถตู้') }}
+                                                                                        </option>
+                                                                                        @php
+                                                                                            $hasDisplayedVan = true; // แสดง "รถตู้" เพียงครั้งเดียว
+                                                                                        @endphp
+                                                            @elseif(in_array($vehicle->icon_id, [7, 8, 9]))
+                                                                <option value="เรือ" {{ old('car_type') == 'เรือ' ? 'selected' : '' }}>
+                                                                    {{ __('เรือ') }}
                                                                 </option>
-                                                                @php
-                                                                    $hasDisplayedPickupTruck = true; // แสดง "รถกระบะ" เพียงครั้งเดียว
-                                                                @endphp
-                                            @elseif(in_array($vehicle->icon_id, [4, 5, 6]) && !$hasDisplayedVan)
-                                                                <option value="รถตู้" {{ old('car_type') == 'รถตู้' ? 'selected' : '' }}>
-                                                                    {{ __('รถตู้') }}
-                                                                </option>
-                                                                @php
-                                                                    $hasDisplayedVan = true; // แสดง "รถตู้" เพียงครั้งเดียว
-                                                                @endphp
-                                            @elseif(in_array($vehicle->icon_id, [7, 8, 9]))
-                                                <option value="เรือ" {{ old('car_type') == 'เรือ' ? 'selected' : '' }}>
-                                                    {{ __('เรือ') }}
-                                                </option>
-                                            @endif
-                        @endforeach
-                    </select>
+                                                            @endif
+                                @endforeach
+                            </select>
+                            <div class="input-group-append" style="margin-left: 20px;">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="car_rent" name="car_rent"
+                                        onclick="toggleCarType()">
+                                    <label class="form-check-label" for="car_rent">{{ __('รถเช่า') }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @error('car_type')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
                 </div>
+
+                <script>
+                    function toggleCarType() {
+                        const carTypeSelect = document.getElementById('car_type');
+                        const carRentCheckbox = document.getElementById('car_rent');
+                        if (carRentCheckbox.checked) {
+                            carTypeSelect.value = "รถเช่า"; // ตั้งค่า car_type เป็น "รถเช่า"
+                            carTypeSelect.disabled = true; // ปิดฟิลเลือกประเภทของรถยนต์
+                            carTypeSelect.required = false; // ไม่บังคับเลือก car_type
+                        } else {
+                            carTypeSelect.disabled = false; // เปิดฟิลเลือกประเภทของรถยนต์
+                            carTypeSelect.required = true; // ทำให้ car_type กลับมาบังคับเลือก
+                            carTypeSelect.value = ""; // รีเซ็ตค่า car_type
+                        }
+                    }
+                </script>
 
                 <!-- ให้รถไปรับที่ -->
                 <div class="form-group mb-4">
